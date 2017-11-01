@@ -1,0 +1,23 @@
+#!/bin/csh
+#------------------------------------------------------------------------------
+echo "?path is $?path, but ?xzxz is $?xzxz"
+
+echo "0 is $0"
+echo "argv is $argv"
+echo "1 is $1"
+echo "* is $*"
+echo "# is $#"
+
+set MyList = (the cat sat on the mat)
+echo "MyList is $MyList, and #MyList is $#MyList"
+
+set MyData = hello
+echo "MyData is $MyData, and %MyData is $%MyData"
+
+echo "PID is $$"
+
+echo -n "Please enter something : "
+set MyInput = $<
+echo "MyInput is $MyInput"
+#------------------------------------------------------------------------------
+

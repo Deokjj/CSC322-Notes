@@ -1,0 +1,6 @@
+# -O2 -Wall Modular.c Person.c
+Modular.o: Modular.c /usr/include/stdio.h /usr/include/sys/cdefs.h \
+ /usr/include/machine/ansi.h /usr/include/stdlib.h CString.h Person.h \
+ PrettyPrint.h
+Person.o: Person.c Person.h CString.h /usr/include/string.h \
+ /usr/include/machine/ansi.h /usr/include/sys/cdefs.h

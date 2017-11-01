@@ -1,0 +1,251 @@
+<HTML>
+<HEAD>
+<TITLE>Introduction to shells</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Introduction to <TT>csh</TT></H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Shell startup
+<UL>
+<LI> After a user logs into a UNIX system, the <EM>shell</EM> program
+          specified in their password entry is run, and it is the shell that
+          provides the prompt.
+          <UL>
+          <LI> A shell may be run in other contexts, e.g., in a shell script or
+               as a program like any other.
+          <LI> <TT>chsh</TT> and <TT>ypchsh</TT> change your shell (to a good
+               one :-)<BR>
+          </UL>
+</LI>
+     <LI> <TT>tcsh</TT>
+     <UL>   
+     <LI> A <TT>tcsh</TT> login shell begins by executing commands from the 
+          system files <TT>/etc/csh.cshrc</TT> and <TT>/etc/csh.login</TT>.
+          It then executes commands  from  files  in the user's home directory:
+          first <TT>~/.tcshrc</TT>  or, if <TT>~/.tcshrc</TT>  is  not  found,
+          <TT>~/.cshrc</TT>, then  <TT>~/.history</TT> (or the value of the
+          <TT>histfile</TT> shell variable), then <TT>~/.login</TT>, and
+          finally <TT>~/.cshdirs</TT> (or the value of  the  <TT>dirsfile</TT>
+          shell variable) .
+     <LI> Non-login shells read only <TT>/etc/csh.cshrc</TT> and
+          <TT>~/.tcshrc</TT> or <TT>~/.cshrc</TT> on startup.
+     <LI> Sample configuration files for <TT>tcsh</TT>
+          <UL>
+          <LI> <A HREF="MyCode/dot.login"><TT>.login</TT></A>
+          <LI> <A HREF="MyCode/dot.tcshrc"><TT>.tcshrc</TT></A>
+          </UL>
+     </UL>
+     <LI> <TT>bash</TT>
+       <UL>
+	 <LI> A <TT>bash</TT> login shell reads and executes <TT>/etc/profile</TT> (if it exists). (Often this file calls <TT>/etc/bash.bashrc</TT>.)
+	 <LI> After reading that file, it looks for <TT>~/.bash_profile</TT>, <TT>~/.bash_login</TT>, and <TT>~/.profile</TT> in that order, and reads and executes the first one that exists and is readable.
+	 <LI> A non-login <TT>bash</TT> reads and executes <TT>~/.bashrc</TT> (if it exists). This may be inhibited by using the <TT>--norc</TT> option. The <TT>--rcfile</TT> file option will force Bash to read and execute commands from file instead of <TT>~/.bashrc</TT>.
+         <LI> When the login shell exits <TT> bash</TT> reads and executes <TT> ~/.bash_logout</TT>.
+     </UL>
+     </UL>
+<P>
+<LI> Shell output
+     <UL>
+     <LI> <TT>echo</TT> is used for output. Try <TT>echo $0</TT>.
+     </UL>
+<P>
+<LI> Special shell characters
+     <UL>
+     <LI> Many characters have special meaning in most shells, including 
+          <EM>space</EM> <TT>$ ( ) [ ] * & | ; \ ` ' "</TT>
+     <LI> Command arguments may be enclosed in <TT>'single quotes'</TT> or 
+          in <TT>"double quotes"</TT> to create a single argument with
+          spaces in it. Example: File names with spaces
+     <LI> Backslash <TT>\</TT> can be used to suppress the special meaning of 
+          individual characters, e.g., <TT>\'</TT> is a quote, <TT>\\</TT>
+          is a backslash. Example: Filenames with $s in them
+     </UL>
+<P>
+<LI> Shell variables
+     <UL>
+     <LI> Try <TT>printenv</TT>.
+     <LI> The shell maintains a list of variables, each of which has
+          as  value  a  list  of  zero or more words.  The values of
+          shell variables can be set with the <TT>set</TT> command
+          and cleared with the <TT>unset</TT> command. In the <TT>bash</TT> shell the command is <TT>export</TT> to set a variable.  
+     <LI> Values of variables are accessed by adding a <TT>$</TT> prefix
+          (same for environment variables)
+     <LI> Variables are also like arrays
+          <UL>
+          <LI> Use <TT>()</TT>s to set a variable to a list of values (<TT>bash</TT>: <TT><EM>variable</EM>[<EM>n</EM>]=value</EM></TT>)
+          <LI> <TT>$#</TT><EM>variable</EM> - number of words in 
+               <EM>variable</EM> (<TT>bash</TT>: <TT><EM> ${#variable}</EM></TT>),
+          <LI> <TT>$<EM>variable</EM>[<EM>index</EM>]</TT> - the 
+               <EM>index</EM>th word from the <EM>variable</EM>, counting
+               from 1. (<TT>bash</TT>: <TT><EM> ${variable</EM>[<EM>n</EM>]<EM>}</EM></TT>)
+          </UL>
+     <LI>
+          To give a lasting value put setting of shell variable in your <TT>.cshrc</TT> (<TT>.tcshrc</TT> or <TT>.bashrc</TT>).<BR>
+	  To make the shell recognize the new variable you need to <TT>source .cshrc</TT>.
+     <LI> There are some special variables
+          <UL>
+          <LI> <TT>$?</TT> - status from last command
+          <LI> <TT>$$</TT> - the shell's process ID
+          <LI> <TT>$&lt;</TT> - a word read from <TT>stdin</TT> (the keyboard
+               by default, but more about this later) (<TT>bash</TT>: use <TT>read</TT>)
+          <LI> <TT>$argv</TT> - command line arguments to the shell (useful
+               for scripts - see below).
+          </UL>
+     <LI> The shell synchronizes <TT>afsuser</TT>, <TT>group</TT>, 
+          <TT>home</TT>, <TT>path</TT>,  <TT>shlvl</TT>, <TT>term</TT>  and  
+          <TT>user</TT> with the environment variables of the same names: 
+          whenever the environment variable changes the shell changes  the 
+          corresponding shell variable to match (unless the shell variable 
+          is read-only)  and  vice  versa.   
+     </UL>
+<P>
+<LI> Aliases
+     <UL>
+     <LI> These tell the shell to replace input commands.
+     <LI> Typically defined in the user's shell resource file
+          <PRE>
+alias   ls      ls -F
+alias   h       history
+alias   vi      vim
+</PRE>
+     <LI> Note that the syntax in the <TT>bash</TT> shell is <PRE>
+alias ls='ls -F'
+alias h='history'
+alias vi='vim'
+</PRE>
+     <LI> Use the <TT>alias</TT> and <TT>unalias</TT> commands to set, 
+          examine, and clear aliases.
+     </UL>
+<P>
+<LI> Commands
+     <UL>
+     <LI> Two types of commands can be entered at a shell prompt:
+          <EM>builtin</EM> commands, and names of <EM>executable files</EM>.
+     <LI> For each command entered, the shell:
+          <UL>
+          <LI> Does alias substitution on the first word.
+          <LI> Does variable substitution on all words not in 'quotes'
+               (they are done in "double quotes").
+          <LI> Does globbing all words not in 'quotes'.
+          <LI> Checks to see if it is builtin, and if so executes it.
+          <LI> If not builtin, starts a child process, and ...
+               <UL>
+               <LI> Checks if it is an absolute file name, and if so 
+                    executes it, else ...
+               <LI> For each member of the <TT>path</TT> variable, checks 
+                    to see if the command is in that directory, and if so 
+                    executes it.
+               </UL>
+          </UL>
+     <LI> <TT>which</TT> tells if a command is builtin or an executable<BR>
+          <TT>builtins</TT> lists all the builtin commands
+     <LI> <TT>``</TT> can be used to run a command within a command; this
+          is done after variable substitution.
+          for example, <TT>wc `grep -l int *`</TT>
+     </UL>
+<A NAME="IdeaOfScripts">
+<P>
+<LI> The Idea of Scripts
+     <UL>
+     <LI> A shell script is a sequence of shell commands
+     <LI> Lines starting with <TT>#</TT> are comments
+     <LI> Two ways to run scripts
+          <UL>
+          <LI> <TT>source</TT> &lt;script file></TT>
+          <LI> Add a line that specifies which shell should be used to execute
+               the commands on its first line, with a leading <TT>#!</TT>,
+               e.g., <TT>#!/bin/tcsh</TT>. 
+               Make the file executable (with <TT>chmod +x your_file_name</TT>).
+          </UL>
+     <LI> <A HREF="MyCode/LookingForInts"><TT>LookingForInts</TT></A>
+          - Sample <TT>tcsh</TT> script
+     <LI> <TT>$</TT>N is argument N to the script (shorthand for
+          <TT>$argv[</TT>N<TT>]</TT>)
+     </UL>
+<P>
+<LI> Input/output
+     <UL>
+     <LI> Every process starts with a standard input (<TT>stdin</TT>),
+          standard output (<TT>stdout</TT>), and standard error
+          (<TT>stderr</TT>) stream, each connected to some device.
+     <LI> The standard stream of a command may be redirected.
+     <LI> <TT>> name</TT> - The file <TT>name</TT> is used as standard output
+          <UL>
+          <LI> <TT>>! name</TT> - Forces overwriting of an existing file
+          <LI> <TT>>& name</TT> - Includes <TT>stderr</TT> output
+          <LI> <TT>>&! name</TT> - Combination
+          </UL>
+     <LI> <TT>>> name</TT> - Like  <TT>></TT>,  but appends output to the 
+          end of <TT>name</TT>.
+     <LI> <TT>&lt; name</TT> - Open file <TT>name</TT> as the standard input.
+          (Example, <TT>AddIntsSTDIN</TT>)
+     <LI> <TT>&lt;&lt; word</TT> - Read the shell input up to a line which 
+          is identical  to  <TT>word</TT>.
+     <LI> A series of commands joined by <TT>|</TT> characters forms a 
+          pipeline. 
+          The <TT>stdout</TT> of the command in a pipeline is connected to 
+          the <TT>stdin</TT> of the next.
+          <UL>
+          <LI> <TT>stderr</TT> output may be directed through a pipe with  the
+               <TT>stdout</TT> using <TT>|&</TT>
+          </UL>
+     <LI> <A HREF="MyCode/Redirection"><TT>Redirection</TT></A>
+          - Scripts that uses some redirection of IO
+     <LI> The shell  cannot  presently  redirect  <TT>stderr</TT>
+          without also redirecting <TT>stdout</TT>, but 
+          <PRE>
+(command > output-file)  >&  error-file </PRE>
+          is  often   an   acceptable workaround.   
+     </UL>
+<P>
+</UL>
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+
+<UL>
+<LI> What command is used to change your shell on
+     <OL>
+     <LI> A standalone UNIX system?
+     <LI> An NIS served UNIX system?
+     </OL>
+<LI> How can you find what code is executed for a given user command?
+<LI> How many builtin commands are there in your shell?
+<LI> What does the <TT>source</TT> command do?
+<LI> Write a command that send the contents of the file <TT>MyInputData</TT>
+     into the program <TT>FirstAnalysis</TT>, whose output is then piped to
+     the input of the program <TT>SecondAnalysis</TT>, whose output and
+     error messages are appended to the file <TT>AnalysisResults</TT>.
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+
+<UL>
+<LI> What two files in your home directory are read by your shell when you
+     login?
+<LI> Give the command to set a shell variable named <TT>NewPath</TT> to the
+     current value of the <TT>path</TT> variable.
+<LI> List in order the places that a shell checks for the code to execute a
+     user's command.
+<LI> Explain how to make a shell script into a standalone executable.
+<LI> Explain the effect of putting the following lines in your <TT>.tcshrc</TT>
+     file:
+     <PRE>
+alias vi vim
+alias pico vi </PRE>
+<LI> Explain the underlying mechanism that causes a command such as
+     <PRE>
+ls -la | grep System </PRE>
+     to send the output from <TT>ls</TT> to the input of <TT>grep</TT>.
+<LI> Explain the difference between placing a string in single and double
+     quotes in a command.
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

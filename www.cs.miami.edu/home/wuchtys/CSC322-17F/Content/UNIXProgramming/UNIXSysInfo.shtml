@@ -1,0 +1,206 @@
+<HTML>
+<HEAD>
+<!------------------------------------------------------------------------>
+<TITLE>UNIX System Information</TITLE>
+<!------------------------------------------------------------------------>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX System Information</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:45 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<A NAME="Passwords">
+<LI> Passwords
+     <UL>
+     <LI> User information stored in the <TT>/etc/passwd</TT> file.
+          <UL> 
+          <LI> There is one entry per line, and each line has the format:
+               <PRE>
+account:password:UID:GID:GECOS:directory:shell
+               </PRE>
+               The field descriptions are:
+               <UL>
+               <LI> <TT>account</TT> - The name of the user on the system.
+                    It should not contain capital letters.
+               <LI> <TT>password</TT> - The encrypted user password or a star.
+               <LI> <TT>UID</TT> - The numerical user ID.
+               <LI> <TT>GID</TT> - The numerical primary group ID for this user.
+               <LI> <TT>GECOS</TT> - This field is optional and only used for
+                    informational purposes. Usually, it contains the full user  
+                    name.
+               <LI> <TT>directory</TT> - The user's $HOME directory.
+     
+               <LI> <TT>shell</TT> - The program to run at login (if empty,
+                             use /bin/sh). 
+               </UL>
+          <LI> <TT>/etc/passwd</TT> should have general read permission (many
+               utilities, like ls(1) use it  to  map  user  IDs  to  user
+               names), but write access only for the superuser.
+          <LI> In  the good old days there was no great problem with this
+               general  read  permission.   Everybody  could   read   the
+               encrypted  passwords,  but  the  hardware  was too slow to
+               crack a well-chosen  password,  and  moreover,  the  basic
+               assumption used to be that of a friendly user-community.
+               These days many people run some version of the shadow password  
+               suite,  where  <TT>/etc/passwd</TT>  has  *'s  instead of
+               encrypted passwords, and the encrypted  passwords  are  in
+               <TT>/etc/shadow</TT> which is readable by the superuser only.
+          </UL>
+     <LI> Functions to manipulate <TT>/etc/passwd</TT> are in <TT>pwd.h</TT>
+          and require <TT>sys/types.h</TT>.
+          <UL>
+          <LI> <TT>struct passwd *getpwent(void);</TT> - 
+               Returns a pointer to a structure containing the broken out 
+               fields of a line from <TT>/etc/passwd</TT>.   
+               The first time it is called it returns the first entry; 
+               thereafter, it returns successive entries, and NULL when
+               there are no more or an error.
+               <PRE>
+struct passwd {
+    char    *pw_name;       /* user name */
+    char    *pw_passwd;     /* user password */
+    uid_t   pw_uid;         /* user id */
+    gid_t   pw_gid;         /* group id */
+    char    *pw_gecos;      /* real name */
+    char    *pw_dir;        /* home directory */
+    char    *pw_shell;      /* shell program */
+};
+               </PRE>
+
+          <LI> <TT>int setpassent(int stayopen);</TT> -
+               Rewinds the file pointer to the beginning of the 
+               </TT>/etc/passwd</TT> file.
+          <LI> <TT>void endpwent(void);</TT> - Closes the </TT>/etc/passwd</TT> 
+               file.
+          <LI> <TT>struct passwd *fgetpwent(FILE *stream);</TT> -
+               Returns a pointer to a structure containing the broken out 
+               fields of a line in the file stream.
+          <LI> <TT>struct passwd *getpwnam(const char * name);</TT> -
+               Returns a pointer to a structure containing the broken out
+               fields of a line from <TT>/etc/passwd</TT> for the entry that 
+               matches the user name.
+          <LI> <TT>struct passwd *getpwuid(uid_t uid);</TT> -
+               Returns a pointer to a structure containing the broken out
+               fields of a line from <TT>/etc/passwd</TT> for the entry that 
+               matches the UID.
+          <LI> <TT>int getpw(uid_t uid, char *buffer);</TT> -
+               Constructs the password line entry for the given user uid in 
+               the buffer.
+          <LI> <A HREF="MyCode/PasswdEntries.c"><TT>PasswdEntries.c</TT></A>
+               - Program that retrieves passwd entries
+          </UL>
+     <LI> Password authentication functions
+          <UL>
+          <LI> <TT>char *getpass(const char * prompt);</TT> -
+               Displays a prompt to the standard error output, and reads in 
+               a password without echo.
+               The calling process should zero the password  as  soon  as
+               possible  to  avoid leaving the cleartext password visible
+               in the process's address space.
+          <LI> <TT>char *crypt(const char *key, const char *salt);</TT> -
+               The password encryption function.
+               <TT>key</TT> is a user's typed password.
+               <TT>salt</TT> is a two-character string chosen from the set
+               [a-zA-Z0-9./]. This string is used to perturb the algorithm 
+               in one of 4096 different ways.
+               Requires linking <TT>libcrypt.a</TT> and <TT>-D_XOPEN_SOURCE</TT>.
+          <LI> <A HREF="MyCode/PasswdVerify.c"><TT>PasswdVerify.c</TT></A>
+               - Program to read and encrypt a password.
+          </UL>
+     </UL>
+     <P>
+
+<A NAME="SystemInfo">
+<LI> System Information
+     <UL>
+     <LI> <TT>int uname(struct utsname *buffer);</TT> 
+          - Returns system information in the structure pointed to by 
+          <TT>buffer</TT>.   
+          The <TT>utsname</TT> struct is as defined in <TT>utsname</TT>:
+          <PRE>
+struct utsname {
+            char sysname[SYS_NMLN];
+            char nodename[SYS_NMLN];
+            char release[SYS_NMLN];
+            char version[SYS_NMLN];
+            char machine[SYS_NMLN];
+#ifdef _GNU_SOURCE
+            char domainname[SYS_NMLN];
+#endif
+};
+          </PRE>
+          On error, -1 is returned.
+     <LI> <TT>long sysconf(int name);</TT> -
+          Retrieve a system limit.
+          Possible values for <TT>name</TT> include:
+          <UL>
+          <LI> <TT>_SC_CHILD_MAX</TT> - Maximal simultaneous processes per UID.
+          <LI> <TT>_SC_OPEN_MAX</TT> - Maximal number of files that a process 
+               can have open at any time.
+          <LI> <TT>_SC_PAGESIZE</TT> - The size of a page (in bytes).
+          <LI> <TT>_SC_PHYS_PAGES</TT> - The number of pages of physical memory.
+          </UL>
+     <LI> <TT>int gethostname(char *name, size_t len);</TT> -
+          Gets the name of the machine into <TT>name</TT> which is of length
+          <TT>len</TT>.
+          On error, -1  is  returned.
+     <LI> <TT>int getdomainname(char *name, size_t len);</TT> -
+          Gets the domain name of the machine.
+     <LI> <TT>struct hostent *gethostbyname(const char *name);</TT> -
+          Returns a pointer to a <TT>struct hostent</TT> for the given host 
+          <TT>name</TT>, either a host name, or an IP address.
+          <PRE>
+struct hostent {
+    char    *h_name;        /* official name of host */
+    char    **h_aliases;    /* alias list */
+    int     h_addrtype;     /* host address type */
+    int     h_length;       /* length of address */
+    char    **h_addr_list;  /* list of addresses */
+};
+#define h_addr  h_addr_list[0]  /* for backward compatibility */
+          </PRE>
+     <LI> <A HREF="MyCode/SysInfo.c"><TT>SysInfo.c</TT></A>
+          - Program that extracts host information
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2>Exam Style Questions</H2>
+<UL>
+<LI> What user information stored in the <TT>/etc/passwd</TT> file?
+<LI> What does the following program output?
+     <PRE>
+#include &lt;stdio.h>
+#include &lt;sys/types.h>
+#include &lt;pwd.h>
+
+int main(int argc,char *argv[]) {
+
+    struct passwd *P;
+
+    while ((P = getpwent()) != NULL) {
+        if (P->pw_uid == geteuid()) {
+            printf("%s\n",P->pw_name);
+        }
+    }
+    return(0);
+} </PRE>
+<LI> What system call is designed for reading a password from a user?
+<LI> After a call to <TT>uname</TT>, what information is stored in the
+     <TT>struct utsname</TT> pointed to be the parameter?
+<LI> What system call can be used to get the IP address of a machine?
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

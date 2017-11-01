@@ -1,0 +1,564 @@
+<HTML>
+<HEAD>
+<!------------------------------------------------------------------------>
+<TITLE>UNIX Internet</TITLE>
+<!------------------------------------------------------------------------>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX Internet</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:45 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Sockets
+     <UL>
+     <LI> Connection oriented sockets are a standard way of communicating
+          between processes.
+          <UL>
+          <LI> A socket address holds information about the machine 
+               and port number.
+               Various types exist, e.g., internet socket addresses are
+               <PRE>
+struct sockaddr_in {
+    u_char  sin_len;
+    u_char  sin_family;        /*----Internet address family, e.g. PF_UNIX or PF_INET */
+    u_short sin_port;          /*----Port number */
+    struct  in_addr sin_addr;  /*----Holds the IP address */
+    char    sin_zero[8];       /*----Filling */
+};
+               </PRE>
+          <LI> <TT>int socket(int domain,int type,int protocol);</TT> -
+               Creates a socket endpoint for communication and returns a 
+               descriptor.
+               <UL>
+               <LI> The <TT>domain</TT> determines the protocol family.
+                    <TT>AF_INET</TT> is the internet <TT>domain</TT>.
+               <LI> The <TT>type</TT> describes the type of communication.
+                    <TT>SOCK_STREAM</TT> is the connection oriented type.
+               <LI> The <TT>protocol</TT> specifies the protocol. If set to
+                    0 a default is chosen, e.g., TCP for <TT>SOCK_STREAM</TT>s.
+               </UL>
+          <LI> <TT>int bind(int socket,struct sockaddr *addr,socklen_t addrlen);</TT> -
+               Assigns the socket address to a socket.
+          <LI> <TT>int listen(int socket,int backlog);</TT> -
+               Indicates a willingness to accept connections, queueing up to
+               <TT>backlog</TT> pending connections.
+          <LI> <TT>int accept(int socket,struct sockaddr *addr,socklen_t *addrlen);</TT> -
+               Accepts connections to the <TT>socket</TT>.
+               <TT>addr</TT> is filled with information about the connecting
+               machine, or can be NULL.
+          <LI> <TT>int connect(int socket,struct sockaddr *name,socklen_t namelen);</TT> -
+               For the <TT>SOCK_STREAM</TT> type, attempts to make a 
+               connection to another socket, as specified in <TT>name</TT>.
+          <LI> <TT>ssize_t send(int socket, void *msg,size_t len,int flags);</TT> -
+               Used to transmit a message to another socket.
+          <LI> <TT>ssize_t recv(int socket,void *buf,size_t len,int flags);</TT> -
+               Used to receive messages from a socket.
+          </UL>
+     <LI> The standard model is a server-client relationship
+          <UL>
+          <LI> Server
+               <UL>
+               <LI> Create a socket address for local machine
+               <LI> Create a socket
+               <LI> Bind the socket address to the socket
+               <LI> Listen for connections
+               <LI> For each connection received
+                    <UL>
+                    <LI> Accept connection
+                    <LI> Use connection (typically fork a child for this)
+                    </UL>
+               </UL>
+          <LI> Client
+               <UL>
+               <LI> Create a socket address for target machine
+               <LI> Create a socket
+               <LI> Connect the socket to the target socket address
+               <LI> Use connection
+               </UL>
+          </UL>
+     <LI> <P><IMG SRC="SocketServerClient.JPG" WIDTH=80%><P>
+     <LI> Example server - client programs
+          <UL>
+          <LI> <A HREF="MyCode/SocketServerFork.c">SocketServerFork.c</A>
+               - Socket server
+          <LI> <A HREF="MyCode/SocketClient.c">SocketClient.c</A>
+               - Socket client
+          <LI> <A HREF="MyCode/mysockets.c">mysockets.c</A>
+               - Socket library implementation
+          <LI> <A HREF="MyCode/mysockets.h">mysockets.h</A>
+               - Socket library header file
+          </UL>
+     </UL>
+     <P>
+
+<H3>CSC322 STOPS HERE</H3>
+<P>
+<LI> Remote Procedure Calls
+     <UL>
+     <LI> What is RPC?
+          <UL>
+          <LI> RPC is a powerful technique for constructing distributed, 
+               client-server based applications. 
+               It is based on extending the notion of conventional, or local 
+               procedure calling, so that the called procedure need not exist 
+               in the same address space as the calling procedure. 
+               The two processes may be on the same system, or they may be 
+               on different systems with a network connecting them. 
+               By using RPC, programmers of distributed applications avoid the 
+               details of the interface with the network. 
+               The transport independence of RPC isolates the application from 
+               the physical and logical elements of the data communications 
+               mechanism and allows the application to use a variety of 
+               transports.
+          <LI> When combined with the ONC RPCGEN protocol compiler clients 
+               transparently make remote calls through a local procedure 
+               interface.
+          </UL>
+     <LI> How RPC Works
+          <UL>
+          <LI> An RPC is analogous to a function call. 
+               Like a function call, when an RPC is made, the calling 
+               arguments are passed to the remote procedure and the caller 
+               waits for a response to be returned from the remote procedure. 
+          <LI> <P>
+               <IMG ALIGN=CENTER SRC="RPC.GIF">
+               <P>
+          <LI> The client makes a procedure call that sends a request to 
+               the server and waits. 
+               The thread is blocked from processing until either a reply is
+               received, or it times out. 
+          <LI> When the request arrives, the server calls a dispatch routine 
+               that performs the requested service, and sends the reply
+               to the client. 
+          <LI> After the RPC call is completed, the client program continues. 
+          <LI> A remote procedure is uniquely identified by the triple:
+               (program number, version number, procedure number)
+               <UL>
+               <LI> The program number identifies a group of related remote 
+                    procedures, each of which has a unique procedure number.
+               <LI> A program may consist of one or more versions. 
+                    Each version consists of a collection of procedures which
+                    are available to be called remotely. 
+                    Version numbers enable multiple versions of an RPC 
+                    protocol to be available simultaneously.
+               <LI> Each version contains a a number of procedures that can 
+                    be called remotely. Each procedure has a procedure number.
+               </UL>
+          <LI> Program numbers are defined in a standard way:
+               <UL>
+               <LI> 0<I>x</I>00000000 - 0<I>x</I>1<I>FFFFFFF</I>: Defined by Sun
+               <LI> 0<I>x</I>20000000 - 0<I>x</I>3<I>FFFFFFF</I>: User Defined
+               <LI> 0<I>x</I>40000000 - 0<I>x</I>5<I>FFFFFFF</I>: Transient
+               <LI> 0<I>x</I>60000000 - 0<I>xFFFFFFFF</I>: Reserved
+               </UL>
+          </UL>
+     <LI> Levels of interface
+          <UL> 
+          <LI> RPC has multiple levels of application interface to its 
+               services. 
+               These levels provide different degrees of control balanced 
+               with different amounts of interface code to implement. 
+          <LI> The <EM>simplified interfaces</EM> are used to make remote 
+               procedure calls to routines on other machines, and specify 
+               only the type of transport to use. 
+               The routines at this level are used for most applications.
+          <LI> The <EM>standard interfaces</EM> are divided into top level, 
+               intermediate level, expert level, and bottom level. 
+               <UL>
+               <LI> These interfaces give a developer much greater control 
+                    over communication parameters such as the transport
+                    being used, how long to wait beforeresponding to errors and
+                    retransmitting requests, and so on.
+               <LI> At the top level, the interface is still simple, but 
+                    the program has to create a client handle before making 
+                    a call or create a server handle before receiving calls. 
+                    If you want the application to run on all transports, 
+                    use this interface. 
+               <LI> The intermediate level interface of RPC lets you control 
+                    details.
+                    Programs written at these lower levels are more complicated 
+                    but run more efficiently. 
+                    The intermediate level enables you to specify the transport
+                    to use.
+               <LI> The expert level contains a larger set of routines with 
+                    which to specify transport-related parameters. 
+               <LI> The bottom level contains routines used for full control of 
+                    transport options.
+               </UL>
+          <LI> The standard interfaces provides access to user authentication
+               protocols.
+          </UL>
+     <LI> RPC Programs (using the Simplified Interface)
+          <UL>
+          <LI> A "remote procedure" is a function. 
+               <UL>
+               <LI> It must take a single pointer argument and return a 
+                    pointer. 
+               <LI> To pass multiple items of data in or out they can 
+                    be bundled into a <TT>struct</TT>
+               <LI> The return pointer must be to non-automatic data so
+                    that it exists to be passed back to the calling side,
+                    e.g., <TT>static</TT> or <TT>malloc</TT>ed data.
+               </UL>
+          <LI> Marshalling
+               <UL>
+               <LI> RPC handles arbitrary data structures, regardless of 
+                    different machines' byte orders or structure layout 
+                    conventions, by always converting them to a standard 
+                    transfer format called <EM>external data 
+                    representation</EM> (XDR) before sending them over the 
+                    transport. 
+               <LI> The XDR is an data abstraction needed for machine 
+                    independent communication. 
+                    The client and server need not be machines of the same type.
+               <LI> The conversion from a machine representation to XDR is 
+                    called serializing, and the reverse process is called 
+                    deserializing. 
+               <LI> The translator arguments of <TT>callrpc</TT> and 
+                    <TT>registerrpc</TT> can specify an XDR primitive procedure
+                    like <TT>xdr_u_long()</TT>, or a programmer supplied 
+                    routine that processes a complete argument structure. 
+               </UL>
+          <LI> A remote procedure is accessed via a <EM>server stub</EM>.
+               <UL>
+               <LI> The server registers uniquely identified remote procedures
+                    with RPC.
+               <LI> xdr functions have to be specified to marshall the data 
+                    into and back from standard RPC form, so that calls can be
+                    made between code in different languages.
+               <LI> <TT>int registerrpc(u_long prognum,u_long versnum,u_long procnum,char *(* procname)(char *),xdrproc_t inproc,xdrproc_t outproc);</TT>
+                    <UL>
+                    <LI> <TT>prognum</TT>, <TT>versnum</TT>, and 
+                         <TT>procnum</TT> identify the procedure.
+                    <LI> <TT>procname</TT> is the name of the procedure
+                    <LI> <TT>inproc</TT> de-marshalls the input argument
+                    <LI> <TT>outproc</TT> marshalls the return value
+                    <LI> Returns 0 on success, -1 on failure
+                    </UL>
+               <LI> The server calls <TT>svc_run()</TT> which listens for
+                    calls to registered procedures.
+               </UL>
+          <LI> A remote procedure is called by a <EM>client stub</EM>.
+               <UL>
+               <LI> The stub calls an identified remote procedure using the
+                    <TT>callrpc</TT> function.
+               <LI> <TT>int callrpc(char *host,u_long prognum,u_long versnum,u_long procnum,xdrproc_t inproc,char *in,xdrproc_t outproc,char *out);</TT>
+                    <UL>
+                    <LI> <TT>host</TT> is the name of the machine running the
+                         remote procedure.
+                    <LI> <TT>in</TT> is the address of the data to be passed
+                         to the remote procedure
+                    <LI> <TT>out</TT> is where the returned data is placed.
+                    <LI> <TT>inproc</TT> marshalls the <TT>in</TT> data
+                    <LI> <TT>outproc</TT> de-marshalls the <TT>out</TT> data
+                    <LI> Returns 0 if it succeeds, or the value  of  <TT>enum
+                         clnt_stat</TT> cast to an integer if it fails.  
+                         The routine <TT>clnt_perrno()</TT> is handy for 
+                         translating failure statuses into messages.
+                    </UL>
+               </UL>
+          <LI> Hand rolled example
+               <UL>
+               <LI> <A HREF="MyCode/RPC/LSHeader.h"><TT>LSHeader.h</TT></A>
+                    - Header used by all parts
+               <LI> <A HREF="MyCode/RPC/LS.c"><TT>LS.c</TT></A>
+                    - The remote procedure that does a directory listing
+               <LI> <A HREF="MyCode/RPC/LSServer.c"><TT>LSServer.c</TT></A>
+                    - Server main
+               <LI> <A HREF="MyCode/RPC/LSClient.c"><TT>LSClient.c</TT></A>
+                    - Client and client stub
+               <LI> <A HREF="MyCode/RPC/LS_xdr.c"><TT>LS_xdr.c</TT></A>
+                    - Marshalling for all directions and cases
+               </UL>
+          </UL>
+     <LI> Marshalling
+          <UL>
+          <LI> The following XDR Primitive Routines are available:
+               <UL>
+               <LI> <TT>xdr_int()</TT>
+               <LI> <TT>xdr_netobj()</TT>
+               <LI> <TT>xdr_u_long()</TT>
+               <LI> <TT>xdr_enum()</TT>
+               <LI> <TT>xdr_long()</TT>
+               <LI> <TT>xdr_float()</TT>
+               <LI> <TT>xdr_u_int()</TT>
+               <LI> <TT>xdr_bool(</TT>
+               <LI> <TT>xdr_short()</TT>
+               <LI> <TT>xdr_double()</TT>
+               <LI> <TT>xdr_u_short()</TT>
+               <LI> <TT>xdr_wrapstring()</TT>
+               <LI> <TT>xdr_char()</TT>
+               <LI> <TT>xdr_quadruple()</TT>
+               <LI> <TT>xdr_u_char()</TT>
+               <LI> <TT>xdr_void()</TT>
+               <LI> The nonprimitive <TT>xdr_string()</TT>, which takes 
+                    more than two parameters, is called from 
+                    <TT>xdr_wrapstring()</TT>.
+               </UL>
+          <LI> Complex data structures
+               <UL>
+               <LI> User defined routines
+                    <UL>
+                    <LI> Must take only two arguments: a pointer to the result 
+                         and a pointer to the XDR handle.
+                    <LI> Must return <TT>bool_t</TT>
+                    <LI> For the structure
+                         <PRE>
+typedef struct {
+    int a;
+    short b;
+    } simple; </PRE>
+                         this would do the trick
+                         <PRE>
+#include &lt;rpc/rpc.h>
+#include "simple.h"
+
+bool_t xdr_Simple(XDR *xdrsp,simple *simplep) {
+
+    if (!xdr_int(xdrsp,&simplep->a))
+        return(FALSE);
+    if (!xdr_short(xdrsp,&simplep->b))
+        return (FALSE);
+
+    return (TRUE);
+} </PRE>
+                    </UL>
+               <LI> XDR prefabricated routines
+                    <UL>
+                    <LI> <TT>xdr_array()</TT>
+                    <LI> <TT>xdr_bytes()</TT>
+                    <LI> <TT>xdr_reference()</TT>
+                    <LI> <TT>xdr_vector()</TT>
+                    <LI> <TT>xdr_union()</TT>
+                    <LI> <TT>xdr_pointer()</TT>
+                    <LI> <TT>xdr_string()</TT>
+                    <LI> <TT>xdr_opaque()</TT>
+                    </UL>
+               <LI> Example, to send a variable-sized array of integers,
+                    packaged in a structure containing the array and its 
+                    length:
+                    <PRE>
+typedef struct {
+    int *data;
+    int array_length;
+} dynamic_array_type;
+                    </PRE>
+                    Translate the array with <TT>xdr_array()</TT>:
+                    <PRE>
+bool_t xdr_dynamic_array_type(XDR *xdrsp,dynamic_array_type *arrp) {
+
+    return(xdr_array(xdrsp,(caddr_t)&arrp->data,(u_int *)&arrp->array_length,
+MAXLEN,sizeof(int),xdr_int));
+}
+                    </PRE>
+                    The arguments of <TT>xdr_array()</TT> are the XDR handle, 
+                    a pointer to the array, a pointer to the size of the 
+                    array, the maximum array size, the size of each array 
+                    element, and a pointer to the XDR routine to translate 
+                    each array element. 
+               </UL>
+          </UL>
+     <LI> Defining the protocol
+          <UL>
+          <LI> The <EM>protocol</EM> is the stubs and the marshalling 
+               functions.
+          <LI> The easiest way to generate the protocol is to use a protocol
+               complier such as <TT>rpcgen</TT>
+          <LI> For the protocol you must identify the name of the service 
+               procedures, and data types of parameters and return arguments.
+          <LI> A protocol compiler reads a definition and automatically 
+               generates client and server stubs.
+          <LI> <TT>rpcgen</TT> uses its own language (RPC language or RPCL) 
+               which looks very similar to preprocessor directives.
+          <LI> <TT>rpcgen</TT>  exists as a standalone executable compiler 
+               that reads definition files with a <TT>.x</TT> prefix.
+          <LI> Example
+               <UL>
+               <LI> <A HREF="MyCode/RPC/Message.c"><TT>Message.c</TT></A>
+                    - Simple program to print a message.
+               <LI> Now to convert it so that the message is printed
+                    on a remote machine.
+               <LI> <A HREF="MyCode/RPC/Message.x"><TT>Message.x</TT></A>
+                    - Protocol definition for remote service
+               <LI> Compiling with <TT>rpcgen</TT> produces
+                    <UL>
+                    <LI> <A HREF="MyCode/RPC/Message.h"><TT>Message.h</TT></A>
+                         - Header file for both sides
+                    <LI> <A HREF="MyCode/RPC/Message_svc.c">
+                         <TT>Message_svc.c</TT></A>
+                         - Server <TT>main</TT> and stub; calls the real
+                           function to be written.
+                    <LI> <A HREF="MyCode/RPC/Message_clnt.c">
+                         <TT>Message_clnt.c</TT></A>
+                         - Client stub; takes pointer to real argument
+                           and client machine name as arguments.
+                    </UL>
+               <LI> In more complex situations <TT>rpcgen</TT> might also
+                    produce &lt;File><TT>_xdr.c</TT> containing any
+                    necessary XDR filters.
+               <LI> Now write the client and server sides
+               <LI> <A HREF="MyCode/RPC/Message_svc_doit.c">
+                    <TT>Message_svc_doit.c</TT></A>
+                    - Function that prints the message in the server
+                    <UL>
+                    <LI> Receives a single pointer to its argument
+                    <LI> Returns a pointer to the result (static).
+                    <LI> Name appended with <TT>_1</TT> corresponding to 
+                         <TT>version</TT> in <TT>Message.x</TT>
+                    <LI> Compile
+                         <PRE>
+prompt> gcc Message_svc.c Message_svc_doit.c -o Message_svc </PRE>
+                    </UL>
+               <LI> <A HREF="MyCode/RPC/Message_clnt_doit.c">
+                    <TT>Message_clnt_doit.c</TT></A>
+                    - Main routine for client
+                    <UL>
+                    <LI> <TT>clnt_create</TT> is a generic client creation 
+                         routine.
+                    <LI> If the <TT>printmessage_1</TT> client stub returns 
+                         <TT>NULL</TT> then the call failed.
+                    <LI> Compile
+                         <PRE>
+prompt> gcc Message_clnt.c Message_clnt_doit.c -o Message_clnt </PRE>
+                    </UL>
+               <LI> Run the server and the client on different machines
+               </UL>
+          </UL>
+     </UL>
+     <P>
+<P>
+</UL>
+<!--
+<HR>
+<H3>Unused notes</H3>
+Routines such as <TT>rusers</TT> are in the RPC services library
+<TT>librpcsvc</TT>. <TT>rusers.c</TT>, below,  is a program that displays the
+number of users on a remote host. It calls the RPC library routine,
+<TT>rusers</TT>.
+<P>
+The <TT>program.c</TT> program listing:
+<P><PRE>
+#include &lt;rpc/rpc.h&gt; 
+#include &lt;rpcsvc/rusers.h&gt;
+#include &lt;stdio.h&gt;
+
+/*
+* a program that calls the
+* rusers() service
+*/
+
+main(int argc,char **argv)
+
+{
+int num;
+if (argc != 2) {
+   fprintf(stderr, &quot;usage: %s hostname\n&quot;,
+   argv[0]);
+   exit(1);
+   }
+
+if ((num = rnusers(argv[1])) &lt; 0) {
+   fprintf(stderr, &quot;error: rusers\n&quot;);
+   exit(1);
+  }
+
+fprintf(stderr, &quot;%d users on %s\n&quot;, num, argv[1] );
+exit(0);
+}
+</PRE>
+<P>
+Compile the program with:
+<P><PRE>
+cc program.c -lrpcsvc -lnsl
+</PRE>
+<P><B>The Client Side</B>
+<P>
+The example  changed to
+use the simplified interface, looks like
+<PRE>
+#include &lt;stdio.h&gt;
+#include &lt;utmp.h&gt; 
+#include &lt;rpc/rpc.h&gt;
+#include &lt;rpcsvc/rusers.h&gt;
+
+/* a program that calls the RUSERSPROG
+* RPC program
+*/
+
+main(int argc, char **argv)
+
+{
+   unsigned long nusers;
+   enum clnt_stat cs;
+   if (argc != 2) {
+     fprintf(stderr, &quot;usage: rusers hostname\n&quot;);
+     exit(1);
+    }
+
+   if( cs = rpc_call(argv[1], RUSERSPROG,
+          RUSERSVERS, RUSERSPROC_NUM, xdr_void,
+          (char *)0, xdr_u_long, (char *)&amp;nusers,
+          &quot;visible&quot;) != RPC_SUCCESS ) {
+              clnt_perrno(cs);
+              exit(1);
+            }
+
+   fprintf(stderr, &quot;%d users on %s\n&quot;, nusers, argv[1] );
+   exit(0);
+}
+</PRE>
+
+If you pass <TT>NULL</TT> as a result of a function, then
+no reply is sent to the client. It is assumed that there is no reply to send.
+-->
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2>Exam Style Questions</H2>
+<UL>
+<LI> List the sequence of steps performed by the server and client in
+     the standard model of a server-client relationship using sockets.
+<LI> In the standard model of a server-client relationship using sockets,
+     the sequence of steps performed by the server and client are:
+     <UL>
+     <LI> Server
+          <UL>
+          <LI> Create a socket address for local machine
+          <LI> Create a socket
+          <LI> Bind the socket address to the socket
+          <LI> Listen for connections
+          <LI> For each connection received
+               <UL>
+               <LI> Accept connection
+               <LI> Use connection 
+               </UL>
+          </UL>
+     <LI> Client
+          <UL>
+          <LI> Create a socket address for target machine
+          <LI> Create a socket
+          <LI> Connect the socket to the target socket address
+          <LI> Use connection
+          </UL>
+     </UL>
+     Copy these and write next to each the system calls that are used to
+     implement the step.
+<LI> Explain the difference between the <TT>read</TT> and <TT>recv</TT>
+     system calls.
+<LI> How is a remote procedure identified?
+<LI> What is "marshalling", and when is it used in RPC?
+<LI> What does the <TT>svc_run</TT> system call do?
+<LI> What is the task of the client-side stub in RPC?
+<LI> How is data passed to and returned from a remote procedure?
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

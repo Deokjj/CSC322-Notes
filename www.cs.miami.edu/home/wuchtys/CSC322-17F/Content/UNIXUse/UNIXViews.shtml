@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<TITLE>UNIX Views</TITLE>
+<script src="http://www.apple.com/library/quicktime/2.0/scripts/prototype.js" language="JavaScript" type="text/javascript"></script>
+<script src="http://www.apple.com/library/quicktime/2.0/scripts/qtp_poster.js" language="JavaScript" type="text/javascript"></script>
+<link href="http://www.apple.com/library/quicktime/2.0/stylesheets/qtp_poster.css" rel="StyleSheet" type="text/css" />
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX Views</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H3>A Magical Movie</H3>
+<A HREF="Pictures/UNIXBoot.mov" rel="qtposter" jscontroller="false">
+false<img src="Pictures/UNIXBoot.jpg" width="854" height="496"/>
+</A>
+
+<H3>A Black Box</H3>
+<IMG SRC="Pictures/BlackBox.GIF" WIDTH=80%>
+
+<H3>A Windows Interface</H3>
+<IMG SRC="Pictures/KDE.JPG" WIDTH=80%>
+
+<H3>A White Box</H3>
+<IMG SRC="Pictures/WhiteBox.GIF" WIDTH=80%>
+
+<P>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

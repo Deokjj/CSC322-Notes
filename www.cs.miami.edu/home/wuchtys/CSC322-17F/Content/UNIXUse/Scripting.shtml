@@ -1,0 +1,189 @@
+<HTML>
+<HEAD>
+<TITLE>csh Scripting</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1><TT>csh</TT> Scripting</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Recall the <A HREF="ShellIntro.shtml">Introduction to Shells</A>,
+     especially the <A HREF="ShellIntro.shtml#IdeaOfScripts">Idea of 
+     Scripts</A>
+
+<P>
+<LI> Variables
+     <UL>
+     <LI> Shell  variables  have  names consisting of up to 20 letters and 
+          digits starting with a letter. 
+          The underscore character  is  considered  a  letter.
+     <LI> Variables have no defined type, and may be heterogeneous.
+     <LI> When used as an lvalue, a variable is given directly.
+          When used as an rvalue, it is preceded by a <TT>$</TT>,
+          and optionally surrounded by <TT>{}</TT>s to insulate
+          it from following characters which would otherwise be part of it..
+     <LI> Variables may be introduced in several contexts, most commonly
+          with a <TT>set</TT> command, e.g.,
+          <PRE>
+set MyData = 27 </PRE>
+          or an <TT>@</TT> command, which is used for numeric variables, e.g.,
+          <PRE>
+@ MyAnswer = $MyData + 16 </PRE>
+     <LI> List/array variables hold multiple values. 
+          Lists are written using <TT>()</TT>s, and the elements are blank
+          separated, e.g.,
+          <PRE>
+set MyList = (the cat is 27 years old) </PRE>
+          Members of list variables are accessed using <TT>[]</TT>s, 
+          indexing from 1, e.g.,
+          <PRE>
+echo $MyList[4]
+set MyList[4] = 16
+echo $MyList </PRE>
+          Sublists are accesed by giving a range, using a <TT>-</TT>, e.g.,
+          <PRE>
+echo $MyList[2-4] </PRE>
+     </UL>
+
+<P>
+<LI> Predefined variables
+     <UL>
+     <LI> <TT>$?name</TT> - 1 if name is set, 0 if it is not.
+     <LI> <TT>$0</TT> - The name of the file from which command input is being read.  
+     <LI> <TT>$argv</TT> - The list of arguments to the shell (script)
+     <LI> <TT>$number</TT> - Equivalent to <TT>$argv[number]</TT>
+     <LI> <TT>$*</TT> - Equivalent  to <TT>$argv</TT>, which is equivalent 
+          to <TT>$argv[*]</TT>
+     <LI> <TT>$#name</TT> - The number of words in name.
+     <LI> <TT>$#</TT> - Equivalent to <TT>$#argv</TT>
+     <LI> <TT>$%name</TT> - The number of characters in name.  
+     <LI> <TT>$$</TT> - The  (decimal)  process number of the shell.
+     <LI> <TT>$?</TT> - The status from the last command.
+     <LI> <TT>$&lt;</TT> - A  line from the standard input
+     <LI> <A HREF="MyCode/Predefined"><TT>Predefined</TT></A>
+          - Script full of predefined variables
+     </UL>
+
+<P>
+<LI> Expressions
+     <UL>
+     <LI> The operators are similar to those of  C  and  have  the
+          same precedence.  They include
+          <PRE>
+||  &&  |  ^  &  ==  !=  =~  !~  <=  >=
+<  > <<  >>  +  -  *  /  %  !  ~  (  ) </PRE>
+     <LI> <A HREF="MyCode/ShellArithmetic"><TT>ShellArithmetic</TT></A>
+          - Script using arithmetic
+     <LI> The <TT>==</TT>, <TT>!=</TT>, <TT>=~</TT>, and <TT>!~</TT> 
+          operators compare their  arguments  as  strings;  all  others  
+          operate on numbers.  
+     <LI> The operators <TT>=~</TT> and <TT>!~</TT> are like <TT>!=</TT> 
+          and <TT>==</TT> except that the  right  hand side is a glob-pattern 
+          against which the left hand operand is matched.
+     <LI> The results of  all  expressions  are strings, which represent 
+          decimal numbers.  
+     <LI> A command in <TT>``</TT>s evaluates to the <TT>stdout</TT> output of
+          the command.
+     <LI> <A HREF="MyCode/ShellStrings"><TT>ShellStrings</TT></A>
+          - Script using strings
+     <LI> File inquiry operators
+          <UL>
+          <LI> Expressions of the form -X filename evaluate to 1 or 0,
+               for true and false.
+          <LI> Some value for for X are:
+               <UL>
+               <LI> r - Read access
+               <LI> w - Write access
+               <LI> x - Execute access
+               <LI> X - Executable in the path or shell builtin
+               <LI> e - Existence
+               <LI> o - Ownership
+               <LI> z - Zero size
+               <LI> s - Non-zero size 
+               <LI> f - Plain file
+               <LI> d - Directory
+               <LI> l - Symbolic link
+               </UL>
+          </UL>
+     <LI> <A HREF="MyCode/ShellFiles"><TT>ShellFiles</TT></A>
+          - Script using file properties
+     </UL>
+
+<P>
+<LI> Builtin commands (a small selection!)
+     <UL>
+     <LI> <TT>@ name++|--</TT>
+          Increments or decrements <TT>name</TT>
+     <LI> <TT>break</TT> - Causes execution to resume after the  end  of  the
+          nearest enclosing foreach or while.  
+     <LI> <TT>continue</TT> -
+          Continues execution of the nearest enclosing while or foreach.  
+          The rest of the commands on the  current line are executed.
+     <LI> <TT>echo [-n] word ...</TT> -
+          Writes each word to the shell's  standard  output, separated by 
+          spaces, and terminated with a newline unless <TT>-n</TT> is used.
+     <LI> <TT>exit [expr]</TT> - The shell exits either with the value of the 
+          specified  <TT>expr</TT> 
+     <LI> <PRE>
+foreach name (wordlist)
+       ...
+end</PRE>
+          Successively sets the variable <TT>name</TT> to each member of 
+          <TT>wordlist</TT> and executes the sequence of  commands
+          between  this command and the matching <TT>end</TT>.
+     <LI> <PRE>
+if (expr) then
+       ...
+else if (expr2) then
+       ...
+else
+       ...
+endif</PRE>
+          If the specified <TT>expr</TT> is true then the commands to
+          the first <TT>else</TT> are executed; otherwise if <TT>expr2</TT> is
+          true then the commands to the second <TT>else</TT> are executed, etc.
+          Only one <TT>endif</TT> is needed.  
+          The <TT>else</TT> part is optional.
+     <LI> <TT>shift [variable]</TT> -
+          Without <TT>variable</TT>, discards <TT>argv[1]</TT> and shifts the
+          members  of  <TT>argv</TT> to the left.  
+          With <TT>variable</TT>, performs the same function on 
+          <TT>variable</TT>.
+     <LI> <TT>source [-h] name [args ...]</TT> -
+          The shell reads and executes commands  from  <TT>name</TT>.
+     <LI> <PRE>
+switch (string)
+case str1:
+    ...
+    breaksw
+...
+default:
+    ...
+    breaksw
+endsw</PRE>
+          Each <TT>case</TT> label is successively  matched against the
+          specified  <TT>string</TT>.
+     <LI> <TT>wait</TT> - The  shell  waits for all background jobs. 
+     <LI> <PRE>
+while (expr)
+       ...
+end </PRE>
+          Executes the commands between the  <TT>while</TT>  and  the
+          matching <TT>end</TT> while <TT>expr</TT> evaluates  non-zero.
+     <LI> <A HREF="MyCode/Builtins"><TT>Builtins</TT></A>
+          - Scripts to exercise some builtins
+     </UL>
+
+<P>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

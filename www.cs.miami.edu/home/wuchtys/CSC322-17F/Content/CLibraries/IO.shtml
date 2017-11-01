@@ -1,0 +1,550 @@
+<HTML>
+<HEAD>
+<TITLE>Input/Output</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Input/Output</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Input and output are not part of C but are provided by standard
+     library functions in <TT>stdio.h</TT>.
+<P>
+<LI> Input and output are performed via streams.
+     <UL>
+     <LI> A stream is a file or a physical device (e.g., printer or
+          monitor) which is manipulated with a pointer to the stream.
+     <LI> There is an internal C data structure, <TT>FILE</TT>, which 
+          represents all streams and is defined in <TT>stdio.h</TT>. 
+          A <TT>FILE</TT> is a <TT>struct</TT>, defined in <TT>stdio.h</TT>.
+          Stream IO uses a <TT>FILE *</TT>.
+     <LI> Stream I/O is buffered. 
+          A fixed size block is read from or written to a file via some 
+          temporary storage area (the buffer). 
+          This leads to efficient I/O but data written to a buffer does not
+          appear in a file (or device) until the buffer is flushed.
+          Any abnormal exit of code can cause problems.
+     <LI> Streams have to be opened before use, and closed after use.
+     <LI> Streams may be considered to transfer either text or binary
+          data.
+     </UL>
+<P>
+<LI> Predefined Streams
+     <UL>
+     <LI> UNIX has 3 predefined streams (in <TT>stdio.h</TT>):
+          <UL>
+          <LI> <TT>stdin</TT> - initially associated with the keyboard
+          <LI> <TT>stdout</TT> - initially associated with the screen
+          <LI> <TT>stderr</TT> - initially associated with the screen
+          </UL>
+          Their type is <TT>FILE *</TT>.
+     <LI> Predefined streams are automatically open.
+     <LI> They all use text as the method of I/O.
+     <LI> <TT>stdin</TT> and <TT>stdout</TT> can be used with files, programs, 
+          and I/O devices such as keyboard, console, etc. 
+          <TT>stderr</TT> normally goes to the console or screen.
+     <LI> The <TT>stdin</TT> and <TT>stdout</TT> streams may have their 
+          input/output devices redirected (> &lt; >>) or piped (|) from 
+          the command line, or associated with other devices by the program. 
+          This is why <TT>stderr</TT> exists, so that error messages can 
+          continue to be displayed on the screen, even if output is 
+          redirected to a file.
+     </UL>
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+<H3>Basic <TT>stdin</TT> and <TT>stdout</TT> IO</H3>
+
+<UL>
+<LI> Character input and output
+     <UL>
+     <LI> <TT>int getchar(void)</TT> returns the next input character from the
+          standard input each time it is called. 
+          <TT>getchar</TT> returns <TT>EOF</TT> (defined in <TT>stdio.h</TT>)
+          when end of file is encountered.
+     <LI> <TT>int putchar(int c1)</TT> puts <TT>c1</TT> onto the standard 
+          output stream.
+          <TT>putchar</TT> returns <TT>EOF</TT> on error.
+     <LI> <A HREF="../CLanguage/MyCode/FileCopy.c"><TT>FileCopy.c</TT></A>
+          - Program to copy a text file character by character
+     <LI> Not all characters are printable. C provides library
+          functions, declared in <TT>ctype.h</TT>, which determine the 
+          nature of a character. 
+     </UL>
+<P>
+<LI> Line input and output
+     <UL>
+     <LI> <TT>char *gets(char s1[])</TT> reads the next input line into the
+          character array <TT>s1</TT>, replacing the terminating <TT>\n</TT>
+          with <TT>\0</TT>. 
+          It returns the address of <TT>s1[]</TT>, or <TT>NULL</TT> if an 
+          error occurs.
+          <UL>
+          <LI> Warning, beep, beep ... you are responsible for making sure
+               that the chcracter array is big enough for the input.
+          <LI> Achtung, achtung ... users are not reliable, and may enter
+               more than you expect.
+          <LI> Aandag asseblief ... use <TT>fgets</TT> instead.
+          </UL>
+     <LI> <TT>int puts(char s1[])</TT> writes out <TT>s1</TT> and a 
+          <TT>\n</TT>. 
+          Returns a non-negative <TT>int</TT>, or <TT>EOF</TT> if an error 
+          occurs.
+     <LI> <A HREF="MyCode/FileCopyByLine.c"><TT>FileCopyByLine.c</TT></A>
+          - Program to copy a text file line by line
+     </UL>
+<P>
+<LI> Formatted output - <TT>printf</TT>.
+     <UL>
+     <LI> <TT>int printf(char control[],&lt;arg1>,arg2>,.....);</TT>
+     <LI> <TT>printf</TT>  converts, formats and prints its arguments on the
+          standard output stream under the control of the control
+          argument.
+     <LI> <TT>printf</TT> returns the number of characters printed, or a 
+          negative value on error.
+     <LI> The control string contains characters to be printed as is and
+          conversion specifications which specify how the following
+          arguments should be printed.
+     <LI> Each conversion specification starts with a <TT>%</TT> and ends 
+          with a conversion character. 
+     <LI> There must be the same number of conversion specifications as 
+          following arguments, unless an * is used for width or precision 
+          (see below).
+     <LI> Between the <TT>%</TT> and the conversion character there may be (in
+          order) :
+          <UL>
+          <LI> Flags (in any order)
+               <UL>
+               <LI> <TT>-</TT> = left justification.
+               <LI> <TT>+</TT> = always print with a sign (otherwise only - is
+                    printed).
+               <LI> space = if first character is not a sign, then a space
+                    is printed instead. Only one of + or space can be
+                    specified.
+               <LI> <TT>0</TT> = in numeric output, specifies padding with 0.
+               <LI> <TT>#</TT> = alternate output form.
+               </UL>
+          <LI> number = minimum field width. A greater width is used if
+               necessary, padded otherwise.
+          <LI> <TT>.</TT> = Separates minimum field width from precision
+          <LI> second number = maximum number of characters to be printed
+               from a string, or the number of decimal places for
+               <TT>float</TT> and <TT>double</TT>, or the minimum number 
+               of digits for an integer.
+          <LI> <TT>l</TT> = <TT>long int</TT>,  
+               <TT>h</TT> = <TT>short int</TT>, 
+               <TT>L</TT> = <TT>long double</TT>.
+          </UL>
+     <LI> A width or precision may be specified by <TT>*</TT>, which takes its
+          value from the next argument.
+     <LI> The conversion characters are :
+          <UL>
+          <LI> <TT>d</TT>,<TT>i</TT> = <TT>int</TT> -> decimal
+          <LI> <TT>o</TT> = <TT>int</TT> -> octal
+          <LI> <TT>x</TT>,<TT>X</TT> = <TT>int</TT> -> hexidecimal
+          <LI> <TT>u</TT> = <TT>int</TT> -> unsigned
+          <LI> <TT>c</TT> = <TT>int</TT> -> character
+          <LI> <TT>s</TT> = <TT>char[]</TT> -> character string
+          <LI> <TT>e</TT>,<TT>E</TT> = <TT>double</TT> -> real scientific
+          <LI> <TT>f</TT> = <TT>double</TT> -> real decimal
+          <LI> <TT>g</TT>,<TT>G</TT> = <TT>double</TT> -> a combination 
+               of <TT>f</TT> and <TT>e</TT>
+          <LI> <TT>p</TT> = <TT>void *</TT> -> pointer
+          <LI> <TT>n</TT> = <TT>int *</TT> -> puts number of characters 
+               written so far into the argument, no argument is converted.
+          <LI> <TT>%</TT> = no argument converted, prints a <TT>%</TT>.
+          </UL>
+     <LI> If the character after the <TT>%</TT> is not a conversion character 
+          the behaviour is undefined.
+     </UL>
+<P>
+<LI> Formatted input - <TT>scanf</TT>.
+     <UL>
+     <LI> <TT>int scanf(char control[],&lt;arg1>,&lt;arg2>,....);</TT>
+     <LI> <TT>scanf</TT> reads and converts input from the standard input 
+          stream under the control of the control argument.
+     <LI> <TT>scanf</TT> returns the number of items read, or <TT>EOF</TT> 
+          on error or end-of-file. Hence it is not immediately known whether
+          end-of-file or an error has occurred.
+     <LI> The control string controls input conversion, and may contain
+          blanks, tabs or newlines (white space) which are ignored,
+          characters other than <TT>%</TT> which are expected to match the next
+          non-white space character on the input stream, and conversion
+          specifications
+     <LI> The following arguments must all be addresses.
+          <UL>
+          <LI> Arrays = give name
+          <LI> Other variables = preceed with &.
+          </UL>
+     <LI> A conversion specification starts with a <TT>%</TT> and ends with a
+          conversion character. 
+     <LI> There must be the same number of conversion specifications as 
+          following arguments, unless assignment suppression is used (see 
+          below).
+     <LI> Between the % and the conversion character there may be :
+          <UL>
+          <LI> <TT>*</TT> = assignment suppression skips input fields and no
+               variable pointer argument is required.
+          <LI> number = maximum field width, or number of characters for c
+               conversion.
+          <LI> <TT>l</TT> = <TT>long int</TT> or <TT>double</TT>, 
+               <TT>h</TT> = <TT>short int</TT>, 
+               <TT>L</TT> = <TT>long double</TT>.
+          </UL>
+     <LI> An input field consists of a string of non-white space
+          characters (except for character input), or until the maximum
+          field width (if specified) is exhausted. Leading white space
+          is hence ignored, and <TT>scanf</TT> will read over line boundaries.
+     <LI> The conversion characters are :
+          <LI> <TT>d</TT> = <TT>int *</TT> &lt;- decimal integer
+          <LI> <TT>i</TT> = <TT>int *</TT> &lt;- decimal, octal or hex integer
+          <LI> <TT>o</TT> = <TT>int *</TT> &lt;- octal integer (with or 
+               without leading 0)
+          <LI> <TT>x</TT> = <TT>int *</TT> &lt;- hex integer
+          <LI> <TT>u</TT> = <TT>unsigned int *</TT> &lt;- unsigned decimal 
+               integer
+          <LI> <TT>c</TT> = <TT>char *</TT> &lt;- character (default one 
+               character). White space skip is suppressed. 
+               Use <TT>%1s</TT> to skip white space.
+          <LI> <TT>s</TT> = <TT>char * (char [])</TT> &lt;- character string. 
+               <TT>\0</TT> is added to the input.
+          <LI> <TT>f</TT>,<TT>e</TT>,<TT>g</TT> = <TT>float *</TT> &lt;- real
+          <LI> <TT>%</TT> = No assignment, read a <TT>%</TT>.
+     <LI> Example
+          <PRE>
+    int i1;
+    float f1;
+    char name[50];
+
+    scanf("%2d %f %*d %2s",&i1,&f1,name)
+          </PRE>
+          with input <TT>56789 1234 45a72</TT>
+          gives <TT>i1</TT>=56, <TT>f1</TT>=789.0 , <TT>name</TT>="45"
+     <LI> <A HREF="MyCode/ReadEchoPeople.c"><TT>ReadEchoPeople.c</TT></A>
+          - Program using formatted IO for reading and writing people
+     </UL>
+
+<P>
+</UL>
+<HR><!------------------------------------------------------------------------>
+<H3>File IO</H3>
+
+<UL>
+<LI> Opening more streams
+     <UL>
+     <LI> Files are opened via the standard function <TT>fopen</TT> which 
+          returns a pointer to a <TT>FILE</TT>.
+          <UL>
+          <LI> <TT>FILE *fopen(char *name,char *mode)</TT>
+          <LI> The available modes are :
+               <UL>
+               <LI> <TT>"r"</TT> - read. The file must exist.
+               <LI> <TT>"w"</TT> - write. The file is re-created destroying 
+                    any old version.
+               <LI> <TT>"a"</TT> - append. If the file exists the new data is
+                    appended, otherwise a new file is created.
+               <LI> <TT>"r+"</TT> - update (read and write)
+               <LI> <TT>"w+"</TT> - update. The file is re-created.
+               <LI> <TT>"a+"</TT> - update, with writes (without positioning) 
+                    being appended.
+               <LI> <TT>"b"</TT> - binary mode. No conversion of newline 
+                    sequences, etc. Used in conjunction with one of the above.
+               </UL>
+          <LI> Returns <TT>NULL</TT> if an error occurs. An error code is 
+               stored and can be retrieved with <TT>ferror</TT>.
+          </UL>
+     <LI> Characters are input from a file using :
+          <UL>
+          <LI> <TT>int fgetc(FILE *file)</TT>
+          <LI> Returns the next character in the file. On end-of-file or
+               error <TT>EOF</TT> is returned.
+          <LI> Has an equivalent macro implementation <TT>getc</TT>.
+          <LI> <TT>getchar()</TT> is <TT>getc(stdin)</TT> => same values 
+               returned.
+          </UL>
+     <LI> Characters are output to a file using :
+          <UL>
+          <LI> <TT>int fputc(char c1,FILE *file)</TT>
+          <LI> Returns <TT>c1</TT> if successful, <TT>EOF</TT> if an error 
+               occurs.
+          <LI> Has an equivalent macro implementation <TT>putc</TT>.
+          <LI> <TT>putchar(c1)</TT> is <TT>putc(c1,stdout)</TT> => same 
+               values returned.
+          </UL>
+     <LI> <TT>int fclose(FILE *file)</TT> is used to close files. 
+          Returns <TT>EOF</TT> on error, and <TT>0</TT> otherwise.
+     <LI> <TT>EOF</TT> is defined in <TT>stdio.h</TT>, and is returned when 
+          an error occurs on an input operation. 
+          End-of-file is one such (common) error, but it is better to use 
+          <TT>feof</TT> to test whether a genuine end-of-file has been reached.
+     <LI> <A HREF="MyCode/FileCopyByName.c"><TT>FileCopyByName.c</TT></A>
+          - Program that copies named files
+     <LI> And don't forget, <TT>stdin</TT>, <TT>stdout</TT>, and 
+          <TT>stderr</TT> are all <TT>FILE *</TT>s, so they can be used 
+          where ever a <TT>FILE *</TT> is expected.
+     </UL>
+<P>
+<LI> Other file output functions.
+     <UL>
+     <LI> <TT>fputs</TT> - writes a string to a file
+          <UL>
+          <LI> <TT>int fputs(char *s1,FILE *file)</TT>
+          <LI> Outputs upto but not including the first <TT>\0</TT>.
+          <LI> Returns non-negative if successful, <TT>EOF</TT> otherwise.
+          <LI> <TT>int *puts(char *s1)</TT> outputs to <TT>stdout</TT>.
+          </UL>
+     <LI> <TT>fprintf</TT> - writes formatted output to a file.
+          <UL>
+          <LI> <TT>int fprintf(FILE *file,char *control,&lt;arg1>,...)</TT>
+          <LI> See <TT>printf</TT> for details
+          <LI> Returns number of characters written, negative if an error
+               occurs.
+          <LI> <TT>printf</TT> is <TT>fprintf(<TT>stdout</TT>,...)</TT> => 
+               same values returned.
+          </UL>
+     <LI> <TT>fwrite</TT> - writes data in binary mode to a file.
+          <UL>
+          <LI> <TT>size_t fwrite(void *buffer,size_t size,size_t number,FILE *file)</TT>
+          <LI> Writes <TT>number</TT> items of <TT>size</TT> bytes from memory 
+               starting at <TT>buffer</TT>, out to <TT>file</TT>.
+          <LI> Returns <TT>number</TT> if successful, number written otherwise.
+          </UL>
+     </UL>
+<P>
+<LI> Other file input functions.
+     <UL>
+     <LI> <TT>fgets</TT> - gets a line of characters from a file.
+          <UL>
+          <LI> <TT>char *fgets(char *s1,int size,FILE *file)</TT>
+          <LI> Gets a maximum of <TT>size</TT>-1 characters (upto and 
+               including a <TT>\n</TT>) and appends <TT>\0</TT>.
+          <LI> Returns <TT>s1</TT> or <TT>NULL</TT> if at end-of-file or 
+               on error.
+          <LI> <TT>char *gets(char *s1)</TT> reads from <TT>stdin</TT>.
+          </UL>
+     <LI> <TT>fscanf</TT> - reads formatted data from file
+          <UL>
+          <LI> <TT>int fscanf(FILE *file,char *control,&lt;arg1>,...)</TT>
+          <LI> See <TT>scanf</TT> for details
+          <LI> Returns number of items matched if successful, <TT>EOF</TT>
+               otherwise.
+          <LI> <TT>scanf</TT> is <TT>fscanf(stdin,...)</TT> => same values 
+               returned.
+          </UL>
+     <LI> <TT>fread</TT> - reads data in binary mode from a file.
+          <UL>
+          <LI> <TT>size_t fread(void *buffer,size_t size,size_t number,FILE *file>)</TT>
+          <LI> Reads <TT>number</TT> items of size bytes into memory 
+               starting at <TT>buffer</TT>, from <TT>file</TT>.
+          <LI> Returns <TT>number</TT> if successful, number read otherwise.
+          </UL>
+     <LI> <A HREF="MyCode/SavePeople.c"><TT>SavePeople.c</TT></A>
+          - Program that uses file output functions to save people
+     <LI> <A HREF="MyCode/SaveRetrievePeople.c">
+          <TT>SaveRetrievePeople.c</TT></A>
+          - Program that uses file input functions to retrieve people
+     </UL>
+<P>
+<LI> File positioning functions
+     <UL>
+     <LI> <TT>ftell</TT> - returns current file position
+          <UL>
+          <LI> <TT>long ftell(FILE *file)</TT>
+          <LI> Returns the current position as an offset from the
+               beginning of the file in bytes, or -1L on error.
+          </UL>
+     <LI> <TT>fseek</TT> - moves to a random byte in a file.
+          <UL>
+          <LI> <TT>int fseek(FILE *file,long offset,int origin)</TT>
+          <LI> Moves to the byte in the file <TT>offset</TT> bytes from 
+               <TT>origin</TT>, where origin can be :
+               <UL>
+               <LI> <TT>SEEK_SET</TT> - beginning of file (non negative offset)
+               <LI> <TT>SEEK_CUR</TT> - current position in file
+               <LI> <TT>SEEK_END</TT> - end of file.
+               </UL>
+          <LI> For text files, the offset must be 0, or the offset must be
+               a value returned by <TT>ftell</TT> and the origin
+               <TT>SEEK_SET</TT>.
+          <LI> Returns 0 if successful, non-0 otherwise.
+          <LI> <A HREF="MyCode/SaveRetrievePerson.c">
+               <TT>SaveRetrievePerson.c</TT></A>
+               - Program that uses file seek to retrieve one person
+          </UL>
+     <LI> <TT>rewind</TT> - resets a file to its start
+          <UL>
+          <LI> <TT>void rewind(FILE *file)</TT>
+          <LI> Rewinds both input and output files.
+          <LI> <TT>rewind(file)</TT> is <TT>fseek(file,0L,SEEK_SET)</TT>
+          </UL>
+     </UL>
+<P>
+<LI> Other file handling functions.
+     <UL>
+     <LI> <TT>ungetc</TT> - puts one character into a stream
+          <UL>
+          <LI> <TT>int ungetc(int c1,FILE *file)</TT>
+          <LI> Only one character (not <TT>EOF</TT>) may be pushed back onto a
+               stream.
+          <LI> Returns <TT>c1</TT> if successful, <TT>EOF</TT> otherwise.
+          </UL>
+     <LI> <TT>fflush</TT> - flushes output buffers to OS.
+          <UL>
+          <LI> <TT>int fflush(FILE *file)</TT>
+          <LI> Returns 0 if successful, <TT>EOF</TT> otherwise.
+          <LI> <TT>fflush</TT> does not flush OS to disk - use <TT>sync()</TT>
+               for that.
+          </UL>
+     <LI> <TT>remove</TT> - deletes a file
+          <UL>
+          <LI> <TT>int remove(char *file_name)</TT>
+          <LI> Removes the file, returning non-zero if unsuccessful.
+          </UL>
+     <LI> <TT>rename</TT> - renames a file
+          <UL>
+          <LI> <TT>int rename(char *old_name,char *new_name)</TT>
+          <LI> Changes the name of a file, returning non-zero if
+               unsuccessful.
+          </UL>
+     </UL>
+<P>
+<LI> File error handling functions.
+     <UL>
+     <LI> <TT>feof</TT> - detects end-of-file condition
+          <UL>
+          <LI> <TT>feof(FILE *file)</TT>
+          <LI> Returns non-0 on end-of-file, 0 otherwise.
+          </UL>
+     <LI> ferror - detects i/o errors
+          <UL>
+          <LI> <TT>int ferror(FILE *file)</TT>
+          <LI> An error indicator is set when an error occurs for each
+               file, and can be retrieved by <TT>ferror</TT>. 
+               Does not clear the error.
+          <LI> Returns non-0 if an error has occured, 0 if no error since
+               last <TT>fopen</TT> or <TT>clearerr</TT>.
+          </UL>
+     <LI> <TT>clearerr</TT> - clears error codes.
+          <UL>
+          <LI> <TT>void clearerr(FILE *file)</TT>
+          </UL>
+     </UL>
+<P>
+<LI> Other less common functions are
+     <UL>
+     <LI> <TT>tmpnam</TT>, <TT>mktemp</TT> for creating non-existant file names
+     <LI> <TT>tmpfile</TT>, <TT>mkstemp</TT> for creating temporary files
+     <LI> <TT>setvbuf</TT> and <TT>setbuf</TT> for controlling buffering
+     <LI> <TT>freopen</TT> for duplicating access to already open files,
+          especially the <TT>std</TT> ones.
+     <LI> <TT>fgetpos</TT> for recording the current file position, portable to
+          non-UNIX systems
+     <LI> <TT>fsetpos</TT> for moving to a position recorded by
+          <TT>fgetpos</TT>
+     </UL>
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+<H3>Miscellaneous IO</H3>
+
+<UL>
+<LI> In-memory format conversion.
+     <UL>
+     <LI> <TT>int sprintf(char string[],char control[],&lt;arg1>,...)</TT>
+          puts output into <TT>string</TT>.
+     <LI> <TT>int sscanf(char string[],char control[],&lt;arg1>,...)</TT>
+          takes input from <TT>string</TT>.
+     </UL>
+<P>
+<LI> Using a variable number of arguments as arguments
+     <UL>
+     <LI> <TT>int vprintf(char control[],va_list arg)</TT>
+     <LI> <TT>int vsprintf(char string[],char control[], va_list arg)</TT>
+     <LI> These are the same as <TT>printf</TT> and <TT>sprintf</TT>, except 
+          that the variable argument list is replaced by <TT>arg</TT>, which 
+          has been initialised with <TT>va_start</TT>, and possible moved with
+          <TT>va_arg</TT>.
+     </UL>
+</UL>
+<P>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Use <TT>sprintf</TT> and <TT>sscanf</TT> to implement 
+     <TT>void itoa(int input,char output[])</TT> and 
+     <TT>int atoi(char input[])</TT>, which convert from
+     integer to string and vice versa.
+<LI> Write 
+     <TT>int int_print(int number_of_arguments,int format,&lt;arg1>,...)</TT>
+     which prints the <TT>int</TT>s passed to it in one of decimal, octal 
+     or hex. The number of <TT>int</TT>s to print is given in
+     <TT>number_of_arguments</TT>, and the format in <TT>format</TT> - one 
+     of the characters <TT>d</TT>, <TT>D</TT>, <TT>o</TT>, <TT>O</TT>, 
+     <TT>x</TT>, <TT>X</TT>. <TT>int_print</TT> should return the number of
+     <TT>int</TT>s printed, or -1 on error.
+<LI> Write a program listing program. Your program should read text
+     from a text file specified as a command line argument, and
+     output the file to <TT>stdout</TT>. <TT>#include</TT> directives should be
+     replaced by the contents of the file to be included, recursively.
+<LI> Write an encryption program that will encrypt any sort of
+     file. The program takes two command line arguments - the name
+     of the file to be encrypted and an encryption string. The
+     program encrypts the file by exclusive-ORing successive bytes
+     of the file with successive characters of the encryption
+     string, looping back to the start of the string each time all
+     the characters in the encryption string have been used up.
+     This encryption technique is convenient as it is self
+     cancelling.
+<LI> Write a program to copy one named file into another named file. 
+     The two file names are given as the first two arguments to the program.
+     Copy the file a block (512 bytes) at a time.
+<LI> Write a program that prints the last n lines of a text file.
+     The file name must be specified on the command line. 
+     By default is 5, but the program must allow an optional argument so that
+     n can be set to another value, so that
+     <PRE>
+prompt> last -n file.txt
+     </PRE>
+     prints out the last n lines, where n is any integer. 
+<LI> Write a program to compare two files and print out the lines where they
+     differ. 
+<LI> Write a program to print the lines of a file which contain a
+     word given as the program argument (a simple version of <TT>grep</TT> 
+     UNIX utility).
+<LI> Write a program to list the files given as arguments, stopping
+     every 20 lines until a key is hit (a simple version of <TT>more</TT> 
+     UNIX utility).
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> What are the three predefined IO streams in UNIX, and what devices are
+     they associated with by default?
+<LI> Why should <TT>fgets</TT> be used in preference to <TT>gets</TT>?
+<LI> What is the exact output from the following code? Indicate spaces
+     with an upsidedown triangle.
+     <PRE>
+     int i1 = 27;
+     float f1 = 13.13;
+     float f2 = -45.45;
+     char data[] = "Bonzai!";
+
+     printf("%3d %7.3f %-10s %f %o\n",i1,f1,data,f2,i1); </PRE>
+<LI> What are the values of the variables after the following code is executed
+     with input <TT>56789 1234 45a72</TT>?
+     <PRE>
+int i1;
+float f1;
+char name[50];
+
+scanf("%2d %f %*d %2s",&i1,&f1,name); </PRE>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

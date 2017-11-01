@@ -1,0 +1,375 @@
+<HTML>
+<HEAD>
+<TITLE>Pointers</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Pointers</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Pointer variables
+     <UL>
+     <LI> Nothing useful yet, just the idea
+     <LI> Pointers to primitive types
+          <UL>
+          <LI> The definition <TT>int *pi1;</TT> says <TT>pi1</TT> will hold 
+               the address of an integer, or <TT>*pi1</TT> is an <TT>int</TT>.
+          <LI> The unary operator <TT>&</TT> gives the address of an object.
+          <LI> The unary operator <TT>*</TT> implements indirection on its 
+               argument.
+          <LI> Assigning pointers to pointers
+          <LI> Pointers can be manipulated like other variables, e.g.
+               assignment and increment (what does this mean).
+          <LI> <A HREF="MyCode/PrimitivePointers.c">
+               <TT>PrimitivePointers.c</TT></A>
+               - program demonstrating pointers to primitive types
+          </UL>
+     <LI> The <TT>NULL</TT> pointer
+          <UL>
+          <LI> <TT>NULL</TT> is defined in <TT>stdio.h</TT> as 0. 
+          <LI> Pointers and <TT>int</TT>s are not interchangable (despite a 
+               cavalier attitute of classic C programmers). 
+          <LI> The only integer that may be assigned to or compared with a 
+               pointer is 0. Using <TT>NULL</TT> makes this explicit.
+          <LI> C guarantees no pointer to data will contain 0, so returning
+               <TT>NULL</TT> for an error is safe.
+          <LI> <A HREF="MyCode/NullPointer.c"><TT>NullPointer.c</TT></A>
+               - program demonstrating a null pointer
+          </UL>
+     <LI> Array of pointers
+          <UL>
+          <LI> <A HREF="MyCode/ElementPoints.c"><TT>ElementPoints.c</TT></A>
+               - Program demonstrating use of an array of pointers
+          </UL>
+     </UL>
+<P>
+<LI> Pointers as parameters
+     <UL>
+     <LI> Pass by value (= pass the referred object by reference)
+     <LI> <A HREF="MyCode/PassByValue.c"><TT>PassByValue.c</TT></A>
+          - Program demonstrating passing pointers by value
+     <LI> Pointers to pointers pass pointers by reference
+     <LI> <A HREF="MyCode/PassByReference.c">
+          <TT>PassByReference.c</TT></A>
+          - Program that passes a pointer to a pointer.
+     </UL>
+<P>
+<LI> BEWARE following pointers ... you'd better know where they go
+     <UL>
+     <LI> If you follow a pointer to a place you don't own, you'll
+          get a seg fault.
+     <LI> If you follow a pointer to a place that doesn't exist, you'll
+          get a bus error.
+     <LI> <A HREF="SegFault1.jpg">Virgin</A> 
+          <A HREF="SegFault2.jpg">Airlines</A>
+     </UL>
+<P>
+<LI> Pointers and arrays.
+     <UL>
+     <LI> Pointers and arrays are closely linked in C. 
+          Anything that can be done with array subscripting can be done 
+          with pointers.
+     <LI> An array name provides the address of the first element of the
+          array. e.g. <TT>int A[10];</TT> Then <TT>A == &A[0]</TT> and 
+          <TT>*A == A[0]</TT>.
+     <LI> Given a pointer <TT>PA</TT> into an array <TT>A</TT> (the array 
+          name counts as a pointer to the first element), then the pointer
+          can be indexed like an array.
+     <LI> An array name is a constant address and cannot be assigned a 
+          new value, but a pointer to an array element can.
+     <LI> Given a pointer <TT>PA</TT> into an array <TT>A</TT> (the array 
+          name counts as a pointer to the first element), then adding or
+          subtracting an integer gives a pointer offset that far along the 
+          array.
+     <LI> Given two pointers into an array, subtracting them gives the number
+          of elements from one to the other.
+     <LI> Incrementing or decrementing a pointer (which is pointing into an 
+          array) moves the pointer along the array
+     <LI> <A HREF="MyCode/ArrayPointer.c"><TT>ArrayPointer.c</TT></A>
+          - Using pointers into an array
+     <LI> Function arguments
+          <UL>
+          <LI> It is possible to pass part of an array to a function by
+               passing the address of the element at the start of the
+               required part. e.g. <TT>strlen(&s1[3])</TT>. 
+          <LI> The receiving function may view the passed address as an 
+               array (subscripted from 0 again) or as a pointer to an element.
+          <LI> <A HREF="MyCode/ArrayRestart.c"><TT>ArrayRestart.c</TT></A>
+               - Offsets an array in a function
+          </UL>
+     <LI> Multi-dimensional array accesses are also converted to pointer
+          access. 
+          <UL>
+          <LI> Given the definition <TT>int a[5][8]</TT>, 
+               <TT>a[3][5]</TT> is converted to <TT>*(*(a+3)+5)</TT> in the 
+               steps <TT>a[3]</TT> => <TT>*(a+3)</TT>, <TT>a[3][5]</TT> => 
+               <TT>*(a+3)[5]</TT> => <TT>*(*(a+3)+5)</TT>. 
+          <LI> <TT>a</TT> - a pointer to the 1st of 5 arrays of 8 elements.
+          <LI> <TT>a+3</TT> - a pointer to the 4th 8 element array.
+          <LI> <TT>*(a+3)</TT> - a pointer to the 1st element of the 4th 8 
+               element array (because the 4th 8 element array is an array!!. 
+               If it were a number it would be the number).
+          <LI> <TT>*(a+3)+5)</TT> - a pointer to the 6th element of the 4th 8
+               element array.
+          <LI> <TT>*(*(a+3)+5)</TT> - the 6th element of the 4th 8 element 
+               array.
+          </UL>
+     <LI> Pointer arithmetic on addresses in different arrays is
+          dangerous as order of memory allocation is not consistent
+          between compilers. No pointer arithmetic other than that
+          described here should be used.
+     </UL>
+
+<P>
+<LI> Character pointers and functions.
+     <UL>
+     <LI> String constants and arrays of <TT>char</TT> are implemented 
+          the same.
+     <LI> When a character string (or any array) is passed to a
+          function, a pointer to the start of the string is actually
+          passed. The end of a string is marked with a <TT>\0</TT>.
+     <LI> The definitions
+          <PRE>
+char message[] = "Hello world";
+char *message = "Hello world";
+char *message;
+message="Hello world";
+          </PRE>
+          are different. The first defines an array, the second and
+          third a pointer to a string, somewhere where the compiler puts
+          it.
+          Take care that you own the memory that you use
+     <LI> <A HREF="MyCode/StringPointers.c"><TT>StringPointers.c</TT></A>
+          - Dangerous games with strings
+     <LI> C does not provide string manipulation directly, but there are
+          plenty of library routines, declared in <TT>string.h</TT> and 
+          <TT>stdlib.h</TT>.
+     </UL>
+
+<P>
+<LI> Arrays of pointers and arrays of arrays
+     <UL>
+     <LI> This works neatly because array names are pointers, so a
+          pointer can be assigned an array, e.g. sorting arrays of
+          strings into order can be done by swapping pointers to the
+          strings, rather than swapping the strings themselves.
+     <LI> Useful for ragged right edge arrays.
+     <LI> <A HREF="MyCode/StringsSort.c"><TT>StringsSort.c</TT></A>
+          - Sorting strings by pointers
+          <UL>
+          <LI> <TT>Name</TT> is an array of pointers to character. 
+          <LI> Each of these characters is the first in an initialised array. 
+               (Pointer to a character is also a character array).
+          <LI> The characters of the ith string are stored somewhere and a
+               pointer to them is stored in <TT>Name[i]</TT>.
+          <LI> The size of name is given implicitly by the number of
+               strings in the initialisation.
+          </UL>
+     <LI> Pointers vs Multi-dimensional arrays
+          <UL>
+          <LI> <TT>int A[10][10], *B[10];</TT> defines <TT>A</TT> to be a 2D 
+               array of 100 <TT>int</TT>s and <TT>B</TT> to be an array of 10 
+               pointers to <TT>int</TT>.
+          <LI> <TT>A[4][6]</TT> and <TT>B[4][6]</TT> are both syntactically 
+               legal. <TT>A[4][6]</TT> is the 7th element in the 5th array. 
+               <TT>B[4][6]</TT> is the memory location 6 <TT>int</TT>s beyond 
+               the address given in the 5th array element, equivalent to 
+               <TT>*(B[4] + 6)</TT>. 
+               If <TT>B[4]</TT> points to an array of ints of length >=7 
+               the two are equivalent.
+          <LI> The setting up of <TT>B</TT> to point to arrays is the 
+               programmer's responsibility. 
+               The setting up of <TT>A</TT> to the 10 x 10 format is
+               the compiler's responsibility.
+          </UL>
+     </UL>
+
+<P>
+<LI> Pointers to functions.
+     <UL>
+     <LI> Pointers to functions can be passed to functions.
+     <LI> <A HREF="MyCode/SortByFunction.c"><TT>SortByFunction.c</TT></A>
+          - Program demonstrating passing functions as parameters.
+     <LI> As <TT>CompareGreater</TT> and <TT>CompareLess</TT> are 
+          defined (declared) before <TT>main</TT>, they are known to be 
+          functions of type <TT>int</TT>, and the compiler will pass 
+          their addresses to sort. (For functions addresses are passed, 
+          like arrays.)
+     <LI> The declaration <TT>int (*CompareFunction)(int,int)</TT> says 
+          <TT>CompareFunction</TT> is a pointer to a function of type 
+          <TT>int</TT> and takes two <TT>int</TT> arguments.
+          <UL>
+          <LI> The <TT>()</TT> are necessary round <TT>(*CompareFunction)</TT> 
+               as <TT>(int,int)</TT> takes precedence over <TT>*</TT>.
+          <LI> <TT>int *F(int,int)</TT> declares a function
+               that returns a pointer to an <TT>int</TT>. 
+          <LI> <TT>int *(*F)(int,int)</TT> declares a pointer to a 
+               function that returns a pointer to an <TT>int</TT>.
+          </UL>
+     <LI> The call <TT>(*CompareFunction)(Data[Index],Data[Index+1])</TT> 
+          is consistent with the declaration. 
+          <UL>
+          <LI> <TT>*CompareFunction</TT> is a pointer to a function 
+          <LI> <TT>CompareFunction</TT> is a function. 
+          <LI> The <TT>()</TT> are needed to provide the correct associations.
+          </UL>
+     <LI> These pointer declarations can get confusing, due to the use
+          of <TT>()</TT> for indicating functions, and indicating precedence.
+          <UL>
+          <LI> In precedence <TT>()</TT> = <TT>[]</TT> > <TT>*</TT>
+          <LI> <TT>()</TT> and <TT>[]</TT> have left to right associativity, 
+               <TT>*</TT> has right to left associativity.
+          <LI> Try these examples, using precedence and associativity to
+               justify the types :
+               <UL>
+               <LI> <TT>char **PPC;</TT> - <TT>PPC</TT> is pointer to a 
+                    pointer to <TT>char</TT>.
+               <LI> <TT>int (*Table)[13];</TT> - <TT>Table</TT> is a pointer 
+                    to an array of 13 <TT>int</TT>s.
+               <LI> <TT>int *Table[13];</TT> - <TT>Table</TT> is an array of 
+                    13 pointers to <TT>int</TT>.
+               <LI> <TT>void *F(void);</TT> - <TT>F</TT> is a 
+                    function that returns a pointer to <TT>void</TT>, and 
+                    takes no arguments.
+               <LI> <TT>void (*F)(char);</TT> - <TT>F</TT> is 
+                    a pointer to a function that returns a <TT>void</TT>, and 
+                    takes a <TT>char</TT> argument.
+               <LI> <TT>char (*(*F(void))[])(int,int);</TT> - <TT>F</TT> 
+                    is a function of no arguments returning a pointer to an 
+                    array of pointers to functions that return <TT>char</TT> 
+                    and have two <TT>int</TT> arguments.
+               <LI> <TT>char (*(*A[])(float))[5];</TT> - <TT>A</TT> is an 
+                    array of pointers to functions that return pointers to 
+                    arrays of 5 <TT>char</TT>, and take one <TT>float</TT> 
+                    argument.
+               </UL>
+          </UL>
+     <LI> The <TT>qsort</TT> standard library function is very useful function 
+          that is designed to sort an array by a key value of any type into 
+          ascending order, as long as the elements of the array are of fixed 
+          type. 
+          <UL>
+          <LI> <TT>qsort</TT> is prototyped in <TT>stdlib.h</TT>: 
+               <PRE>
+void qsort(void *base, size_t num_elements, size_t element_size,
+   int (*compare)(void const *, void  const *));
+               </PRE>
+          <LI> The argument <TT>base</TT> points to the array to be sorted, 
+               <TT>num_elements</TT> indicates how long the array is, 
+               <TT>element_size</TT> is the size in bytes of each array
+               element and the final argument <TT>compare</TT> is a pointer to 
+               a function. 
+          <LI> <TT>qsort</TT> calls the <TT>compare</TT> function which is user 
+               defined to compare the data when sorting. <TT>qsort</TT> thus
+               maintains it's data type independence by giving the comparison 
+               responsibility to the user. 
+          <LI> The <TT>compare</TT> function must return integer values 
+               according to the comparison result: 
+               <UL>
+               <LI> less than zero : if first value is less than the second 
+                    value 
+               <LI> zero : if first value is equal to the second value 
+               <LI> greater than zero : if first value is greater than the 
+                    second value 
+               </UL>
+          <LI> Some quite complicated data structures can be sorted in this 
+               manner.
+          </UL>
+     </UL>
+
+<P>
+<LI> Command-line arguments.
+     <UL>
+     <LI> The main routine of a C program has two optional arguments,
+          the first being the number of fields separated by blanks on
+          the command line (including run name), and the second an array
+          of pointers to these character strings.
+     <LI> The 0th pointer points to the run name.
+     <LI> <A HREF="MyCode/CommandLine.c"><TT>CommandLine.c</TT></A>
+          - Program looking at its command line
+     </UL>
+
+<P>
+</UL>
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write a code segment that declares an array of 10 pointers to 
+     <TT>int</TT>, initializes all of them to point at the <TT>int</TT> 
+     variable <TT>anInt</TT>, and finally prints out the contents of
+     <TT>anInt</TT> using the 5th array element.
+<LI> What is the output from the following code?
+     <PRE>
+char Name[12];
+char *Offset;
+
+strcpy(Name,"Sutcliffe");
+Offset = &Name[4];
+printf("%s\n",Offset);
+     </PRE>
+<LI> Write a code segment that declares a pointer to a float, and then
+     makes the pointer be the "name" of a newly created array of 10 floats.
+<LI> Write a pointer version of the <TT>void squeeze(char *s1,char *s2)</TT>
+     function, that deletes each character in <TT>s1</TT> that matches a
+     character in <TT>s2</TT>.
+<LI> Write an improved <TT>dispose_heap_frame</TT> function
+     <TT>char *dispose_heap_frame(char *frame,int size)</TT> that checks
+     that frame does extend to the top of the heap, returning <TT>frame</TT>
+     if successful, <TT>NULL</TT> if an error occurs.
+<LI> Improve the sorting example given by writing a <TT>choose_direction</TT>
+     function that returns a pointer to one of <TT>compare_greater</TT> and
+     <TT>compare_less</TT>, depending on whether the user inputs an
+     <TT>A</TT> or not. The if-then-else construct in the main function can 
+     then be replaced by :
+     <TT>sort(data,number_of_numbers,choose_direction());</TT>.
+<LI> Write a C program to read through an array of any type using pointers. 
+     Write a C program to scan through this array to find a particular value. 
+<LI> An insertion sort is performed by adding values to an array one by one. 
+     The first value is simply stored at the beginning of the array. 
+     Each subsequent value is added by finding its ordered position in the 
+     array, moving data as needed to accommodate the value and inserting 
+     the value in this position. 
+     Write a function called insort that performs this task and behaves in the
+     same manner as qsort, i.e it can sort an array by a key value of any type
+     and it has similar prototyping.
+</UL>
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> What is the difference between <TT>*i1</TT> in the following two lines?
+     <PRE>
+int *i1;
+
+*i1 = 27; </PRE>
+<LI> What does the <TT>&</TT> operator return when applied to a variable?
+<LI> What is the output from the following code?
+     <PRE>
+int data[] = {8,7,6,5,4,3,2};
+int *bean;
+
+bean = &data[3];
+printf("%d %d\n",bean[data[6]],&data[5]-bean); </PRE>
+<LI> Given the multidimensional array <TT>float values[4][3];</TT>, what
+     is the equivalent pointer expression for <TT>values[2][2]</TT>?
+<LI> What errors might the following code produce?
+     <PRE>
+char string[128];
+char *name;
+
+strcpy(string,name);
+strcpy(name,"old stuff"); </PRE>
+<LI> Give an example showing how an array of pointers can be used to create
+     a two dimensional array in which the rows are of differing lenths.
+<LI> Give <TT>typedef</TT>s to define a data type for an array of three
+     pointers to functions, where each function takes two <TT>int</TT>
+     arguments and returns a <TT>float</TT>. (OK, that's hard, I admit).
+<LI> Write a program that takes integers as command line arguments, sums
+     them, and returns the sum back to the operating system.
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

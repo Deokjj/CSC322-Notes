@@ -1,0 +1,473 @@
+<HTML>
+<HEAD>
+<TITLE>Structured Data</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Structured Data</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Enumerated types
+     <UL>
+     <LI> An enumeration type is a set of identifiers called enumeration
+          constants. The syntax is the same as for structures and
+          unions.
+          <PRE>
+enum [enumeration_tag] {&lt;list of identifiers>} &lt;variables>; </PRE>
+     <LI> The enumeration constants may not also be used as other names.
+     <LI> <A HREF="MyCode/EnumPet.c"><TT>EnumPet.c</TT></A>
+          - Enumerated type for pets
+     <LI> Enumeration types are implemented by assigning integer values
+          to the enumeration constants, the first constant being assign
+          0, then 1 etc. This may be overridden by explicitly giving the
+          constants signed integer values in the definition. e.g.
+          <PRE>
+typdef enum {ben=7,paul=1,andrew=-9,kevin=5} StudentsType;
+
+StudentsType Class; </PRE>
+     <LI> It is legal to give two constants the same value but that is
+          bad style. If some constants are not given values, they
+          receive values progressing upwards from the last one that did.
+     <LI> Variables of this type may be assigned any of the constants.
+     <LI> Implementations vary, but enumerated variables may usually be
+          used as <TT>int</TT>s in expressions - it may be necessary to 
+          cast them to <TT>int</TT>.
+     </UL>
+<P>
+<LI> Structures
+     <UL>
+     <LI> A structure is a collection of one or more variables, possibly
+          of different types, grouped together under a single name for
+          convenience.
+          <PRE>
+struct date {
+    short Day,Month;
+    int Year;
+    int YearDay;
+    char MonthName[10];
+} Today,Tommorrow,Doomsday; </PRE>
+          This definition declares a type struct date which is a
+          structure, and variables of that type.
+     <LI> The structure tag which follows the struct is optional, but is
+          useful as future variables of this type can be defined using
+          <TT>struct &lt;tag></TT> as the type. 
+     <LI> Variables need not be defined in a structure definition. The 
+          structure definition itself is called a structure template. 
+          In such a case it makes no sense to omit the structure tag.
+     <LI> Better style is to typedef the structure :
+          <PRE>
+typedef struct {
+    short Day,Month;
+    int Year;
+    int YearDay;
+    char MonthName[10];
+} DateType;
+
+DateType Today,Tommorrow,Doomsday; </PRE>
+     <LI> Structure members can have the same names as other variables
+          as they are differentiated by context.
+     <LI> Structures can be nested, e.g.
+          <PRE>
+typedef struct {
+    char Name[64],Address[128];
+    int Postcode;
+    double Salary;
+    DateType Birthdate;
+} AustraliaCardType;
+
+AustraliaCardType BobHawke,PaulKeating; </PRE>
+     </UL>
+
+<P>
+<LI> Operations on a structure
+     <UL>
+     <LI> To access a structure element, use
+          <TT>&lt;structure name>.&lt;member name>.</TT> e.g. 
+          <PRE>
+Tommorrow.Year = 1989;
+MonthEnd = Today.Month != Tommorrow.Month; </PRE>
+     <LI> The structure member operator is left to right associative.
+          e.g. <TT>BobHawke.Birthdate.Year = 1902;</TT> is read as
+          <TT>(BobHawke.Birthdate).Year = 1902</TT>
+     <LI> Structures may be assigned to another (including passing to
+          and returning from functions), e.g.
+          <PRE>
+Tommorrow = Today;
+DateType Armagedon(AustraliaCardType Instigator);
+         . . . .
+Doomsday = Armagedon(BobHawke); </PRE>
+     <LI> <A HREF="MyCode/StructSCUBA1.c"><TT>StructSCUBA1.c</TT></A>
+          - Typedefed structure of SCUBA data
+     <LI> Note how the <TT>Site</TT> array gets passed by value.
+     <LI> Structures may not be compared as a unit, only member by member.
+     <LI> Structures can be initialised with a list of initialisers in
+          <TT>{}</TT>, as for arrays. e.g.
+          <PRE>
+DateType Tommorow = {28,10,1987,301,"Oct"};
+          </PRE>
+     </UL>
+
+<P>
+<LI> Pointers to structs
+     <UL>
+     <LI> To get the address of a structure use <TT>&</TT> as usual.
+     <LI> The <TT>-></TT> operator operates on a pointer to a structure to
+          access a member. 
+     <LI> <TT>DatePointer->Year</TT> is equivalent to
+          <TT>(*DatePointer).Year</TT>. Here the <TT>()</TT> are 
+          necessary as <TT>.</TT> has higher precedence that <TT>*</TT>.
+     <LI> Where ever it is legal to take a pointer to a structure, it
+          is legal to take a pointer to one of its elements, e.g.
+          <TT>ChangeDate(&Today.Day);</TT> may be used to pass the date by
+          reference to <TT>ChangeDate</TT>.
+     <LI> <A HREF="MyCode/StructPointers.c"><TT>StructPointers.c</TT></A>
+          - Program demonstrating pointers to structs
+     <LI> <A HREF="MyCode/StructPointerFields.c">
+          <TT>StructPointerFields.c</TT></A>
+          - Program demonstrating pointer fields in structs
+     <LI> <A HREF="MyCode/StructSCUBA2.c"><TT>StructSCUBA2.c</TT></A>
+          - Structure of SCUBA data with input
+     </UL>
+
+<P>
+<LI> Arrays of structures.
+     <UL>
+     <LI> Defining a <TT>DataBankType</TT>
+          <PRE>
+#define POPULATION 10000
+
+typedef struct {
+    short Day,Month;
+    int Year;
+    int YearDay;
+    char MonthName[4];
+} DateType;
+
+typedef struct {
+    char Name[64],Address[128];
+    int Postcode;
+    double Salary;
+    DateType Birthdate;
+} AustraliaCardType;
+
+typedef AustraliaCardType DataBankType[POPULATION];
+
+DataBankType BigBrother; </PRE>
+     <LI> <A HREF="MyCode/StructSCUBA3.c"><TT>StructSCUBA3.c</TT></A>
+          - Array of structure of SCUBA data with input
+     <LI> Arrays of structure can be initialised like all arrays, each
+          element of the initialisation list being a structure
+          initialiser. 
+          <PRE>
+DataBankType BigBrother =
+    {{"Adam Ant",
+      "10 Hill St, Blues City",
+      1984,
+      2001.0,
+      {29,2,1945,60,"Feb"}},
+     {"Brian Bury",
+           etc
+                         }}}; </PRE>
+          As with arrays, the innner <TT>{}</TT> may be left out and
+          the array will be initialised in order. Not good style.
+     <LI> <A HREF="MyCode/StringsQSort.c"><TT>StringsQSort.c</TT></A>
+          - Program sorting structures using <TT>qsort</TT>. <TT>qsort</TT> has the following prototype <PRE>void qsort(void *base, size_t nitems, size_t size, int (*compar)(const void *, const void*))</PRE>.
+     <LI> If the array is initialised the size of the array may be
+          determined by the number of initialsers. For scanning through
+          the array it is still necessary to know how many elements
+          there are. This number can be found by dividing the size of
+          the array by the size of each element. e.g.
+          <PRE>
+typedef struct {
+    char Name[10];
+    long PhoneNumber;
+} PhoneBookEntryType;
+
+PhonebookEntryType PhoneBook[] =
+    {{"Fred",2726547},
+     {"Mary",3107654},
+           etc
+                    }};
+
+int NumberOfFriends = sizeof(PhoneBook)/sizeof(PhoneBookEntryType); </PRE>
+          Here's an abstracted way of doing that ...
+          <PRE>
+#define LENGTH(A) (sizeof(A)/sizeof(A[0]))
+
+int NumberOfFriends = LENGTH(PhoneBook);</PRE>
+     <LI> The size of a structure is not always the sum of the size of
+          its members as alignment constaints may leave holes in the
+          structure.
+     </UL>
+
+<P>
+<LI> Self referential structures
+     <UL>
+     <LI> Pointers inside structs (oooh, look, linked structures)
+     <LI> It is necessary to use the structure tag to define 
+          self-pointers, as the type of the structure is unknown at 
+          that point.
+     <LI> <A HREF="MyCode/SimpleLinkedList.c"><TT>SimpleLinkedList.c</TT></A>
+          - A simple linked list program
+     <LI> <A HREF="MyCode/LinkedList.c"><TT>LinkedList.c</TT></A>
+          - A heavier linked list program
+     <LI> <A HREF="MyCode/BinaryTree.c"><TT>BinaryTree.c</TT></A>
+          - A binary tree program
+     </UL>
+
+<P>
+<LI> Unions.
+     <UL>
+     <LI> A union is a variable which may hold (at different times)
+          objects of different types and sizes.
+     <LI> The syntax and access is based on structures.
+          <PRE>
+typedef union {
+    int I1;
+    float F1;
+    char *S1;
+} StrangeType;
+
+StrangeType StrangeVariable; </PRE>
+          <UL>
+          <LI> The <TT>StrangeVariable</TT> will be large enough to hold the 
+               largest of the three types. 
+          <LI> Any one of the fields may be assigned a value and the value 
+               retrieved as long as the usage is consistent. 
+          <LI> The programmer is responsible for maintaining this consistency.
+          </UL>
+     <LI> The access is again via the <TT>.</TT> and <TT>-></TT> operators.
+     <LI> The same operations are allowed on unions as on structures.
+     <LI> The addresses of the members will all be the same as the
+          address of the union.
+     <LI> <A HREF="MyCode/UnionSport.c"><TT>UnionSport.c</TT></A>
+          - Union of wild sports
+     <LI> Unions may be initialised via the first member of the union.
+     <LI> It is not possible to have a union that has "either two
+          integers or a float" as in Pascal, without nesting a structure
+          in the union.
+     </UL>
+
+<P>
+<LI> Bit fields.
+     <UL>
+     <LI> Bit fields are a set of adjacent bits, which can be used as
+          members of structures and unions.
+          <PRE>
+typedef struct {
+    char Name[20];
+    int Type:4;
+    signed int Class:3;
+    unsigned int UsedYet:1;
+    int NumberOfUses;
+} SymbolType;
+
+SymbolType SymbolDetails; </PRE>
+     <LI> The field type is always one of <TT>int</TT>, <TT>unsigned int</TT>, 
+          or <TT>signed int</TT>.
+     <LI> Bits fields are packed into implementation dependant allocation 
+          units, and may be packed in either direction. If a bit field does 
+          not fit into the allocation unit, it may be split or moved into 
+          the next unit.
+     <LI> <A HREF="MyCode/BitFields.c"><TT>BitFields.c</TT></A>
+          - Bit fields of a byte
+     <LI> Unnamed fields may be used as padding - useful when accessing
+          machine defined bits.
+     <LI> The field width 0 will force the next field to the next
+          allocation unit boundary.
+     <LI> The <TT>&</TT> operator may not be applied to bit fields.
+     <LI> Bit fields and ordinary fields may be freely intermixed.
+          Ordinary fields will always start at the next allocation unit
+          boundary.
+     <LI> Example: Device control
+          <UL>
+          <LI> Frequently device controllers (e.g. disk drives) and the 
+               operating system need to communicate at a low level. Device 
+               controllers contain several registers which may be packed 
+               together in one integer:
+               <P>
+               <IMG SRC="BitFields.GIF">
+               <P>
+          <LI> We could define this register easily with bit fields: 
+               <PRE>
+typedef struct {
+     unsigned Ready:1;
+     unsigned ErrorOccured:1;
+     unsigned DiskSpinning:1;
+     unsigned WriteProtect:1;
+     unsigned HeadLoaded:1;
+     unsigned ErrorCode:8;
+     unsigned Track:9;
+     unsigned Sector:5;
+     unsigned Command:5;
+} DiskRegisterType; </PRE>
+          <LI> To access values stored at a particular memory address, 
+               <TT>DiskRegisterMemory</TT> we can assign a pointer of the 
+               above structure to access the memory via: 
+               <PRE>
+DiskRegisterType *DiskRegister = (DiskRegisterType *) DiskRegisterMemory;
+               </PRE>
+          <LI> The disk driver code to access this is now relatively 
+               straightforward: 
+               <PRE>
+//----Define sector and track to start read 
+DiskRegister->Sector = NewSector;
+DiskRegister->Track = NewTrack;
+DiskRegister->Command = READ;
+
+//----Wait until operation done, ready will be true
+while (! DiskRegister->Ready) {
+}
+
+//----Check for errors
+if (DiskRegister->ErrorOccured) {
+//----Interrogate error_code for error type
+    switch (DiskRegister->ErrorCode) {
+        ....
+    }
+} </PRE>
+          <LI> A note of caution: Bit fields are a convenient way to express 
+               many difficult operations.  
+               However, bit fields do suffer from a lack of portability between 
+               platforms: integers may be signed or unsigned.
+               Many compilers limit the maximum number of bits in the bit 
+               field to the size of an integer which may be either 16-bit or 
+               32-bit varieties. 
+               Some bit field members are stored left to right others are stored
+               right to left in memory. 
+               If bit fields too large, next bit field may be stored 
+               consecutively in memory (overlapping the boundary between 
+               memory locations) or in the next word of memory.  
+               If portability of code is a premium you can use bit shifting and 
+               masking to achieve the same results but not as easy to express 
+               or read. For example: 
+               <PRE>
+unsigned int  *DiskRegister = (unsigned int *) DiskRegisterMemory;
+
+//----See if disk error occured
+DiskErrorOccured = (DiskRegister & 0x40000000) >> 31; </PRE>
+          </UL>
+     </UL>
+
+<P>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write a program that gets the high and low order bytes of an
+     unsigned <TT>int</TT>.
+<LI> Write a suite of functions for manipulating queues. You should
+     provide functions to add to the queue, remove from the queue,
+     and test if the queue is empty. Each member of the queue may
+     hold either an <TT>int</TT>, a <TT>double</TT> or a string. Use a 
+     bit field to indicate the nature of the contents.
+     <P>
+     Write an interactive program that allows the user to place
+     items (as above) into, or remove items from, a queue.
+<LI> Exercise 12386<BR>
+     Write program using enumerated types which when given today's date will
+     print out tomorrow's date in the for 31st January, for example.
+<LI> Exercise 12387<BR>
+     Write a simple database program that will store a persons details such as
+     age, date of birth, address etc.
+<LI> Exercise 12507<BR>
+     Write a function that prints out an 8-bit (unsigned char) number in binary
+     format.
+<LI> Exercise 12514<BR>
+     Write a function <TT>setbits(x,p,n,y)</TT> that returns <TT>x</TT> with 
+     the <TT>n</TT> bits that begin at position <TT>p</TT> set to the 
+     rightmost <TT>n</TT> bits of an <TT>unsigned char</TT> variable
+     <TT>y</TT> (leaving other bits unchanged). 
+     E.g. if <TT>x = 10101010</TT> (170 decimal) and <TT>y = 10100111</TT>
+     (167 decimal) and <TT>n = 3</TT> and <TT>p = 6</TT> say then you need 
+     to strip off 3 bits of <TT>y</TT> (111) and put them in <TT>x</TT> at
+     position <TT>10xxx010</TT> to get answer <TT>10111010</TT>. 
+     Your answer should print out the result in binary form although input 
+     can be in decimal form. 
+     Your output should be like this: 
+     <PRE>
+x = 10101010 (binary)
+y = 10100111 (binary)
+setbits n = 3, p = 6 gives x = 10111010 (binary)
+     </PRE>
+<LI> Exercise 12515<BR>
+     Write a function that inverts the bits of an <TT>unsigned char x</TT>
+     and stores answer in <TT>y</TT>. 
+     Your answer should print out the result in binary form although input 
+     can be in decimal form. 
+     Your output should be like this: 
+     <PRE>
+x = 10101010 (binary)
+x inverted = 01010101 (binary)
+     </PRE>
+<LI> Exercise 12516<BR>
+     Write a function that rotates (NOT shifts) to the right by <TT>n</TT> 
+     bit positions the bits of an <TT>unsigned char x</TT>, i.e. no bits 
+     are lost in this process. 
+     Your answer should print out the result in binary form although input 
+     can be in decimal form. 
+     Your output should be like this: 
+     <PRE>
+x = 10100111 (binary)
+x rotated by 3 = 11110100 (binary)
+     </PRE>
+<LI> Exercise 12478<BR>
+     Write a program that reads the following structure and sorts the data by
+     keyword using <TT>qsort</TT> 
+     <PRE>
+typedef struct {
+            char keyword[10];
+            int other_data;
+        } Record;
+     </PRE>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> <TT>typedef</TT> a structure suitable for holding information about
+     a radio station, including it's 4 character code name (e.g., ZETA), 
+     it's catch phrase (e.g., "ZETA Rocks"), it's frequency (e.g., 94.9),
+     and the number of employees (e.g., 27).
+<LI> Given the structure definitions
+     <PRE>
+typedef struct {
+    int Counter;
+    float Average;
+} hit_rate_type;
+typdef struct {
+    char *Name;
+    hit_rate_type Killer;
+} murder_type;
+
+murder_type *JackTheRipper; </PRE>
+    write code that <TT>malloc</TT>s memory for <TT>JackTheRipper</TT>,
+    stores the name "Jack the Ripper" in the <TT>Name</TT> field, and
+    stores 99 in the <TT>Counter</TT>.
+<LI> Explain the difference between a <TT>union</TT> and <TT>struct</TT>
+<LI> Assuming that an int occupies 2 bytes, what is the output from the 
+     following code?
+     <PRE>
+typedef union {
+     int WholeThing;
+     struct {
+          unsigned Top:8;
+          unsigned Middle:4;
+          unsigned Bottom:4;
+          } Parts;
+} int_parts_type;
+
+int_parts_type MyParts;
+
+MyParts.WholeThing = 0x1BB2;
+printf("%d\n",MyParts.Parts.Middle); </PRE>
+<LI> What is an enumerated type?
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

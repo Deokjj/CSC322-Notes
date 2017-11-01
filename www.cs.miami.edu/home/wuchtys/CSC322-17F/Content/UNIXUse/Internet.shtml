@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<TITLE>UNIX Internet</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX Internet</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> The Internet
+     <UL>
+     <LI> Packet Switched
+          <UL>
+          <LI> Data is transmitted in packets 
+          <LI> Packet = data + destination information (e.g. IP address) 
+          <LI> The packet is sent from one machine to the next until the
+               destination machine is reached 
+          <LI> Routers coordinate the network load and transmissions of
+               packets 
+          </UL>
+     <LI> IP numbers
+          <UL>
+          <LI> Each machine has a 32 bit IP number, e.g., 137.219.47.69
+<!--
+          <LI> IP number has 4 octets, in two parts: network and machine
+          <LI> 1st octet 1-127
+               <UL>
+               <LI> Class A network
+               <LI> Network number in 1st octet, machine number in others
+               <LI> 127 networks
+               <LI> 16M machines
+               </UL>
+          <LI> 1st octet 128-191
+               <UL>
+               <LI> Class B network
+               <LI> Network number in 1st and 2nd octet, machine number in 
+                    others
+               <LI> ~16K networks
+               <LI> 64K machines
+               </UL>
+          <LI> 1st octet 192-223
+               <UL>
+               <LI> Class C network
+               <LI> Network number in 1st to 3rd octet, machine number in 
+                    last
+               <LI> ~2M networks
+               <LI> 255 machines
+               </UL>
+          <LI> 1st octet 224 onward
+               <UL>
+               <LI> Multicast network
+               </UL>
+-->
+          </UL>
+     <LI> Logical
+          <UL>
+          <LI> Hierarchy of domains
+          <LI> Names are resolved to IP numbers
+               <UL>
+               <LI> The DNS hierarchy
+               </UL>
+          <LI> Routers and gateways forward packets to the required IP address
+          </UL>
+     <LI> Protocols
+          <UL>
+          <LI> Network level
+               <UL>
+               <LI> IP - Smallest data level. Unreliable and unordered
+               <LI> RIP - For sharing routing data
+               <LI> ARP - For resolving names to addresses
+               </UL>
+          <LI> Transport level
+               <UL>
+               <LI> UDP - On IP to make it reliable, with service multiplexing
+                    via ports concept
+                    <UL>
+                    <LI> See <TT>/etc/services</TT> for known ports up to 1024
+                    </UL>
+               <LI> TCP - On IP to make it connection based, reliable, and
+                    stream-oriented (ordered packets)
+               </UL>
+          </UL>
+     </UL>
+
+<P>
+<LI> Some useful commands
+     <UL>
+     <LI> <TT>ping <EM>machine</EM></TT> to check if 
+          <TT><EM>machine</EM></TT> is reachable
+     <LI> <TT>nslookup</TT> to get information about a machine on the net.
+          <UL>
+          <LI> Plain <TT>nslookup</TT> gets IP address of computer
+          <LI> Within <TT>nslookup</TT>,
+               <TT>ls -d <EM>domain</EM></TT> lists all computers in the domain
+          </UL>
+     <LI> <TT>traceroute <EM>machine</EM></TT> to print the route that 
+          packets take to <TT><EM>machine</EM></TT>
+     <LI> <TT>netstat</TT> symbolically displays the contents of various network
+          related data structures
+          <UL>
+          <LI> Plain <TT>netstat</TT> tells about all internet connections
+          <LI> <TT>netstat -w 1 -d</TT> tells about packets every 1 second
+          <LI> <TT>netstat -s</TT> gives a summary of network activity
+          </UL>
+     <LI> <TT>finger <EM>login</EM></TT> or
+          <TT>finger <EM>login@machine</EM></TT> shows details for the
+          <TT><EM>login</EM></TT>
+     <LI> <TT>talk <EM>user@machine</EM></TT> to chat to
+          <TT><EM>user@machine</EM></TT>
+     <LI> <TT>ssh <EM>machine</EM> <EM>command</EM></TT> 
+          securely runs <TT><EM>command</EM></TT> on 
+          <TT><EM>machine</EM></TT> where you have an account. If the
+          <TT><EM>command</EM></TT> is omitted you get a login prompt.
+     <LI> <TT>scp <EM>machine1:filename1</EM> 
+          <EM>machine2:filename2</EM></TT> to copy files between 
+          machines 
+     </UL>
+
+<P>
+</UL>
+
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+
+<UL>
+</UL>
+
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+
+<UL>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

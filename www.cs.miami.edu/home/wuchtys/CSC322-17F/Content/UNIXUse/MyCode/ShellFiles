@@ -1,0 +1,42 @@
+#!/bin/tcsh
+#------------------------------------------------------------------------------
+set FileProperties = ( \
+    "e-exists" \
+    "f-plain" \
+    "d-directory" \
+    "l-sybmolic" \
+    "r-read" \
+    "w-write" \
+    "x-execute" \
+    "X-path" \
+    "o-owned" \
+    "z-zero" \
+    "s-nonzero" \
+)
+
+#----Do for each file on the command line
+foreach File ($*)
+    echo -n "$File "
+#----Check if it exists
+    if (-e $File) then
+        echo -n "exists "
+#----Check the type
+        if (-f $File) then
+            echo -n "plain "
+        else if (-d $File) then
+            echo -n "directory "
+        else if (-l $File) then
+            echo -n "symbolic link "
+        endif
+#----Check the permissions
+        if (-r $File) echo -n "read "
+        if (-w $File) echo -n "write "
+        if (-x $File) echo -n "execute "
+        if (-X $File) echo -n "execute in path "
+        echo -n "access"
+    else
+        echo -n "does not exist"
+    endif
+    echo
+end
+#------------------------------------------------------------------------------

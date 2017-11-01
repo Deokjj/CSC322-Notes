@@ -1,0 +1,43 @@
+#!/bin/csh
+#------------------------------------------------------------------------------
+set Flag = "-w"
+
+while ($#argv > 0 && "$1" =~ -*)
+    set Flag = $1
+    echo "Flag $Flag"
+    shift
+end
+
+if ($#argv == 0) then
+    echo "ERROR: No files to process"
+    exit
+endif
+
+echo "============================================================="
+@ Count = 0
+foreach File ($*)
+    if (-e $File && -f $File && -r $File) then
+        set FileCount = `wc $Flag $File`
+        set FileCount = $FileCount[1]
+        echo "$File has $FileCount"
+        @ Count = $Count + $FileCount
+    else
+        echo "WARNING: $File does not exist, or is not plain, or is unreadable"
+    endif
+end
+
+echo -n $Count
+switch ($Flag)
+    case "-c":
+        echo " characters"
+        breaksw
+    case "-w":
+        echo " words"
+        breaksw
+    case "-l":
+        echo " lines"
+        breaksw
+endsw
+
+echo "============================================================="
+#------------------------------------------------------------------------------

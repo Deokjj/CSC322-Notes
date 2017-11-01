@@ -1,0 +1,334 @@
+<HTML>
+<HEAD>
+<TITLE>Welcome to UNIX</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Welcome to UNIX</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Online Documentation
+     <UL>
+     <LI> Traditionally available on every UNIX system, quite terse
+     <LI> Usage: <TT>man [section] &lt;command></TT>
+     <LI> Sections (may vary by UNIX flavour):
+          <OL>
+          <LI> User commands
+          <LI> System calls
+          <LI> C library routines
+          <LI> Device drivers and network interfaces
+          <LI> File formats
+          <LI> Games and demos
+          <LI> Misc. (ASCII, macro packages, tables, etc)
+          <LI> Commands for system administration
+          <LI> Locally installed manual pages. (i.e. X11)
+          </OL>
+     <LI> <TT>man -k &lt;term></TT> gives you a list of pages relevant to 
+          &lt;term>
+     <LI> GNU info files
+          <UL>
+          <LI> Available with most Linux systems and most GNU packages
+          <LI> Usage: <TT>info &lt;command></TT>, then browse interactively
+          <LI> You can also use the info reader build into GNU Emacs
+          </UL>
+     </UL>
+<P>
+<LI> Users
+     <UL>
+     <LI> Each line of the <TT>/etc/passwd</TT> file identifies a user
+          <PRE>
+root:*:0:0:Charlie &:/root:/bin/csh
+toor:*:0:0:Bourne-again Superuser:/root:
+daemon:*:1:1:Owner of many system processes:/root:/usr/sbin/nologin
+news:*:8:8:News Subsystem:/:/usr/sbin/nologin
+man:*:9:9:Mister Man Pages:/usr/share/man:/usr/sbin/nologin
+sshd:*:22:22:Secure Shell Daemon:/var/empty:/usr/sbin/nologin
+mailnull:*:26:26:Sendmail Default User:/var/spool/mqueue:/usr/sbin/nologin
+www:*:80:80:World Wide Web Owner:/nonexistent:/usr/sbin/nologin
+nobody:*:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
+tptp:*:641:3001:TPTP Project:/home/tptp:/bin/tcsh
+urban:*:1025:15:Josef Urban:/home/urban:/bin/tcsh
+duncan:*:646:15:Christian A. Duncan,Ungar 441,284-2254:/home/duncan:/bin/tcsh
+schulz:*:1003:15:Stephan Schulz:/home/schulz:/bin/tcsh
+jennifer:*:1023:15:Jennifer Hwang:/home/jennifer:/bin/tcsh
+julie:*:1028:15:Julie Garcia:/home/julie:/bin/tcsh
+esacks:*:1018:15:Elisha Sacks:/home/esacks:/bin/tcsh
+secretary:*:1000:15:CS secretary:/home/secretary:/bin/tcsh
+irina:*:556:15:Irina Kaliman:/home/irina:/bin/tcsh
+marcus:*:1001:15:Joe Clarke:/home/marcus:/bin/tcsh
+hk:*:1004:15:Huseyin Kocak:/home/hk:/bin/tcsh
+uttam:*:1027:15:Uttam Sarkar:/home/uttam:/bin/tcsh
+ogihara:*:1007:15:Mitsunori Ogihara:/home/ogihara:/bin/tcsh
+ntsinoremas:*:1014:15:Nicholas Tsinoremas:/home/ntsinoremas:/bin/tcsh
+sarkar:*:510:15:Dilip Sarkar:/home/sarkar:/bin/csh
+bora:*:1021:15:Borivoje Djokic:/home/bora:/bin/tcsh
+burt:*:542:15:Burt Rosenberg:/home/burt:/bin/tcsh
+jef:*:634:15:jef moskot:/home/jef:/bin/csh
+vjm:*:548:15:Victor Milenkovic:/home/vjm:/bin/csh
+strac:*:1017:15:Steven Trac:/home/strac:/bin/tcsh
+dimitris:*:1009:15:Dimitris Papamichail:/home/dimitris:/bin/tcsh
+geoff:*:501:15:Geoff Sutcliffe,445,305 2842158:/home/geoff:/bin/tcsh </PRE>
+     <LI> Each user has
+          <UL>
+          <LI> Name
+          <LI> Password
+          <LI> UID
+          <LI> GID (primary)
+          <LI> Personal information
+          <LI> Home directory
+          <LI> Shell program
+          </UL>
+     <LI> User name and password
+          <UL>
+          <LI> The user name is used to look up a line in <TT>/etc/passwd</TT>,
+               to obtain the user information.
+          <LI> On NIS served systems the password file is stored centrally
+          <LI> The password field contains either the encrypted password, or
+               an asterisk in a shadowed password system to eliminate brute
+               force password attacks.
+          <LI> <TT>passwd</TT> and <TT>yppasswd</TT> change your password<BR>
+               <TT>ypcat passwd</TT> shows the password information for 
+               systems running NIS (revealing that the shadow password system 
+               is rendered useless in some systems running NIS, e.g., Linux 
+               but not FreeBSD).
+          <LI> Password encryption with <A HREF="http://en.wikipedia.org/wiki/Salt_(cryptography)"> salt</A>, and checking on login
+          </UL>
+     <LI> User ids and user groups
+          <UL>
+          <LI> Every user has a unique id, as given by the third field of the
+               <TT>/etc/passwd</TT>.
+          <LI> The user id, not the user name, is the identifier for users.
+          <LI> Groups are used in UNIX to give a group of users the ability to 
+               access a common resource, e.g., a file, or a device.
+          <LI> Every user belongs to a primary group, and possible many other
+               secondary groups.
+          <LI> <TT>id</TT> shows the user id and which groups a user belongs to
+          <LI> <TT>groups</TT> shows which groups a user belongs to
+          </UL>
+     <LI> Shell and home directory
+          <UL>
+          <LI> These are used when starting the users' shell - see below.
+          </UL>
+     <LI> Super-users
+          <UL>
+          <LI> Always have numerical user id 0
+          <LI> Normally have user name <TT>root</TT> (but there can be 
+               more than one user name associated with UID 0)
+          <LI> Have unlimited access to all files and resources
+          <LI> Can seriously damage the system!
+          </UL>
+     <LI> Normal users
+          <UL>
+          <LI> Can only access files if they have the appropriate permissions
+          <LI> Can belong to one or more groups. Users within a group 
+               can share files
+          <LI> Usually cannot damage the system or other users files!
+          </UL>
+     <LI> <TT>who</TT> lists users currectly logged in<BR>
+          <TT>whoami</TT> tells who this shell belongs to<BR>
+          <TT>finger</TT> tells you information about a user (name)<BR>
+     </UL>
+<P>
+<LI> Processes
+     <UL>
+     <LI> UNIX is a multi-tasking system, i.e. it can run multiple programs 
+          at once. 
+          A running program (with its data) is called a process.
+          <UL>
+          <LI> <TT>top</TT> is useful for watching processes
+          <LI> <TT>ps</TT> lists processes directly
+          <LI> <TT>ps</TT> has some useful options ... read the <TT>man</TT>
+               page
+          </UL>
+     <LI> Process creation
+          <UL>
+          <LI> Unless the system is being bootstrapped a process can only
+               come into existance as the child of another process. 
+          <LI> Every UNIX process has a unique PID, starting from 0 and
+               recycled.
+          <LI> The first process created is "hand tooled" by the boot process:
+               <UL>
+               <LI> Power on and run BIOS
+               <LI> Read the boot program from the boot block (block 0) of the
+                    root file system.
+               <LI> Boot program loads kernel (<TT>/kernel</TT> or 
+                    <TT>/unix</TT> or <TT>/boot</TT> (GRUB), etc.)
+               <LI> Kernel executes and creates process 0.
+               <LI> Note: There may be more layers of bootstrapping.
+               <LI> Note: Process 0 does not show in <TT>top</TT>/<TT>ps</TT>
+                    on some UNIX variants.
+               </UL>
+          <LI> The first process creates the <TT>init</TT> process, which 
+               is the ancestor of all further processes, and always has PID 1. 
+          <LI> The first process then becomes the <TT>sched</TT> (Sys V) or 
+               <TT>swapper</TT> (BSD) process, which is responsible for 
+               bringing processes into memory.
+          <LI> <TT>init</TT> forks off processes that run
+               <TT>getty</TT>, which monitors terminal lines and allows 
+               users to log in.
+          <LI> Upon login, the command shell replaces the <TT>getty</TT>
+               program.. 
+               The command shell for a given user is specified in the 
+               <TT>/etc/passwd</TT> file. 
+          <LI> The processes form a tree, and every process has a PPID.
+               Strangely, the PPID of process 0 is also 0.
+          </UL>
+     <LI> Process components
+          <UL>
+          <LI> Text segment
+          <LI> Data segment
+          <LI> Stack and heap
+          <LI> Process control block
+          </UL>
+     <LI> Processes and the UNIX kernel
+          <UL>
+          <LI> UNIX processes talk to the UNIX kernel using system calls.
+          <LI> UNIX processes can only "do the math" by themselves.
+               Everything else requires a system call to the kernel.
+          </UL>
+     <LI> Every process has a current working directory in the file system.
+          <UL>
+          <LI> The initial working directory of the command shell is 
+               the home directory specified in the <TT>/etc/passwd</TT> 
+               file.
+          <LI> <TT>pwd</TT> tells the current working directory of the
+               shell<BR>
+          <LI> <TT>cd</TT> changes the current working directory of the
+               shell<BR>
+          <LI> The current working directory is inherited by child processes.
+          </UL>
+     <LI> Process ownership
+          <UL>
+          <LI> Every process has a real user ID (the UID), an effective user ID
+               (the EUID), a real user group ID (the GID), and an effective 
+               user group ID (the EGID). 
+          <LI> The real IDs are used for accounting and user-user 
+               communication, while the effective IDs are used to control 
+               access to files and control signal sending.
+          <LI> The user ID and primary group ID are assigned to the user's 
+               shell as its initial IDs. 
+          <LI> Ids are inherited by child processes.
+          </UL>
+     <LI> The Environment of a Process
+          <UL>
+          <LI> The environment of a  process includes details of the home
+               directory, path names to be searched for the program, the type
+               of terminal being used, the user name, the shell being run,
+               etc.
+          <LI> Common environment variables include:<BR>
+               <TT>USER</TT> <TT>HOME</TT> <TT>PATH</TT> <TT>TERM</TT> 
+               <TT>SHELL</TT> <BR>
+               <TT>EMAIL</TT> <TT>EDITOR</TT> <TT>PRINTER</TT>
+          <LI> <TT>printenv</TT> lists the current environment variables<BR>
+               <TT>setenv</TT> sets environment variables<BR>
+               <TT>unsetenv</TT> clears environment variables
+          <LI> Environment variables are inherited by child processes
+          </UL>
+     <LI> Signals
+          <UL>
+          <LI> <TT>kill</TT> can be used to (have the OS) send a signal to a 
+               process
+          <LI> The effect depends on the signal and the process.
+               Examples are to terminate or suspend the process.
+          <LI> <TT>^C</TT> is a shortcut for <TT>kill -INT</TT><BR>, which
+               normally terminates the process
+          <LI> <TT>^Z</TT> is a shortcut for <TT>kill -TSTP</TT><BR>, which
+               normally suspends the process (<TT>kill -CONT</TT> to restart).
+          <LI> <TT>kill -KILL</TT> really means it
+          </UL>
+     <LI> Process termination
+          <UL>
+          <LI> The process tells the OS it's done, and passes the OS an
+               exit code.
+          <LI> The process becomes a zombie.
+          <LI> The parent has to clean up the zombie (the shell does this
+               automatically), at which point it can collect the exit code.
+          <LI> Orphans (including zombies) are adopted by <TT>init</TT>
+          </UL>
+     </UL>
+
+<P>
+<LI> Users to Processes to Hardware
+     <BR>
+     <IMG SRC="Pictures/SWToHW.GIF">
+     <UL>
+     <LI> Shell
+          <UL>
+          <LI> Provides a text interface
+          <LI> Provides direct access to
+               <UL>
+               <LI> Process control
+               <LI> File system
+               <LI> UNIX tools
+               </UL>
+          <LI> Provides many options, techniques, configurations
+          <LI> Suitable for Computer Science
+          </UL>
+     <LI> Windowing layer
+          <UL>
+          <LI> Hides the text interface
+          <LI> Hides functionality
+          <LI> Not suitable for Computer Science (woos button pushers)
+          <LI> Is useful for providing improved text interfaces and
+               running graphical applications, but not for OS access.
+          </UL>
+     </UL>
+
+<P>
+</UL>
+
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Make sure you can answer these questions
+     <UL>
+     <LI> Give a reason for and against having super-user access on a UNIX
+          system.
+     <LI> What is your UID and GID on lee?
+     <LI> How many primary user groups does a user have?
+     <LI> How many groups can a user belong to?
+     <LI> Have you used the <TT>top</TT> command yet? If not, why not?
+     <LI> What is a zombie process?
+     <LI> Which process adopts orphans?
+     <LI> What kind of UNIX users use a GUI interface?
+     <LI> How does an application program make the hardware do something?
+     <LI> For what <TT>kill</TT> parameters are <TT>^C</TT> and <TT>^Z</TT> 
+          shortcuts?
+     <LI> What would the command <TT>kill -9 yourprogram</TT> do?
+     </UL>
+</UL>
+
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> How is the information about each UNIX user stored?
+<LI> What seven items of information are stored about each user of a UNIX
+     system?
+<LI> What file contains the information about users in a non-NIS based
+     UNIX system?
+<LI> What command lists the users in an NIS based UNIX system?
+<LI> What UID does the super-user have?
+<LI> What does the <TT>who</TT> command do?
+<LI> What command shows the groups of the owner of the process?
+<LI> Define a process.
+<LI> How is the first process on a UNIX system created, and what is it
+     (eventually) called?
+<LI> What is the name of the important process whos PID is 1?
+<LI> What do the <TT>getty</TT> processes do?
+<LI> What does the <TT>pwd</TT> command do?
+<LI> What does the <TT>cd</TT> command do?
+<LI> Explain what the UID and EUID of a process are used for.
+<LI> What does the <TT>id</TT> command tell?
+<LI> What would the command <TT>kill -9 90210</TT> do?
+<LI> What are environment variables?
+<LI> What commands display, set, and remove environment variables?
+<LI> What does the command <TT>man man</TT> provide?
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

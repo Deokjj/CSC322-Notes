@@ -1,0 +1,217 @@
+<HTML>
+<HEAD>
+<TITLE>Mathematics</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Mathematics</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Mathematics is relatively straightforward library to use. 
+     You must <TT>#include &lt;math.h&gt;</TT> and must link in the math
+     library at compilation:
+     <PRE>
+gcc mathprog.c -o mathprog -lm
+     </PRE>
+     Some things are defined in <TT>stdlib.h</TT> instead of <TT>math.h</TT>.
+     <P>
+
+<LI> Math constants
+     <UL>
+     <LI> The <TT>math.h</TT> library defines many (often neglected) 
+          constants. It is always advisable to use these definitions.
+     <LI> <TT>M_E</TT> 
+          - The base of natural logarithms (e).
+     <LI> <TT>M_LOG2E</TT> 
+          - The base-2 logarithm of e.
+     <LI> <TT>M_LOG10E</TT> 
+          - The base-10 logarithm of e.
+     <LI> <TT>M_LN2</TT> 
+          - The natural logarithm of 2.
+     <LI> <TT>M_LN10</TT> 
+          - The natural logarithm of 10.
+     <LI> <TT>M_PI  </TT> 
+          - Pi
+     <LI> <TT>M_PI_2 </TT> 
+          - Pi/2
+     <LI> <TT>M_PI_4</TT> 
+          - Pi/4
+     <LI> <TT>M_1_PI</TT> 
+          - 1/Pi
+     <LI> <TT>M_2_PI</TT> 
+          - 2/Pi
+     <LI> <TT>M_2_SQRTPI</TT> 
+          - 2/sqrt(Pi)
+     <LI> <TT>M_SQRT2</TT> 
+          - The positive square root of 2.
+     <LI> <TT>M_SQRT1_2</TT> 
+          - The positive square root of 1/2.
+     <LI> <TT>HUGE</TT> or <TT>MAXFLOAT</TT>
+          - The  maximum  value of a <TT>float</TT>
+     <LI> <TT>HUGE_VAL</TT> 
+          - positive infinity.
+     </UL>
+     <P>
+
+<LI> Common maths functions
+     <UL>
+     <LI> Absolutes, fractions, remainders
+          <UL>
+          <LI> <TT>int abs(int x);</TT>
+               - Compute absolute value of x
+          <LI> <TT>long labs(long x);</TT>
+               - Compute absolute value of x
+          <LI> <TT>double fabs(double x);</TT>
+               - Compute absolute value of x
+          <LI> <TT>double rint(double x);</TT> 
+               - Get integral value nearest to x
+          <LI> <TT>double ceil(double x);</TT> 
+               - Get smallest integral value that exceeds x
+          <LI> <TT>double floor(double x);</TT>
+               - Get largest integral value less than x
+          <LI> <TT>div_t div(int number,int denom)</TT> 
+               - Divide one integer by another and get quotient and remainder
+          <LI> <TT>ldiv_t ldiv(long number,long denom)</TT> 
+               - Divide one integer by another and get quotient and remainder
+          <LI> <TT>double fmod(double x,double y)</TT> 
+               - Divide x by y with integral quotient and return remainder
+          <LI> <TT>double frexp(double x,int *expptr)</TT> 
+               - Breaks down x into mantissa and exponent (base 2)
+          <LI> <TT>double ldexp(double x,int exp)</TT> 
+               - Computes x * 2<SUP>exp</SUP>
+          <LI> <TT>double modf(double x,double *intptr)</TT> 
+               - Breaks x into fractional and integer parts.
+          </UL>
+     <LI> Trigonometric functions
+          <UL>
+          <LI> <TT>double acos(double x)</TT> 
+               - Compute arc cosine of x. 
+          <LI> <TT>double asin(double x)</TT> 
+               - Compute arc sine of x.
+          <LI> <TT>double atan(double x)</TT> 
+               - Compute arc tangent of x. 
+          <LI> <TT>double atan2(double y, double x)</TT> 
+               - Compute arc tangent of y/x.
+          <LI> <TT>double cos(double x)</TT> 
+               - Compute cosine of angle in radians.
+          <LI> <TT>double cosh(double x)</TT> 
+               - Compute the hyperbolic cosine of x.
+          <LI> <TT>double sin(double x)</TT> 
+               - Compute sine of angle in radians. 
+          <LI> <TT> double sinh(double x)</TT> 
+               - Compute the hyperbolic sine of x.
+          <LI> <TT>double tan(double x)</TT> 
+               - Compute tangent of angle in radians.
+          <LI> <TT>double tanh(double x)</TT> 
+               - Compute the hyperbolic tangent of x.
+          <LI> <A HREF="MyCode/SinCurve.c"><TT>SinCurve.c</TT></A>
+               - Program using some maths functions
+          </UL>
+     <LI> Exponents
+          <UL>
+          <LI> <TT>double exp(double x)</TT> 
+               - Compute exponential of x
+          <LI> <TT>double log(double x)</TT> 
+               - Compute log(x).
+          <LI> <TT>double log10(double x )</TT> 
+               - Compute log to the base 10 of x.
+          <LI> <TT>double pow(double x, double y)</TT> 
+               - Compute x raised to the power y.
+          <LI> <TT>double sqrt(double x)</TT> 
+               - Compute the square root of x.
+          </UL>
+     <LI> Random numbers
+          <UL>
+          <LI> <TT>int rand(void)</TT> 
+               - Returns a random number in the range 0 to <TT>RAND_MAX</TT>, 
+               which is at least 32767.
+          <LI> <TT>void srand(unsigned int seed)</TT> 
+               - Uses seed for a new sequence of random numbers. 
+               The initial seed is 1.
+          <LI> <A HREF="MyCode/RandomX.c"><TT>RandomX.c</TT></A>
+               - Program that uses random numbers
+          </UL>
+     </UL>
+     <P>
+
+<LI> There are also a number a machine dependent values defined in
+     <TT>values.h</TT> 
+     <UL>
+     <LI> BITSPERBYTE - Number of bits in a byte
+     <LI> MAXSHORT - Largest possible <TT>short</TT>
+     <LI> MAXINT - Largest possible <TT>int</TT>
+     <LI> MAXLONG - Largest possible <TT>long</TT>
+     <LI> DMAXEXP - The maximum exponent of a double
+     <LI> FMAXEXP - The maximum exponent of a float
+     <LI> DMINEXP - The minimum exponent of a double
+     <LI> FMINEXP - The minimum exponent of a float
+     <LI> MAXDOUBLE - The largest double
+     <LI> MAXFLOAT - The largest float
+     <LI> MINDOUBLE - The smallest double
+     <LI> MINFLOAT - The smallest float
+     </UL>
+     <P>
+
+<LI> There are also a number a machine dependent values defined in
+     <TT>limits.h</TT>
+     <UL>
+     <LI> CHAR_BIT - Max # of bits in a "char"
+     <LI> SCHAR_MIN - Min value of a "signed char"
+     <LI> SCHAR_MAX - Max value of a "signed char"
+     <LI> UCHAR_MAX - Max value of an "unsigned char"
+     <LI> SHRT_MIN - Min value of a "short int"
+     <LI> SHRT_MAX - Max value of a "short int"
+     <LI> USHRT_MAX - Max value of "unsigned short int"
+     <LI> INT_MIN - Min value of an "int"
+     <LI> INT_MAX - Max value of an "int"
+     <LI> UINT_MAX - Max value of an "unsigned int"
+     <LI> LONG_MIN - Min value of a "long int"
+     <LI> LONG_MAX - Max value of a "long int"
+     <LI> ULONG_MAX - Max value of "unsigned long int"
+     <LI> WORD_BIT - Number of bits in a "word" or "int"
+     <LI> LONG_BIT - Number of bits in a "long"
+     <LI> DBL_DIG - Digits of precision of a "double"
+     <LI> DBL_MAX - Max decimal value of a "double"
+     <LI> DBL_MIN - Min decimal value of a "double"
+     <LI> FLT_DIG - Digits of precision of a "float"
+     <LI> FLT_MAX - Max decimal value of a "float"
+     <LI> FLT_MIN - Min decimal value of a "float"
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> What compiler flag need to be given to use mathematics functions in C?
+<LI> How could the following program be improved?
+     <PRE>
+#include &lt;stdio.h>
+
+#define PI 3.14159265
+
+int main(int argc,char *argv[]) {
+
+    double Radius,Area;
+
+    Radius = 27;
+    Area = PI * Radius * Radius;
+    printf("%f\n",Area);
+
+    return(0);
+} </PRE>
+<LI> How can you find out the number of digits of precision a <TT>double</TT>
+     variable supports?
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

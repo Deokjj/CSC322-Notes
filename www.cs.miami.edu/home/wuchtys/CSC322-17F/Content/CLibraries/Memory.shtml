@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<TITLE>Memory</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Memory</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Memory allocation
+     <UL>
+     <LI> ANSI C provides several functions for heap manipulation,
+          declared in <TT>stdlib.h</TT>.
+     <LI> void *malloc(size_t size)
+          <UL> 
+          <LI> <TT> malloc</TT> returns a pointer to a block of memory whose 
+               size (as measured by <TT>sizeof</TT>) is <TT>size</TT>, or 
+               <TT>NULL</TT> if unsuccessful. 
+          <LI> The memory is uninitialised. 
+          <LI> Returns a void pointer, which must be coerced to an appropriate 
+               type.
+          <LI> void free(void *space)
+               <UL> 
+               <LI> Frees memory assigned by <TT>malloc</TT> (and 
+                    <TT>realloc</TT> and <TT>calloc</TT>)
+               <LI> <TT>space</TT> must be a pointer returned by such 
+                    a function.
+               </UL> 
+          <LI> <A HREF="MyCode/MallocPrimitive.c">
+               <TT>MallocPrimitive.c</TT></A>
+               - Program that <TT>malloc</TT>s an <TT>int</TT>
+          <LI> <A HREF="MyCode/MallocFunction.c">
+               <TT>MallocFunction.c</TT></A>
+               - Program that uses a function for <TT>malloc</TT>
+          <LI> <A HREF="MyCode/RaggedArray.c">
+               <TT>RaggedArray.c</TT></A>
+               - Dynamic ragged array
+          </UL> 
+     <LI> <TT>void *calloc(int number,size_t size)</TT>
+          <UL> 
+          <LI> <TT>calloc</TT> returns a pointer that starts a block of memory 
+               large enough to hold number elements of size, or <TT>NULL</TT> 
+               if an error occurs. 
+          <LI> The memory is initialised to 0.
+          <LI> <A HREF="MyCode/CallocPrimitive.c">
+               <TT>CallocPrimitive.c</TT></A>
+               - Program that <TT>calloc</TT>s for a string
+          </UL>
+     <LI> <TT>void *realloc(void *old,size_t size)</TT>
+          <UL> 
+          <LI> <TT>realloc</TT> changes the size of a block of memory 
+               previously allocated with <TT>malloc</TT> or <TT>calloc</TT> 
+               whilst preserving the contents. 
+          <LI> The new size is <TT>size</TT> and <TT>old</TT> points to the 
+               currently allocated block. 
+          <LI> Returns a pointer to the new block or <TT>NULL</TT> if
+               unsuccessful, in which case old is unchanged. 
+          <LI> <A HREF="MyCode/DynamicArray.c"><TT>DynamicArray.c</TT></A>
+               - Program that <TT>realloc</TT>s an array
+          <LI> If the new space is larger, the extra memory is uninitialised.
+          <LI> The new block may be in a different place - beware if you have
+               multiple pointers to the old block.
+          </UL> 
+     <LI> Memory leaks
+          <UL>
+          <LI> If not <TT>free</TT>d, allocated space remains allocated 
+               until the program ends. 
+               If there is no pointer to it, it is useless; this is called 
+               a memory leak.
+          <LI> <A HREF="MyCode/MemoryLeak.c"><TT>MemoryLeak.c</TT></A>
+               - Program that leaks
+          <LI> The <TT>valgrind</TT> utility is useful for checking for
+               memory leaks (Try <TT>valgrind --leak-check=full MemoryLeak</TT>).
+          </UL> 
+     </UL>
+     <P>
+
+<LI> Memory Operations
+     <UL>
+     <LI> Defined in <TT>memory.h</TT> and <TT>string.h</TT>
+     <LI> <TT>void *memchr(void *s,int c,size_t n)</TT> 
+          - Search for a character in a buffer. 
+     <LI> <TT>int memcmp(void *s1,void *s2,size_t n)</TT>
+          - Compare two buffers (bytewise version of <TT>strncmp</TT>).
+     <LI> <TT>void *memcpy(void *dest,void *src,size_t n)</TT>
+          - Copy one buffer into another (bytewise version of <TT>strncpy</TT>).
+     <LI> <TT>void *memmove(void *dest,void *src,size_t n)</TT>
+          - Move a number of bytes from one buffer to another. 
+            Same as <TT>memcpy</TT> except the buffers may overlap.
+     <LI> <TT>void *memset(void *s,int c,size_t n)</TT>
+          - Set all bytes of <TT>s</TT> buffer to <TT>c</TT>.
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write a program last that prints the last n lines of its text input. By
+     default <TT>n</TT> should be 5, but your program should allow an optional 
+     argument so that <TT>last -n</TT> prints out the last <TT>n</TT> lines, 
+     where <TT>n</TT> is any integer. Your program should make the best use 
+     of available storage. (Input of text could be by reading a file specified 
+     from the command or reading a file from standard input) 
+<LI> Write a program that reads a number that says how many integer numbers are
+     to be stored in an array, creates an array to fit the exact size of the 
+     data and then reads in that many numbers into the array.
+<LI> Write a program to sort a sequence of numbers using a binary tree (Using
+     Pointers). A binary tree is a tree structure with only two (possible)
+     branches from each node.
+     Each branch then represents a false or true decision. To sort
+     numbers simply assign the left branch to take numbers less than the node
+     number and the right branch any other number (greater than or equal to). 
+     To obtain a sorted list simply search the tree in a depth first fashion. 
+     Your program should: 
+     <UL> 
+     <LI> Create a binary tree structure. 
+     <LI> Create routines for loading the tree appropriately. 
+     <LI> Read in integer numbers terminated by a zero. 
+     <LI> Sort numbers into numeric ascending order.
+     <LI> Print out the resulting ordered values, printing ten numbers per 
+          line as far as possible. 
+     </UL>
+     Typical output should be 
+     <PRE>
+The sorted values are:
+2  4  6  6  7  9 10 11 11 11
+15 16 17 18 20 20 21 21 23 24
+27 28 29 30
+     </PRE>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> Write a program that declares an array of 10 pointers to <TT>char</TT>,
+     then reads 10 lines from the user, dynamically allocates enough memory
+     for each line after it is read, and makes successive members of the 
+     array point to the dynamically allocated memory. When done, the
+     program must then release all the dynamically allocated memory.
+<LI> Explain what <TT>realloc</TT> does, including the cases when the new
+     size does not equal the old size.
+<LI> Explain the difference between <TT>memcpy</TT> and <TT>memmove</TT>.
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

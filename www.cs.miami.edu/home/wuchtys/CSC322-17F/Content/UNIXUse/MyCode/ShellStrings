@@ -1,0 +1,17 @@
+#!/bin/tcsh
+#------------------------------------------------------------------------------
+set Properties = ""
+
+echo -n "Enter a sentence: "
+set Sentence = "$<"
+while ("$Sentence" != "STOP")
+    if ("$Sentence" =~ "I am *.") then
+        set Property = `expr "$Sentence" : "I am \(.*\)\."`
+        set Properties = "$Properties $Property,"
+    endif
+    echo -n "Enter a sentence: "
+    set Sentence = "$<"
+end
+
+echo "The properties are $Properties"
+#------------------------------------------------------------------------------

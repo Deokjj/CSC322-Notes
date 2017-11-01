@@ -1,0 +1,652 @@
+<HTML>
+<HEAD>
+<!------------------------------------------------------------------------>
+<TITLE>UNIX Processes</TITLE>
+<!------------------------------------------------------------------------>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX Processes</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:45 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<A NAME="Creation">
+<LI> Process creation
+     <UL>
+     <LI> Unless the system is being bootstrapped a process can only
+          come into existance as the child of another process. This done
+          by the fork system call.
+     <LI> The first process created is  "hand tooled"  by the boot process. 
+          This is the <TT>swapper</TT> process.
+     <LI> The swapper process creates the <TT>init</TT> process, which 
+          is the ancestor of all further processes. 
+          In particular, <TT>init</TT> forks off a process 
+          <TT>getty</TT>, which monitors terminal lines and allows users 
+          to log in.
+     <LI> Upon login, the command shell is run as the user's first process. 
+          The command shell for a given user is specified in the 
+          <TT>/etc/passwd</TT> file. 
+          From thereon, any process may <A HREF="#Fork"><TT>fork</TT></A> 
+          to produce new processes, considered to be <EM>children</EM> of 
+          the forking process.
+     </UL>
+<P>
+<A NAME="Uarea">
+<LI> The process table and uarea
+     <UL>
+     <LI> Information about processes is described in two data structures,
+          the kernel process table and a "uarea" associated with each process.
+     <LI> The process table holds information required by the kernel
+     <LI> The uarea holds information required by the process itself.
+     <LI> The process table entry for a process holds (amongst other things):
+          <UL>
+          <LI> Process state
+          <LI> Several process IDs
+          <LI> Several user IDs for determining process priviledges
+          <LI> Pointer to text structure for shared text areas
+          <LI> Pointer to page table for memory management
+          <LI> Scheduling parameters, including the "nice" value which
+               determines priority
+          <LI> Timers for resource usage
+          <LI> A pointer to the process uarea
+          </UL>
+     <LI> The uarea of a process contains (amongst other things):
+          <UL>
+          <LI> Real and effective user IDs
+          <LI> Current working directory and file system root
+          <LI> Timer fields to hold accumulated user and kernel mode time
+          <LI> Information an how to react to signals
+          <LI> Identification of any associated control terminal
+          <LI> Identification of data areas relevant to IO activity
+          <LI> Return values and error conditions from system calls
+          <LI> The user file descriptor table
+          <LI> The umask for the process
+          <LI> Process limits on memory usage and file size
+          </UL>
+     </UL>
+<P>
+<A NAME="ProcessIDs">
+<LI> Process IDs
+     <UL>
+     <LI> There are three IDs associated with every process, the ID of the
+          process itself (the PID), its parent process's ID (the PPID) and 
+          its process group ID (the PGID).
+     <LI> Every UNIX process has a unique PID in the range 0 to <TT>PID_MAX</TT>
+     <LI> The PID 0 is reserved for the swapper process, and 1 for the 
+          <TT>init</TT> process.
+     <LI> A process can get hold of its PID and PPID with the 
+          <TT>getpid</TT> and <TT>getppid</TT> calls.<BR>
+          <TT>int getpid(void)</TT><BR>
+          <TT>int getppid(void)</TT><BR>
+     <LI> Process group IDs
+          <UL>
+          <LI> UNIX provides a PGID that is used to group processes together. 
+          <LI> The PGID of a process may be obtained with<BR>
+               <TT>getpgid(pid_t pid)</TT>
+          <LI> A process initially belongs to its parent's group (or to
+               a new group with GID = PID). 
+               New groups may be established with<BR>
+               <TT>int setpgid(pid_t pid, pid_t pgid)</TT><BR>
+               Sets the process group ID of the process with ID pid to pgid.
+               If pid is equal to 0, the process ID of the calling  process
+               is used.
+          <LI> Groups may have a control terminal which is the first tty
+               device opened by the group leader. Initially the group leader
+               is the shell, and the login device is the control terminal. A
+               new group that is started is not attached to the previous
+               control terminal (if any). Interupt, quit and hangup signals
+               from a terminal go to all process associated with
+               that terminal. For example all processes that start from one
+               given terminal belong to the same group. Then if the terminal
+               goes down it's possible to find all its processes.
+          </UL>
+     <LI> <A HREF="MyCode/ProcessIDs.c">ProcessIDs.c</A>
+          - Program to play with PIDs
+     </UL>
+<P>
+<A NAME="UserIDs">
+<LI> User IDs
+     <UL>
+     <LI> Every process has a real user ID (the UID), an effective user ID
+          (the EUID), a real user group ID (the GID), and an effective user 
+          group ID (the EGID). 
+          The user group ID is distinct from the process group ID. 
+     <LI> The real IDs are used for accounting and user-user communication, 
+          while the effective IDs are used to control access to files and 
+          control signal sending.
+     <LI> A user ID is associated with each user login name in the
+          password file <TT>/etc/passwd</TT>. 
+          This is assigned to the user's shell as its UID and EUID, and is
+          inherited by processes spawned from the shell. 
+     <LI> The user IDs can be accessed with the system calls:<BR>
+          <TT>int getuid(void)</TT><BR>
+          which gets the UID of the process, and<BR>
+          <TT>int geteuid(void)</TT><BR>
+          which gets the EUID of the process.
+     <LI> Each entry in <TT>/etc/passwd</TT> also has a group ID which 
+          is given to the shell as its initial GID and EGID. 
+     <LI> The group IDs can be accessed with the system calls:<BR>
+          <TT>int getgid(void)</TT><BR>
+          which gets the GID of the process and<BR>
+          <TT>int getegid()</TT><BR>
+          which gets the EGID of the process.
+     <LI> Only the superuser may change the user IDs of a process, using
+          the system calls:<BR>
+          <TT>int setuid(int uid)</TT><BR>
+          which sets the UID and EUID, and<BR>
+          <TT>int setgid(int gid)</TT><BR>
+          which sets the GID and EGID. 
+          Both calls return 0 on success, or -1 on error.
+     <LI> Ordinary users may change effective IDs to real IDs, by using
+          these calls with the arguments equal to the real IDs.
+     <LI> <A HREF="MyCode/UserIDs.c">UserIDs.c</A>
+          - Program to play with user IDs
+     </UL>
+<P>
+<A NAME="Environment">
+<LI> The environment of a process
+     <UL>
+     <LI> The environment of a  process includes details of the home
+          directory, path names to be searched for the program, the type
+          of terminal being used, the user name, the shell being run,
+          etc.
+     <LI> The environment of a program is held in strings which have the
+          format &lt;keyword&gt;=&lt;value&gt;, e.g.<BR>
+          <TT>HOME=/usr/spg/geoff</TT><BR>
+          <TT>TERM=/tvi950</TT><BR>
+          <TT>PATH=/usr/bin:/usr/spg/geoff/bin</TT><BR>
+     <LI> The environment of a program can be examined by looking at the
+          system external variable <TT>environ</TT>, which is an array 
+          of char pointers:<BR>
+          <TT>extern char *environ[];</TT>
+          A <TT>NULL</TT> pointer signifies the last such string.
+     <LI> The program may explicitly receive the environment strings as
+          a third parameter to main. This parameter is an array of char
+          pointers.<BR>
+          <TT>int main(int argc,char *argv[],char *env[])</TT>
+     <LI> The value of a environment keyword can be examined with the
+          <TT>getenv</TT> call:<BR>
+          <TT>char *getenv(char keyword[]);</TT>
+          <TT>getenv</TT> returns a pointer to the string value, or 
+          <TT>NULL</TT> if no value is specified.
+     <LI> The value of a environment keyword can be set with the
+          <TT>setenv</TT> call:<BR>
+          <TT>int setenv(char *name,char *value,int overwrite);</TT>
+     <LI> An environmeent variable can be deleted using the
+          <TT>unsetenv</TT> call:<BR>
+          <TT>unsetenv(char *name);</TT>
+     <LI> <A HREF="MyCode/Environment.c"><TT>Environment.c</TT></A>
+          - Program to examine environment strings
+     </UL>
+<P>
+<A NAME="Fork">
+<LI> The <TT>fork</TT> system call
+     <UL>
+     <LI> <TT>int fork(void)</TT>
+     <LI> The <TT>fork</TT> call creates an (almost exact) copy of 
+          the parent. 
+          In particular they share all open files.
+     <LI> The <TT>fork</TT> call returns the new PID to the 
+          parent and 0 to the child, or -ve to the parent if it fails.
+     <LI> The PID of the new process is different, the open file
+          descriptors of the parent process are copied, and accumulated
+          execution times are reset.
+     <LI> <A HREF="MyCode/Fork.c">Fork.c</A>
+          - Program that forks
+     </UL>
+<P>
+<A NAME="Exec">
+<LI> Execution of programs
+     <UL>
+     <LI> The <TT>fork</TT> call merely duplicates the parent process. 
+          To switch to a different program a process uses one of the 
+          <TT>exec</TT> system calls.
+     <LI> The <TT>exec</TT> calls replace the code and data areas of 
+          the current program and jumps to the start of the new program. 
+     <LI> Open files, current directory, inter-process relationships 
+          are not affected by the <TT>exec</TT> calls.
+     <LI> <TT> void execl(char *program_path,char *arg0,...,char *argn,<TT>NULL</TT>);</TT>
+          <UL>
+          <LI> The <TT>program_path</TT> is the name of the file to 
+               execute. 
+          <LI> The program_path must be absolute, i.e. start with 
+               <TT>/</TT>.
+          <LI> <TT>argi</TT> are the arguments to the program, which in 
+               C are accessible through the parameters to main. 
+          <LI> Conventionally <TT>arg0</TT>  is the name of the program. 
+          <LI> A <TT>NULL</TT> argument ends the list.
+          </UL>
+     <LI> <A HREF="MyCode/Exec.c">Exec.c</A>
+          - Programs that forks and execs
+<P>
+     <LI> <STRONG>Always place an <TT>exit()</TT> call after an 
+          <TT>exec</TT></STRONG>
+<P>
+     <LI> <TT>void execlp(char *program,char *arg0,...,char *argn,<TT>NULL</TT>);</TT><BR>
+          searches the directories in the <TT>PATH</TT> environment variable
+          for the <TT>program</TT>.
+     <LI> <TT>void execv(char *program_path,char *arguments[]);</TT><BR>
+          provides the arguments as an array of pointers, in
+          the same way as they are received by main. 
+          The last pointer must be <TT>NULL</TT>.
+     <LI> <TT>execvp(char *program,char *arguments[]);</TT><BR>
+          combines the advantages of <TT>execlp</TT> and <TT>execv</TT>
+     <LI> <A HREF="MyCode/ExecWithArgs.c">ExecWithArgs.c</A>
+          - Program that forks a child with arguments
+     <LI> The <TT>exec</TT> calls pass on the current environment to new 
+          programs. 
+     <LI> The environment of a new program can be changed by using the 
+          <TT>environment</TT> argument to <TT>execle</TT> and 
+          <TT>execve</TT>.
+          <UL>
+          <LI> <TT>void execle(char *program_path,char *arg0,...,char *argn,<TT>NULL</TT>, char *environment[]);</TT><BR>
+               The environment is an array of pointers to strings that
+               describe the environment to be passed to the new program.
+          <LI> <TT>void execve(char *program_path,char *arguments[],char *environment[]);</TT><BR>
+               This is the true <TT>exec</TT>, the others end up calling 
+               this one.
+          </UL>
+     <LI> In the examples so far, when the child terminates it leaves a zombie.
+     </UL>
+<P>
+<A NAME="Termination">
+<LI> Process termination
+     <UL>
+     <LI> <TT>void exit(int status)</TT>
+          <UL>
+          <LI> A process may terminate by explicit use of the <TT>exit</TT>
+               system call.
+          <LI> This call is used implicitly when a process terminates normally.
+          </UL>
+     <LI> A process may terminate when another process sends an
+          appropriate signal (see later).
+     <LI> The parent process is notified by sending it a <TT>SIGCHLD</TT> 
+          signal.
+     <LI> If the parent terminates before any child, then the PPID of the 
+          child process is set to 1, i.e. the <TT>init</TT> process 
+          adopts all orphan processes.
+     <LI> Terminated processes become <EM>zombie</EM> processes, which are
+          removed by the parent process. 
+     <LI> If the parent does not remove zombies, they hang around.
+     <LI> The <TT>wait</TT> system call allows parents to wait for a
+          child to terminate, and cleans up the zombie.<BR>
+          <TT>int wait(int *status_pointer);</TT>
+          <UL>
+          <LI> <TT>wait</TT> suspends the (parent) process until there is a
+               terminated child process
+          <LI> <TT>wait</TT> returns the id of that process, or -1 
+               immediately if there are no children.
+          <LI> Exit status information (see below) is returned to the parent in
+               <TT>*status_pointer</TT>.
+          </UL>
+     <LI> <A HREF="MyCode/Wait.c">Wait.c</A>
+          - Program that forks, execs, and waits
+     <LI> To run a process in background (& in C and Bourne shells)
+          the parent does not execute wait.
+     <LI> <TT>int waitpid(pid_t pid, int *status_pointer, int options);</TT>
+          <UL>
+          <LI> Can wait for a specified <TT>pid</TT>. If <TT>pid</TT> is
+               -1 then waits for any process.
+          <LI> Various options, including
+               <UL>
+               <LI> <TT>WNOHANG</TT> - Does not suspend execution of the
+                    calling process if status is not immediately available
+                    for one of the child processes specified by <TT>pid</TT>.
+               <LI> <TT>WUNTRACED</TT> - The status of any child processes 
+                    specified by <TT>pid</TT> that are stopped, and whose 
+                    status has not yet been reported since they stopped, is 
+                    also reported to the calling process.
+               </UL>
+          <LI> <TT>waitpid()</TT> returns when a child has died, but also
+               when a child is suspended or restarted.
+               The reason for the wait to have returned can be detected from 
+               the <TT>*status_pointer</TT> using <TT>WIFEXITED</TT>, 
+               <TT>WIFSIGNALED</TT>, and <TT>WIFSTOPPED</TT>.
+               <UL>
+               <LI> If <TT>WIFEXITED</TT>, the lower 8 bits of the <TT>exit</TT>
+                    parameter in the child can be obtained from the
+                    <TT>*status_pointer</TT> using <TT>WEXITSTATUS</TT>.
+               <LI> If <TT>WIFSIGNALED</TT>, the signal that caused the 
+                    termination can be obtained from the 
+                    <TT>*status_pointer</TT> using <TT>WIFSIGNALED</TT>.
+               <LI> If <TT>WIFSTOPPED</TT>, the signal that caused the stop
+                    can be obtained from the <TT>*status_pointer</TT> using
+                    <TT>WSTOPSIG</TT>.
+               </UL>
+          <LI> <A HREF="MyCode/ExecWithArgsAndWait.c">ExecWithArgsAndWait.c</A>
+               - Program that forks a child with arguments and waits
+          </UL>
+     </UL>
+<P>
+<A NAME="Priority">
+<LI> Process priority
+     <UL>
+     <LI> The priority of a process is an integer in the range -20 to 20,
+          with -20 being the highest priority.
+     <LI> Processes start with a priority of 0.
+     <LI> <TT>getpriority(int which, int who);</TT> - Gets the priority of
+          a process (or user, or group)<BR>
+          <TT>which</TT> is <TT>PRIO_PROCESS</TT> for process priorities</TT>
+          <TT>who</TT> is the PID, or 0 for the current process (user, group)
+     <LI> <TT>setpriority(int which, int who, int prio);</TT> - Sets the
+          priority of a process (or user, or group)<BR>
+          <TT>prio</TT> is the new priority value.
+     <LI> <A HREF="MyCode/Priority.c"><TT>Priority.c</TT></A>
+          - Program that changes its priority
+     </UL>
+     <P>
+
+<A NAME="Resources">
+<LI> Process resource usage
+     <UL>
+     <LI> Need to include <TT>sys/time.h</TT>, <TT>sys/resource.h</TT>, and
+          <TT>unistd.h</TT>.
+     <LI> <TT>int getrlimit(int resource, struct rlimit *rlim);</TT> -
+          Get the processes resource limits.
+          <TT>resource</TT> is one of:
+          <UL>
+          <LI> <TT>RLIMIT_CPU</TT> - CPU time in seconds
+          <LI> <TT>RLIMIT_FSIZE</TT> - Maximum filesize
+          <LI> <TT>RLIMIT_DATA</TT> - max data size
+          <LI> <TT>RLIMIT_STACK</TT> - max stack size
+          <LI> <TT>RLIMIT_CORE</TT> - max core file size
+          <LI> <TT>RLIMIT_RSS</TT> - max resident set size
+          <LI> <TT>RLIMIT_NPROC</TT> - max number of processes
+          <LI> <TT>RLIMIT_NOFILE</TT> - max number of open files
+          <LI> <TT>RLIMIT_MEMLOCK</TT> - max locked-in-memory address space
+          <LI> <TT>RLIMIT_AS</TT> - address space (virtual memory) limit
+          </UL>
+          <TT>struct rlimit</TT> is defined as:
+          <PRE>
+struct rlimit {
+    rlim_t    rlim_cur;
+    rlim_t    rlim_max;
+};
+          </PRE>
+          If the process exceeds a soft limit it may be sent a signal:
+          <UL>
+          <LI> <TT>SIGSEGV</TT> for data limits.
+          <LI> <TT>SIGXFSZ</TT> for file limits.
+          <LI> <TT>SIGXCPU</TT> for CPU time.
+          </UL>
+          A process cannot exceed its hardlimit.
+     <LI> <TT>int setrlimit(int resource, const struct rlimit *rlim);</TT> -
+          Set the process resource limits (and that of any children).
+          An inifinite limit is set using <TT>RLIM_INFINITY</TT>.
+          Only the superuser can increase the hardlimit <TT>rlim_max</TT>.
+     <LI> <TT>int getrusage(int who, struct rusage *usage);</TT> -
+          Returns the current resource usages, for a <TT>who</TT> of either 
+          <TT>RUSAGE_SELF</TT> or <TT>RUSAGE_CHILDREN</TT>.
+          <TT>struct rusage</TT> is defined as:
+          <PRE>
+struct rusage {
+    struct timeval ru_utime; /* user time used */
+    struct timeval ru_stime; /* system time used */
+    long ru_maxrss;          /* maximum resident set size */
+    long ru_ixrss;           /* integral shared memory size */
+    long ru_idrss;           /* integral unshared data size */
+    long ru_isrss;           /* integral unshared stack size */
+    long ru_minflt;          /* page reclaims */
+    long ru_majflt;          /* page faults */
+    long ru_nswap;           /* swaps */
+    long ru_inblock;         /* block input operations */
+    long ru_oublock;         /* block output operations */
+    long ru_msgsnd;          /* messages sent */
+    long ru_msgrcv;          /* messages received */
+    long ru_nsignals;        /* signals received */
+    long ru_nvcsw;           /* voluntary context switches */
+    long ru_nivcsw;          /* involuntary context switches */
+};
+          </PRE>
+          and a <TT>struct timeval</TT> is defined as:
+          <PRE>
+struct timeval {
+    long    tv_sec;         /* seconds */
+    long    tv_usec;        /* and microseconds */
+};
+          </PRE>
+     <LI> <A HREF="MyCode/CPULimitedRun.c"><TT>CPULimitedRun.c</TT></A>
+          - Program that controls the resource usage of a child.
+     </UL>
+     <P>
+
+<A NAME="Signals">
+<LI> Signals
+     <UL>
+     <LI> A signal interrupts a process. 
+     <LI> Signals are defined in 
+          <A HREF="MyCode/signal.h"><TT>signal.h</TT></A>. Basic ones are:
+          <UL>
+          <LI> <TT>SIGHUP</TT>:   #1 - hangup (modem) 
+          <LI> <TT>SIGINT</TT>:   #2 - interrupt (rubout key) 
+          <LI> <TT>SIGQUIT</TT>:  #3 - quit (FS control \ key) 
+          <LI> <TT>SIGILL</TT>:   #4 - illegal instruction 
+          <LI> <TT>SIGTRAP</TT>:  #5 - trace or breakpoint 
+          <LI> <TT>SIGABRT</TT>:  #6 - abort()
+          <LI> <TT>SIGEMT</TT>:   #7 - emulator trap instruction 
+          <LI> <TT>SIGFPE</TT>:   #8 - floating point exception 
+          <LI> <TT>SIGKILL</TT>:  #9 - kill, uncatchable quit 
+          <LI> <TT>SIGBUS</TT>:  #10 - bus error 
+          <LI> <TT>SIGSEGV</TT>: #11 - segmentation violation 
+          <LI> <TT>SIGSYS</TT>:  #12 - bad system call 
+          <LI> <TT>SIGPIPE</TT>: #13 - end of pipe 
+          <LI> <TT>SIGALRM</TT>: #14 - alarm clock 
+          <LI> <TT>SIGTERM</TT>: #15 - catchable termination 
+          <LI> <TT>SIGURG</TT>:  #16 - urgent condition on IO channel
+          <LI> <TT>SIGSTOP</TT>: #17 - sendable stop signal not from tty
+          <LI> <TT>SIGTSTP</TT>: #18 - stop signal from tty
+          <LI> <TT>SIGCONT</TT>: #19 - continue a stopped process
+          <LI> <TT>SIGCHLD</TT>: #20 - child death (or stopped under Linux)
+          <LI> <TT>SIGTTIN</TT>: #21 - to readers pgrp upon background tty read
+          <LI> <TT>SIGTTOU</TT>: #22 - like TTIN for output 
+          <LI> <TT>SIGIO</TT>:   #23 - input/output possible signal
+          <LI> <TT>SIGXCPU</TT>: #24 - exceeded CPU time limit
+          <LI> <TT>SIGXFSZ</TT>: #25 - exceeded file size limit
+          <LI> <TT>SIGVTALRM</TT>: #26 - virtual time alarm
+          <LI> <TT>SIGPROF</TT>: #27 - profiling time alarm
+          <LI> <TT>SIGWINCH</TT>:  #28 - window size changes
+          <LI> <TT>SIGINFO</TT>: #29 - information request
+          <LI> <TT>SIGUSR1</TT>: #30 - user defined signal 1
+          <LI> <TT>SIGUSR2</TT>: #31 - user defined signal 2
+          </UL>
+     <LI> Signals have 6 basic sources
+          <UL>
+          <LI> User typing control characters at the keyboard.
+               These signals are sent to all processes in the group associated
+               with the terminal - <TT>SIGHUP</TT>, <TT>SIGINT</TT>, 
+               <TT>SIGQUIT</TT>.
+          <LI> Software errors - <TT>SIGILL</TT>, <TT>SIGTRAP</TT>, 
+               <TT>SIGABRT</TT>, <TT>SIGFPE</TT>, <TT>SIGSYS</TT>, 
+               <TT>SIGPIPE</TT>.
+          <LI> Hardware errors - <TT>SIGEMT</TT>, <TT>SIGBUS</TT>, 
+               <TT>SIGSEGV</TT>.
+          <LI> The alarm system call - <TT>SIGALRM</TT>
+          <LI> The kill system call (see below) - All signals
+          <LI> External events - <TT>SIGCHLD</TT>, <TT>SIGURG</TT>, 
+               <TT>SIGIO</TT>, <TT>SIGXCPU</TT>, <TT>SIGXFSZ</TT>,
+               <TT>SIGWINCH</TT>, <TT>SIGINFO</TT>.
+          </UL>
+     <LI> Signals either caught, ignored, or terminate the process.
+          <UL>
+          <LI> The <TT>SIGKILL</TT> and <TT>SIGSTOP</TT> signals cannot 
+               be caught or ignored
+          </UL>
+     <LI> The <TT>signal</TT> system call can be used to instruct 
+          receiving processes on how to deal with a signal. 
+          This associates a function with a given signal.
+          <UL>
+          <LI> <TT>void (*signal(int TheSignal,void (*Function)(int)))(int);</TT><BR>
+               This is a function that returns a pointer to a function
+               that receives an <TT>int</TT>. 
+               The second argument is the same.
+          <LI> <TT>signal</TT> associates <TT>TheSignal</TT> with the 
+               <TT>Function</TT>.
+          <LI> <TT>Function</TT> may be supplied by the user or one of
+               <TT>SIG_DFL</TT>, which resets to the default, and 
+               <TT>SIG_IGN</TT>, which ignores the signal.
+          <LI> When the signal occurs execution is transferred to the function.
+               When a function set up to handle interrupts ends it returns
+               to the point where the interruption occured.
+          <LI> <TT>signal</TT> returns the previous function.
+          <LI> External variables have to be used to pass data into and
+               out of signal handlers.
+          <LI> The <TT>pause</TT> system call
+               <UL>
+               <LI> The pause system call<BR>
+                    <TT>void pause(void);</TT><BR>
+                    causes the calling process to suspend until a non-ignored 
+                    signal is received.
+               </UL>
+          <LI> <A HREF="MyCode/Signal.c">Signal.c</A>
+               - Program that catches keyboard interrupts
+          <LI> Child processes inherit signal handling
+          </UL>
+     <LI> The <TT>kill</TT> system call
+          <UL>
+          <LI> <TT>int kill(int PID,int Signal);</TT>
+          <LI> <TT>kill</TT> sends the <TT>Signal</TT> to all 
+               processes identified by the <TT>PID</TT>, where the 
+               values are:
+               <UL>
+               <LI> +ve - process with the ID
+               <LI> 0 - processes with group ID equal to process ID of sender.
+               <LI> -1 - if the EUID is super user then all processes, 
+                    otherwise processes whose UID equals the EUID of sender.
+               <LI> < -1 - processes whose GID is the absolute of the 
+                    <TT>PID</TT>
+               </UL>
+          <LI> Returns -1 on error, 0 on success
+          <LI> <A HREF="MyCode/Kill.c">Kill.c</A>
+               - Program that kills its parent
+          </UL>
+     <LI> The <TT>alarm</TT> system call
+          <UL>
+          <LI> <TT>unsigned alarm(unsigned Time)</TT>
+          <LI> Causes a signal <TT>SIGALRM</TT> to occur <TT>Time</TT>
+               seconds later in the calling process.
+          <LI> It returns the time left until that signal.
+          <LI> <TT>alarm(0)</TT> turns off the alarm
+          <LI> <A HREF="MyCode/Alarm.c">Alarm.c</A>
+               - Program that wakes itself up
+          <LI> <A HREF="MyCode/KillAlarm.c">KillAlarm.c</A>
+               - Program that uses alarm and kill
+          </UL>
+     <LI> With the exception of the <TT>SIGCHLD</TT> signal, signals 
+          are not queued. 
+          <UL>
+          <LI> <TT>SIGCHLD</TT> signals are generated by child processes
+               when they terminate, and when they are stopped by a
+               <TT>SIGTSTP</TT> or <TT>SIGSTOP</TT>
+          <LI> <A HREF="MyCode/ExecManyWithArgs.c">ExecManyWithArgs.c</A>
+               - Program that forks many child with arguments, and reaps
+          </UL>
+     <LI> POSIX signal handling
+          <UL>
+          <LI> The <TT>signal</TT> system call is the traditional way of
+               handling signals.
+               POSIX has defined a richer signal handling interface.
+          <LI> <TT>int sigaction(int signum,struct sigaction *act,struct sigaction *oldact);</TT> - used to install a signal handler<BR>
+               <TT>signum</TT> specifies which signal to handle,
+               <TT>*act</TT> specifies what to do,
+               <TT>*oldact</TT>, if not NULL, saves the old action.
+               A <TT>struct sigaction</TT> contains:<BR>
+               <UL>
+               <LI> <TT>void (*sa_handler)(int)</TT> - the signal 
+                    handler
+               <LI> <TT>sigset_t sa_mask</TT> - mask of signals which 
+                    should be blocked during execution of the signal 
+                    handler.  
+                    In addition, the signal which triggered the handler 
+                    will be blocked, unless the SA_NODEFER or SA_NOMASK 
+                    flags are used.<BR>
+               <LI> <TT>int sa_flags</TT> - flags which modify the
+                    behaviour of the signal handling process.
+                    Useful flags include <TT>SA_NOCLDSTOP</TT>,
+                    <TT>SA_ONESHOT</TT>, and <TT>SA_NOMASK</TT>
+               </UL>
+          <LI> <TT>int sigprocmask(int how,sigset_t *set,sigset_t *oldset);</TT>
+               - Used to change the list of currently blocked signals
+          <LI> <TT>int siginterrupt(int sig,int flag);</TT> -
+               Changes the restart behaviour when a system call is interrupted 
+               by the signal
+          <LI> <A HREF="MyCode/InterruptSystem.c">InterruptSystem.c</A>
+               - Program that times out read attempts
+          </UL>
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+<LI> Process management:
+     Write a program that reads a file of commands and executes them all in
+     background mode.
+     This batch process starter must wait for all the programs to finish before
+     it exits.
+     A sample file that may be presented to your program could contain:
+     <PRE>
+date
+ls -l
+cat fred.c
+     </PRE>
+
+     Notes:
+     <UL>
+     <LI> There exist two library functions <TT>execlp</TT> and <TT>execvp</TT>
+          that extend the <TT>exec</TT> calls by searching the current path 
+          (as specified in the environment variable <TT>PATH</TT>) for the 
+          file to execute, if it does not have an absolute address.
+     <LI> The lines in the file contain the program name and its parameters.
+          You need to sort out the parameters from the command.
+     </UL>
+<LI> Signals:
+     Write  an onscreen clock program, that updates its time  every
+     five seconds by setting an alarm signal to go off five seconds
+     after  each time the time is printed. The program should  exit
+     gracefully when it is interrupted.
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2>Exam Style Questions</H2>
+<UL>
+<LI> What information is returned by the <TT>getpid</TT>, <TT>getppid</TT>,
+     and <TT>getpgrp</TT> system calls?
+<LI> What is the difference between the return values of the <TT>getuid</TT>
+     and <TT>geteuid</TT> system calls?
+<LI> Write a program that creates a second process, and then in both processes
+     outputs the process ID and the owners user ID.
+<LI> What is wrong with the following code segment?
+     <PRE>
+if (fork()  == 0) {
+    printf("Here comes the directory listing\n");
+    execlp("/bin/ls","ls",NULL);
+    printf("That is the end of the listing\n");
+} else {
+   ...  /*----Some legal stuff here */
+} </PRE>
+<LI> What advantage do the <TT>execlp</TT> and <TT>execvp</TT> calls have
+     over <TT>execl</TT> and <TT>execv</TT>?
+<LI> The <TT>kill</TT> system call sends a signal to a specified process.
+     How can that process be prepared to receive the signal?
+<LI> Which signal cannot be ignored or caught by a receiving process?
+<LI> Name three system calls that cause (directly or indirectly) a signal 
+     to be sent to a process.
+<LI> Write a program that does nothing until it receives a signal, then sends
+     a <TT>SIGQUIT</TT> to its parent process.
+<LI> Write a program that starts a child process for each of its integer
+     command line arguments. The child processes simply sleep for the
+     time specified by the argument, then exit. After starting all the
+     children, the parent process must wait until they have all terminated
+     before terminating itself.
+<LI> Which system call can be used to limit the amount of CPU time a process
+     can use? Which system call can be used to find out home much CPU time
+     the process did use?
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

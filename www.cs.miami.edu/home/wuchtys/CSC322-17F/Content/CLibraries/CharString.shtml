@@ -1,0 +1,369 @@
+<HTML>
+<HEAD>
+<TITLE>Characters and Strings</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Characters and Strings</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Representation
+     <UL>
+     <LI> Characters are represented using ASCII encoding, using 
+          <TT>CHAR_BIT</TT> bits, as defined in <TT>limits.h</TT>.
+     <LI> Strings are arrays of characters, with a null character 
+          <TT>'\0'</TT> after the last character of the string.
+          (Not to be confused with the <TT>NULL</TT> pointer.)
+     <LI> It is important to preserve the null terminating character 
+          as it is how C defines and manages variable length strings. 
+          All the C standard library functions require this for 
+          successful operation.
+     <LI> You should use the many useful string handling functions and 
+          not really need to get your hands dirty dismantling and 
+          assembling strings.
+     </UL>
+     <P>
+
+<LI> Character handling functions
+     <UL>
+     <LI> <TT>ctype.h</TT> contains useful functions to convert and test 
+          single characters. 
+     <LI> <TT>int isalnum(int c)</TT> 
+          - True if c is alphanumeric.  
+     <LI> <TT>int isalpha(int c)</TT> 
+          - True if c is a letter.  
+     <LI> <TT>int isascii(int c)</TT> 
+          - True if c is ASCII . 
+     <LI> <TT>int iscntrl(int c)</TT> 
+          - True if c is a control character.  
+     <LI> <TT>int isdigit(int c)</TT> 
+          - True if c is a decimal digit
+     <LI> <TT>int isgraph(int c)</TT> 
+          - True if c is a graphical character.
+     <LI> <TT>int islower(int c)</TT> 
+          - True if c is a lowercase letter
+     <LI> <TT>int isprint(int c)</TT> 
+          - True if c is a printable character
+     <LI> <TT>int ispunct(int c)</TT> 
+          - True if c is a punctuation character.
+     <LI> <TT>int isspace(int c)</TT> 
+          - True if c is a space character.
+     <LI> <TT>int isupper(int c)</TT> 
+          - True if c is an uppercase letter.  
+     <LI> <TT>int isxdigit(int c)</TT> 
+          - True if c is a hexadecimal digit
+     <LI> <TT>int toascii(int c)</TT> 
+          - Convert <TT>c</TT> to ASCII .  
+     <LI> <TT>int tolower(int c)</TT>  
+          - Convert c to lowercase.
+     <LI> <TT>int toupper(int c)</TT> 
+          - Convert c to uppercase.
+     <LI> <A HREF="MyCode/CountCharTypes.c"><TT>CountCharTypes.c</TT></A>
+          - Program to identify character types.
+     </UL>
+     <P>
+
+<LI> String conversion
+     <UL>
+     <LI> All the string handling functions are prototyped in <TT>string.h</TT>
+     <LI> <TT>int atoi(const char *str);</TT>
+          - Converts a string to an int
+     <LI> <TT>long atol(const char *str);</TT>
+          - Converts a string to a long
+     <LI> <TT>long strtol(const char *str, char **endptr, int base);</TT>
+          - Converts a string to a long, using the base
+     <LI> <TT>double strtod(const char *str,char **endptr);</TT>
+          - Converts a string to double-precision number
+     <LI> <TT>double atof(const char *str);</TT>
+          - Converts a string to double-precision number
+     <LI> <A HREF="MyCode/ReadLongInBase.c"><TT>ReadLongInBase.c</TT></A>
+          - Program that converts numbers to base 10
+     </UL>
+     <P>
+
+<LI> String copying, concatenation, comparison
+     <UL>
+     <LI> <TT>char *strcpy(const char *string1,const  char  *string2)</TT>
+          - Copy string2 to stringl. Chaos if string1 is not large enough.
+     <LI> <TT>char *strncpy(const char *string1,const char *string2,size_t n)</TT>
+          - Copy first n characters of string2 to stringl . 
+     <LI> <TT>char *strcat(const char *string1,char *string2)</TT> 
+          - Append string2 onto string1. Chaos if string1 is not large enough.
+     <LI> <TT>char *strncat(const char *string1,char *string2, size_t n)</TT> 
+          - Append n characters from string2 to stringl.
+     <LI> <TT>int strcmp(const char *string1,const char *string2)</TT> 
+          - Compare string1 and string2 to determine alphabetic order.
+     <LI> <TT>int strncmp(const char *string1,char *string2, size_t n)</TT> 
+          - Compare first n characters of two strings.
+     <LI> <TT>int strcasecmp(const char *s1, const char *s2)</TT> 
+          - Case insensitive version of <TT>strcmp()</TT>.
+     <LI> <TT>int strncasecmp(const char *s1, const char *s2, int n)</TT> 
+          - Case insensitive version of <TT>strncmp()</TT>.
+     <LI> <TT>int strlen(const char *string)</TT> 
+          - Determine the length of a string.
+     <LI> <A HREF="MyCode/SplitLines.c"><TT>SplitLines.c</TT></A>
+          - Program that splits long input strings
+     </UL>
+     <P>
+
+<LI> String tokenizing
+     <UL>
+     <LI> <TT>char *strtok(char *s1,const char *s2)</TT> 
+          - Break <TT>s1</TT> into a sequence of tokens, each of which is 
+          delimited by one or more characters from <TT>s2</TT>.
+     <LI> <A HREF="MyCode/WordTokens.c"><TT>WordTokens.c</TT></A>
+          - Program that finds words in a sentence.
+     </UL>
+     <P>
+
+<LI> String searching
+     <UL>
+     <LI> <TT>char *strchr(const char *string,int c)</TT> 
+          - Finds first occurrence of <TT>c</TT>in <TT>string</TT>.
+     <LI> <TT>char *strrchr(const char *string,int c)</TT> 
+          - Finds last occurrence of <TT>c</TT> in <TT>string</TT>.
+     <LI> <TT>char *strstr(const char *s1,const char *s2)</TT> 
+          - Finds the first occurrence of <TT>s2</TT> in <TT>s1</TT>.
+     <LI> <TT>char *strpbrk(const char *s1,const char *s2)</TT> 
+          - Finds the first occurrence in <TT>s1</TT> of any character from 
+          <TT>s2</TT>
+     <LI> <TT>char *strrpbrk(const char *s1,const char *s2)</TT> 
+          - Finds the last character in <TT>s1</TT> also in <TT>s2</TT>.
+     <LI> <TT>size_t strspn(const char *s1,const char *s2)</TT> 
+          - Counts the number of characters at the begining of <TT>s1</TT> 
+          that are in <TT>s2</TT>.
+     <LI> <TT>size_t strcspn(const char *s1,const char *s2)</TT> 
+          - Counts the number of characters at the begining of <TT>s1</TT> 
+          that are not in <TT>s2</TT>.
+     <LI> <A HREF="MyCode/MatchBrackets.c"><TT>MatchBrackets.c</TT></A>
+          - Program that matches brackets in a string
+     </UL>
+     <P>
+
+<LI> Regular expressions
+     <UL>
+     <LI> Defined in <TT>regex.h</TT>, this allows search for regexp strings
+          in a program.
+          Must include <TT>sys/types.h</TT> before <TT>regex.h</TT>.
+     <LI> Basic regular expressions
+          <UL>
+          <LI> A regular expression specifies a set of character strings.
+          <LI> The following one-character REs match a single character:
+               <UL>
+               <LI> An ordinary character (not one of those discussed 
+                    below) is a one-character RE that matches itself.
+               <LI> A backslash followed by any special character is a
+                    one-character RE that matches the special character
+                    itself. The special characters are:
+                    <UL>
+                    <LI> <TT>.</TT>, <TT>*</TT>, <TT>[</TT>, and <TT>\</TT>,
+                         except when they appear within <TT>[]</TT>; see below.
+                    <LI> <TT>^</TT> at the beginning of an entire RE or when 
+                         it immediately follows the left of a  pair of 
+                         <TT>[]</TT>.
+                    <LI> <TT>$</TT> is special at the end of an entire RE.
+                    </UL>
+               <LI> A <TT>.</TT> is a one-character RE that matches any
+                    character except new-line.
+               <LI> A non-empty string of characters enclosed in <TT>[]</TT>
+                    is a one-character RE that matches any one character in 
+                    that string. 
+                    If, however, the first character of the string is a 
+                    <TT>^</TT>, the one-character RE matches any character 
+                    except new-line and the remaining characters in the string.
+                    The <TT>^</TT> has this special meaning only if it occurs 
+                    first in the string.
+                    A <TT>-</TT> may be used to indicate a range of consecutive 
+                    characters, e.g., <TT>[0-9]</TT> is equivalent to 
+                    <TT>[0123456789]</TT>.
+                    The <TT>-</TT> loses this special meaning if it occurs 
+                    first (after an initial <TT>^</TT>, if any) or last in
+                    the string. 
+                    A <TT>]</TT> does not terminate such a string when it is
+                    the first character within it (after an initial <TT>^</TT>,
+                    if any), e.g., <TT>[]a-f]</TT> matches either a <TT>]</TT>
+                    or one of the ASCII letters <TT>a</TT> through <TT>f</TT> 
+                    inclusive. 
+                    The four characters <TT>.</TT>, <TT>*</TT>, <TT>[</TT>, 
+                    and <TT>\</TT> stand for themselves within such a string 
+                    of characters.
+               </UL>
+          <LI> The following rules may be used to construct REs  from  one-
+               character REs:
+               <UL>
+               <LI> A one-character RE is a RE that  matches  whatever  the
+                    one-character RE matches.
+               <LI> A one-character RE followed by an <TT>*</TT> is a  RE
+                    that matches 0 or more occurrences of the one-character
+                    RE.  
+                    If there is any choice, the longest leftmost string that 
+                    permits a match is chosen.
+               <LI> A one-character RE followed by an <TT>+</TT> is a  RE
+                    that matches 1 or more occurrences of the one-character
+                    RE.  
+                    If there is any choice, the longest leftmost string that 
+                    permits a match is chosen.
+               <LI> A one-character RE followed by <TT>\{</TT>m<TT>\}</TT>,  
+                    <TT>\{</TT>m<TT>,\}</TT>, or 
+                    <TT>\{</TT>m<TT>,</TT>n<TT>\}</TT> is a RE that matches 
+                    a range of occurrences of the one-character RE.  
+                    The values of m and n must be non-negative integers less  
+                    than 256; <TT>\{</TT>m<TT>\}</TT> matches exactly m
+                    occurrences; <TT>\{</TT>m<TT>,\}</TT> matches at least m
+                    occurrences; <TT>\{</TT>m<TT>,</TT>n<TT>\}</TT> matches 
+                    any number of occurrences between m and n inclusive. 
+                    Whenever a choice exists, the RE matches as many 
+                    occurrences as possible.
+               <LI> A RE enclosed between the character sequences <TT>\(</TT> 
+                    and <TT>\)</TT> is a RE that matches whatever the 
+                    unadorned RE matches.
+               <LI> The expression <TT>\</TT>n matches the same string of 
+                    characters as was matched by an expression enclosed 
+                    between <TT>\(</TT> and <TT>\)</TT> earlier in the same RE.
+                    Here n is a digit; the subexpression specified is that 
+                    beginning with the nth occurrence of <TT>\(</TT> counting 
+                    from the left. 
+                    For  example,  the expression <TT>^\(.*\)\1$</TT> matches 
+                    a line consisting of two repeated appearances of the same 
+                    string.
+               </UL>
+          <LI> A RE may be constrained to match words.
+               <UL>
+               <LI> <TT>\&lt;</TT> constrains a RE to match the beginning 
+                    of  a  string or to follow a character that is not a digit, 
+                    underscore, or letter. 
+                    The first character matching the  RE must be a digit, 
+                    underscore, or letter.
+               <LI> <TT>\></TT> constrains a RE to match the end of a string  
+                    or to precede a character that is not a digit, underscore,
+                    or letter.
+               </UL>
+          <LI> An entire RE may be constrained to match only an initial
+               segment or final segment of a line (or both).
+               <UL>
+               <LI> A <TT>^</TT> at the beginning of an entire RE constrains 
+                    that RE to match an initial segment of a line.
+               <LI> A <TT>$</TT> at the end of an entire RE constrains
+                    that RE to match a final segment of a line.
+               <LI> The construction <TT>^</TT>entire RE<TT>$</TT> constrains 
+                    the entire RE to match the entire line.
+               </UL>
+          </UL>
+     <LI> <TT>int regcomp(regex_t *preg,const char *pattern,int cflags);</TT>
+          - Compiles the <TT>pattern</TT>.
+          The parameter <TT>preg</TT> is a pointer.
+          It points to the place where the compiled regular expression will 
+          be placed.
+          The parameter <TT>cflags</TT> determines the type of RE that 
+          will be recognized.
+     <LI> <TT>int regexec(const regex_t *preg,const char *string,size_t nmatch,regmatch_t pmatch[],int eflags);</TT>
+          - Returns zero if some substring of <TT>string</TT> matches the  
+          regular expression in <TT>*preg</TT>.
+          If there are matchs, the <TT>nmatch</TT> and <TT>pmatch[]</TT>
+          parameters can be used to see where the matches are.
+          If <TT>nmatch</TT> is 0 then <TT>pmatch[]</TT> is ignored and can be
+          <TT>NULL</TT>.
+          <TT>eflags</TT> allows some variations, or can be 0.
+     <LI> <A HREF="MyCode/MyGrep.c"><TT>MyGrep.c</TT></A>
+          - Program that checks for a regexp
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write the function <TT>htoi</TT> which converts a character string of
+     hexadecimal digits (including an optional 0x or 0X) into its
+     equivalent integer value. The allowable digits are 0-9, a-f,
+     and A-F.
+     <BR><STRONG>Answer</STRONG>:
+     <A HREF="ExerciseAnswers/HtoI.c"><TT>HtoI.c</TT></A>
+<LI> Write a program that checks that the brackets in a string are balanced,
+     i.e., open and closed brackets match exactly.
+<LI> Write a program that edits a file, replacing all strings that match 
+     a supplied RE with another supplied string.
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> How are strings represented in C?
+<LI> Point out the errors in this program, which prevent it from compiling,
+     and even if it did compile, from running properly.
+     <PRE>
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+int main(int argv,char *argv[]) {
+
+    char Buffer[128];
+    char *Data;
+
+    Buffer = "the cat sat on the mat";
+    Data = &Buffer[5];
+    Buffer = Data;
+    strcpy(Data,Buffer);
+
+    return(0);
+} </PRE>
+<LI> Write a program that read an integer and converts it to its string
+     representation, then reads a string that looks like an integer and
+     converts it to an integer.
+<LI> Write a regular expression that matches all of the following strings:
+     <UL>
+     <LI> aaaaaaaaaa
+     <LI> abba
+     <LI> aabbb
+     </UL>
+     but none of these strings:
+     <UL>
+     <LI> bbbaaa
+     <LI> bbbbb
+     </UL>
+<LI> Which of the following regular expressions match which of the strings?<BR>
+     Regular expressions:
+     <UL>
+     <LI> ^a.b.*
+     <LI> a+b*
+     <LI> a*b*
+     </UL>
+     Strings:
+     <UL>
+     <LI> baaaa
+     <LI> aabb
+     <LI> cba
+     <LI> bbbbb
+     </UL>
+<LI> What is the output from the following program?
+     <PRE>
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+int main(int argc,char *argv) {
+
+    char Buffer[128],Data[128];
+    char *Offset;
+
+    strcpy(Buffer,"What excellent stuffing");
+    Offset = strtok(Buffer," ");
+    printf("%s\n",Buffer);
+    Offset = strtok(NULL," ");
+    strcpy(Data,Offset);
+    printf("%s\n",Data+3);
+    Offset = strtok(NULL," ");
+    printf("%s\n",Offset);
+    strncpy(Data,&Offset[3],3);
+    printf("%s\n",Data);
+
+    return(0);
+} </PRE>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

@@ -1,0 +1,585 @@
+<HTML>
+<HEAD>
+<TITLE>Tutorial Introduction to C</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Tutorial Introduction to C</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> C Basics
+     <UL>
+     <LI> History of C
+          <UL>
+          <LI> UNIX developed in 1969 in BCPL - a language for writing 
+               compilers and system tools.
+          <LI> A new version written in 1970 in B - a cut down version of BCPL
+          <LI> A totally new language C  in 1972 - a successor to B
+          <LI> By 1973 UNIX almost totally written in C.
+          </UL>
+     <LI> Characteristics of C
+          <UL>
+          <LI> Small size
+          <LI> Extensive use of function calls
+          <LI> Loose typing
+          <LI> Structured language
+          <LI> No objects
+          <LI> Low level (bitwise) programming readily available
+          <LI> Pointer implementation - extensive use of pointers for memory, 
+               array, structures and functions.
+          <LI> Not object oriented (no classes, objects, inheritance, etc.)
+          </UL>
+     <LI> C has now become a widely used professional language for various 
+          reasons.
+          <UL>
+          <LI> It has high-level constructs.
+          <LI> It can handle low-level activities.
+          <LI> It produces efficient programs.
+          <LI> It can be compiled on a variety of computers.
+          </UL>
+     <LI> As an extreme example the following C code 
+          (<A HREF="MyCode/Mystery.c"><TT>Mystery.c</TT></A>) is 
+          actually legal C code.
+          <PRE>
+#include &lt;stdio.h&gt;
+
+main(t,_,a)
+char *a;
+{return!0&lt;t?t&lt;3?main(-79,-13,a+main(-87,1-_,
+main(-86, 0, a+1 )+a)):1,t&lt;_?main(t+1, _, a ):3,main ( -94, -27+t, a
+)&amp;&amp;t == 2 ?_&lt;13 ?main ( 2, _+1, &quot;%s %d %d\n&quot; ):9:16:t&lt;0?t&lt;-72?main(_,
+t,&quot;@n'+,#'/*{}w+/w#cdnr/+,{}r/*de}+,/*{*+,/w{%+,/w#q#n+,/#{l,+,/n{n+\
+,/+#n+,/#;#q#n+,/+k#;*+,/'r :'d*'3,}{w+K w'K:'+}e#';dq#'l q#'+d'K#!/\
++k#;q#'r}eKK#}w'r}eKK{nl]'/#;#q#n'){)#}w'){){nl]'/+#n';d}rw' i;# ){n\
+l]!/n{n#'; r{#w'r nc{nl]'/#{l,+'K {rw' iK{;[{nl]'/w#q#\
+n'wk nw' iwk{KK{nl]!/w{%'l##w#' i; :{nl]'/*{q#'ld;r'}{nlwb!/*de}'c \
+;;{nl'-{}rw]'/+,}##'*}#nc,',#nw]'/+kd'+e}+;\
+#'rdq#w! nr'/ ') }+}{rl#'{n' ')# }'+}##(!!/&quot;)
+:t&lt;-50?_==*a ?putchar(a[31]):main(-65,_,a+1):main((*a == '/')+t,_,a\
++1 ):0&lt;t?main ( 2, 2 , &quot;%s&quot;):*a=='/'||main(0,main(-61,*a, &quot;!ek;dc \
+i@bK'(q)-[w]*%n+r3#l,{}:\nuwloca-O;m .vpbks,fxntdCeghiry&quot;),a+1);}
+          </PRE>
+          <UL>
+          <LI> It will compile and run and produce meaningful output. Try this
+               program out. 
+          <LI> Clearly nobody ever writes code like or at least should never. 
+               This piece of code actually won an international 
+               <A HREF="http://www0.us.ioccc.org/main.html">Obfuscated 
+               C Code Contest</A>.
+          </UL>
+     <LI> The standard for C programs was originally the features set
+          by Brian Kernighan. In order to make the language more 
+          internationally acceptable, an international standard was developed,
+          ANSI C (American National Standards Institute).
+     </UL>
+<P>
+<LI> Getting started
+     <PRE>
+//-----------------------------------------------------------------------------
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+//-----------------------------------------------------------------------------
+int main(void) {
+
+    printf("Hello, world\n");
+
+    return(EXIT_SUCCESS);
+}
+//-----------------------------------------------------------------------------
+     </PRE>
+     <UL>
+     <LI> The <TT>#include</TT>s include definitions of standard i/o library
+          functions and standard odds-and-ends. 
+          In general, <TT>#include</TT> includes a file. 
+          <UL>
+          <LI> Include files end with <TT>.h</TT>.
+          <LI> If the file name is enclosed in <TT>&lt;></TT>, the standard 
+               include file directories (e.g., <TT>/usr/include</TT> on UNIX 
+               systems) are searched for the file. 
+          <LI> If enclosed in <TT>""</TT>, the current directory is searched, 
+               then the standard include file directories. 
+          </UL>
+     <LI> A C program consists of one or more functions.
+          <UL>
+          <LI> Every program must have a <TT>main</TT> function somewhere. 
+               Execution starts with the <TT>main</TT> function and ends
+               when it returns (other happy endings are possible too :-)
+               (and there are some unhappy endings :-().
+          <LI> <TT>int</TT> before main indicates that <TT>main</TT> returns an 
+               integer value.
+          <LI> <TT>()</TT> following the function name surrounds the argument 
+               list.
+               <TT>void</TT> here indicates that there are no arguments.
+          <LI> <TT>{}</TT> enclose the statements that make up the function.
+          </UL>
+     <LI> C is case sensitive, <TT>main</TT> is not the same as <TT>Main</TT>, 
+          etc.
+     <LI> <TT>printf</TT> is a general purpose format conversion function. 
+          <UL>
+          <LI> <TT>printf</TT> is not part of the C language.
+          <LI> <TT>printf</TT> calls a standard function that is held in 
+               a library and linked in at link time. 
+          <LI> <TT>printf</TT> is defined in <TT>stdio.h</TT> for compiler 
+               checking. 
+          <LI> Its output goes to <TT>stdout</TT>
+          <LI> A sequence of characters in <TT>"..."</TT> is called a character 
+               string or string constant.
+          <LI> <TT>\n</TT> is for newline.
+          </UL>
+     <LI> The <TT>return</TT> sends the integer value back, via the OS, to
+          the parent process.
+          <TT>EXIT_SUCCESS</TT> is the standard success return value, and
+          <TT>EXIT_FAILURE</TT> is the standard value when something has 
+          gone wrong.
+     </UL>
+<P>
+<LI> <A HREF="../UNIXUse/Mastery.shtml">Editing C</A>
+<P>
+<LI> Compiling C
+     <UL>
+     <LI> By convention the filename must end <TT>.c</TT>, e.g.
+          <TT>MyProgram.c</TT>
+     <LI> There are many C compilers around.
+          <UL>
+          <LI> The <TT>cc</TT> is the default compiler.
+               Often it's simply an alias for ...
+          <LI> The GNU C compiler <TT>gcc</TT> is popular and available
+               for many platforms.
+          <LI> Other (less common) C compilers exist. 
+          <LI> All the compilers operate in essentially the same manner and
+               share many common 
+               <A HREF="../CTools/Compiler.shtml#Some Useful Compiler Options">
+               command line options</A>.
+          <LI> The best source of information for each compiler is
+               through the online manual pages: e.g., <TT>man gcc</TT>.
+          </UL>
+     <LI> To compile your program simply invoke the compiler followed by
+          the name of the (C) program you wish to compile. E.g.,
+          <PRE>
+prompt> gcc Program.c </PRE>
+     <LI> If there are language errors in your program the compiler
+          will detect and report them.
+          <UL>
+          <LI> The <TT>-Wall</TT> option will make the compiler warn about 
+               code that can be compiled but looks dodgy ... use it.
+          <LI> The <TT>-ansi</TT> option will raise errors for non-ANSI
+               standard constructs.
+          <LI> The <TT>-pedantic</TT> option will make the compiler compile
+               strictly to ANSI standards ... it's not necessary.
+          </UL>
+     <LI> The compiled version, or executable, is left in a file called
+          <TT>a.out</TT>, or, if the compiler option <TT>-o</TT> is
+          used, the file listed after the <TT>-o</TT>.
+          <UL>
+          <LI> It is convenient to use a <TT>-o</TT> and filename in the
+               compilation as in
+               <PRE>
+prompt> gcc -Wall -o Program Program.c </PRE>
+          </UL>
+     </UL>
+<P>
+<LI> Running
+     <UL>
+     <LI> To run an executable in UNIX, you simply type the name of
+          the file containing it, e.g.,
+          <PRE>
+prompt> a.out
+prompt> Program </PRE>
+     <LI> This assumes you have <TT>.</TT> in your <TT>path</TT>
+          variable. If you don't you have to precede the file name
+          with <TT>./</TT> to say "look in the current directory".
+     </UL>
+<P>
+<LI> Variables and Arithmetic.
+     <UL>
+     <LI> <A HREF="MyCode/FahrCelciusWhile.c"><TT>FahrCelciusWhile.c</TT></A>
+          - Program to convert fahrenheit to celcius using a <TT>while</TT> 
+          loop.
+     <LI> <TT>//...</TT> is a comment through to the end of the line
+          <UL>
+          <LI> Comments may also be written within <TT>/* ... */</TT> pairs.
+               Such comments may extend over multiple lines. 
+          <LI> Comments do not nest.
+          </UL>
+     <LI> Variable definitions reserve memory for the variables.
+          <UL>
+          <LI> This consists of a type and a list of variables.
+          <LI> The basic data types are 
+               <TT>int</TT>, <TT>float</TT>, <TT>double</TT>, <TT>char</TT>.
+          <LI> Other data types are arrays, structures, unions, pointers.
+          </UL>
+     <LI> Everything should be declared before use.
+          <UL>
+          <LI> Declaration gives structure information. 
+          <LI> A definition gives the details
+          <LI> A definition serves as a declaration.
+          </UL>
+     <LI> <TT>=</TT> is for assignment.
+     <LI> Non-compound statements are terminated with a <TT>;</TT>,
+          and compond statements are enclosed in <TT>{}</TT>s
+     <LI> The <TT>while</TT> loop has a familiar look :
+          <PRE>
+while (&lt;condition>) {
+    &lt;statement> 
+}</PRE>
+          <UL>
+          <LI> The condition is tested each time before the body is executed.
+          <LI> The body may be a single statement or a compound statement 
+               (Style suggestion ... always use  a compound statement).
+          </UL>
+     <LI> Note the use of indentation, meaningful variable names, etc.
+     <LI> The comparison/assignment/subtraction of <TT>float</TT> and 
+          <TT>int</TT> is ok, the <TT>int</TT>s are automatically converted 
+          to <TT>float</TT> before the comparison/assignment/subtraction 
+          occurs.
+     <LI> <TT>5.0/9.0</TT> is real division - implied by the constants. 
+          <UL>
+          <LI> Integer division truncates.
+          </UL>
+     <LI> <TT>printf</TT> is a general purpose format conversion function. 
+          <UL>
+          <LI> Its first argument is a string of characters to be printed, 
+               with a <TT>%</TT> sign where and how each of the following 
+               arguments should be printed. 
+               Each <TT>%</TT> must correspond by type with a later argument.
+          <LI> <TT>%4.0f</TT> says a floating point is to be printed in a 4
+               character field with no digits after the decimal point.
+          <LI> <TT>%f</TT> for float, <TT>%d</TT> for decimal integer, 
+               <TT>%o</TT> for octal, <TT>%x</TT> for hexadecimal, 
+               <TT>%c</TT> for character, <TT>%s</TT> for character string and
+               <TT>%%</TT> for %.
+          <LI> <TT>\n</TT> is for newline, <TT>\t</TT> for tab, <TT>\b</TT> for 
+               backspace, <TT>\"</TT> for double quote and <TT>\\</TT> for 
+               backslash.
+          </UL>
+     </UL>
+<P>
+<LI> The for statement
+     <UL>
+     <LI> <A HREF="MyCode/FahrCelciusFor.c"><TT>FahrCelciusFor.c</TT></A>
+          - Program to convert fahrenheit to celcius using a <TT>for</TT> 
+          loop.
+     <LI> The first part of a <TT>for</TT> statement is done once before 
+          the loop is entered.
+     <LI> The second part is the test that controls whether the loop
+          should be entered.
+     <LI> The third part is the re-initialisation step that is done at
+          the completion of the body of the loop.
+     <LI> Can be re-written as a while loop.
+     <LI> Expressions can be used anywhere values can be used, e.g., in
+          <TT>printf</TT>.
+     </UL>
+<P>
+<LI> Symbolic constants.
+     <UL>
+     <LI> <A HREF="MyCode/FahrCelciusDefine.c"><TT>FahrCelciusDefine.c</TT></A>
+          - Program to convert fahrenheit to celcius using <TT>#define</TT>.
+     <LI> The <TT>#define</TT> construction at the beginning of a program can
+          define a symbolic name or symbolic constant.
+     <LI> A preprocessor replaces all unquoted occurences of the name
+          with the string, before the compiler starts.
+     <LI> Symbolic constants are normally written in upper case to
+          distinguish them from variables.
+     <LI> There is no ; at the end of the definition.
+     <LI> Statements can span over several lines, but must not be
+          broken in mid-character string or word.
+</UL>
+<P>
+<LI> A Collection of Useful Programs
+     <UL>
+     <LI> File copying
+          <UL>
+          <LI> <A HREF="MyCode/FileCopy.c"><TT>FileCopy.c</TT></A>
+               - Program to copy input to output.
+          <LI> Input and output is considered to be a stream of
+               characters. A special character is the new line character
+               <TT>\n</TT>, which breaks the stream up into lines.
+          <LI> <TT>getchar()</TT> returns the next character on <TT>stdin</TT>
+               as an integer. e.g. <TT>c=getchar()</TT>. 
+               The return value is integer to facilitate the return of 
+               <TT>EOF</TT>, which is a symbolic constant defined in
+               <TT>stdio.h,</TT> and is often <TT>-1</TT>. 
+               Hence <TT>C1</TT> is defined as an integer.
+          <LI> From the keyboard <TT>EOF</TT> is generated by a line containing
+               <TT>^D</TT>
+          <LI> <TT>putchar(C)</TT> prints (portably, the last 7 bits of,
+               see <TT>limits.h</TT> for the local width of a char) integer 
+               <TT>C</TT> onto <TT>stdout</TT> as a character.
+               It also returns an <TT>int</TT> value (see later).
+          <LI> Calls to <TT>putchar</TT> and <TT>printf</TT> may be 
+               interleaved, the output will appear in same order.
+          <LI> <TT>getchar</TT> and <TT>putchar</TT> declarations reside 
+               in <TT>stdio.h</TT>.
+          <LI> The return value from function <TT>putchar</TT> has been ignored.
+               This is always ok.
+          <LI> <TT>!=</TT> means not equal to
+          <LI> In C any assignment can be used as an expression, its value
+               being the value assigned to the LHS.
+               <UL>
+               <LI> <A HREF="MyCode/FileCopy2.c"><TT>FileCopy2.c</TT></A>
+                    - Program to copy input to output.
+               <LI> The <TT>()</TT> round the assignment are necessary as 
+                    <TT>!=</TT> has higher precedence than <TT>=</TT>.
+               </UL>
+          </UL>
+     <LI> Character counting.
+          <UL>
+          <LI> <A HREF="MyCode/CharCount.c"><TT>CharCount.c</TT></A>
+               - Program to count characters.
+          <LI> <TT>++</TT> is an operator that increments by one. 
+               There is also <TT>--</TT> which decrements by one. 
+               These two operators may be postfix 
+               (<TT>NumberOfCharacters++</TT>) or prefix 
+               (<TT>++NumberOfCharacters</TT>)
+               with slightly different effects. See later.
+          <LI> The use of <TT>long</TT> allows a much larger number of 
+               characters to be input before overflow occurs. 
+          <LI> The format <TT>%ld</TT> is for long integers.
+          <LI> An alternative way.
+               <UL>
+               <LI> <A HREF="MyCode/CharCount2.c"><TT>CharCount2.c</TT></A>
+                    - Program to count characters.
+               <LI> The body of the <TT>for</TT> loop is empty (could also
+                    be done with a <TT>;</TT>)
+               <LI> <TT>.0f</TT> suppresses the printing of the decimal 
+                    point and fractional part.
+               </UL>
+          </UL>
+     <LI> Line counting.
+          <UL>
+          <LI> <A HREF="MyCode/LineCount.c"><TT>LineCount.c</TT></A>
+               - Program to count lines.
+          <LI> <TT>==</TT> tests for equality.
+          <LI> The if statement tests the condition in <TT>()</TT>
+          <LI> A single character is written between <TT>''</TT>s, 
+               e.g. <TT>'A'</TT> 
+               This is called a character constant, and is converted to the
+               numeric value that represents that character, e.g., 65.
+               Hence compatibility between characters and integer.
+          </UL>
+     <LI> Word counting.
+          <UL>
+          <LI> <A HREF="MyCode/AllCount.c"><TT>AllCount.c</TT></A>
+               - Program to count lines, words, and chars.
+          <LI> The symbolic constants <TT>YES</TT> and <TT>NO</TT> make the 
+               program readable and flexible. 
+               In addition they make sense as false is associated with 0 
+               and true with non-0 integers.
+               Correspondingly, <TT>int</TT> is used for Boolean variables.
+          <LI> The initialisation in one line is possible as assignment
+               has a value and associates right to left. i.e.
+               <TT>Lines = (Words = (Characters = 0));</TT>
+          <LI> The operator <TT>||</TT> means inclusive or. 
+               <TT>&&</TT> is for and. 
+               Logical expressions are evaluated left to right and as soon 
+               as the truthhood is known the evaluation stops. This useful in
+               complicated situations.
+          <LI> The C if-then-else statement has the form :
+               <PRE>
+if (&lt;expression>) {
+    &lt;statement>
+} else {
+    &lt;statement>
+} </PRE>
+               (Style hint ... use compound statements)
+          <LI> <TT>!</TT> negates a "Boolean" value, changing 0 to 1 and 
+               non-0 to 0.
+          </UL>
+     </UL>
+<P>
+<LI> Functions
+     <UL>
+     <LI> <A HREF="MyCode/ProgramStructure.c"><TT>ProgramStructure.c</TT></A>
+          - Program with functions.
+     <LI> ANSI standard compilers provide prototyping which allows a
+          function to be completely (including arguments) declared
+          before use, to improve compiler error checking.
+          <UL>
+          <LI> If not declared a (probably inappropriate) default is used.
+          <LI> If the function is defined before use, this will act as a
+               declaration. 
+               <UL>
+               <LI> Thus the functions could be put before <TT>main</TT>, 
+                    and the declarations left out.
+               <LI> <A HREF="MyCode/ProgramStructure2.c">
+                    <TT>ProgramStructure2.c</TT></A>
+                    - Program with functions before <TT>main</TT>.
+               <LI> The declaration style makes it easy to convert to a 
+                    multi-file program - see later.
+               </UL>
+          <LI> All library functions have their prototypes in the
+               appropriate header file, which must be included.
+          </UL>
+     <LI> A C function can act as a procedure or a function. If the type
+          is <TT>void</TT> then no value is returned, and the function 
+          acts as a procedure.
+          <UL>
+          <LI> A value is returned via the <TT>return</TT> statement. 
+               If a value is returned the function acts as a true function 
+               and is invoked by using the function name as a value.
+          <LI> A <TT>return</TT> statement without a value causes control 
+               but no value to be returned, as does "falling-off-the-end". 
+               In this situation the function acts as a procedure and may be
+               invoked via the function name. 
+          <LI> Functions that return values may have their return values 
+               ignored, and be treated like procedures.
+          <LI> A function may have multiple <TT>return</TT>s.
+          </UL>
+     <LI> Variables declared in a function are local and temporary
+          (unless specified otherwise - see later).
+     <LI> A C program may be distributed over multiple files, and
+          functions called between files. In every case, a function must
+          be declared before use.
+     </UL>
+<P>
+<LI> Arguments - Call by value.
+     <UL>
+     <LI> <A HREF="MyCode/PowerFunction.c"><TT>PowerFunction.c</TT></A>
+          - Program with function with arguments
+     <LI> In C all function arguments except arrays are passed by value,
+          i.e. the arguments are re-created locally when the function is
+          invoked and the appropriate values copied from the invokation.
+          Thus this version alters <TT>Exponent</TT>, but that does not 
+          affect the actual argument in the call.
+     <LI> Pass by reference can be achieved by explicitly passing the
+          address of (pointer to) a variable.
+     <LI> The exception is in the case of arrays where the value passed
+          to the function argument is the address of the first element
+          of the array. Thus arrays are passed by reference.
+     <LI> C has no exponentiation.
+     </UL>
+<P>
+<A NAME="Arrays"></A>
+<LI> Arrays
+     <UL>
+     <LI> <A HREF="MyCode/WhiteCount.c"><TT>WhiteCount.c</TT></A>
+          - Program to count white space and digits and others
+     <LI> The declaration <TT>int Digits[10];</TT> declares an array of 10
+          integers. In C the subscripts to arrays always start at 0.
+     <LI> Beware - no seat belts, no airbags. 
+          C does not check array subscripts.
+          <UL>
+          <LI> Source of many security problems.
+          </UL>
+     <LI> By definition arithmetic involving <TT>int</TT>s and <TT>char</TT>s 
+          converts everything to <TT>int</TT> before proceeding, so 
+          <TT>C1-'0'</TT> has an integer result.
+     </UL>
+<P>
+<LI> Character arrays.
+     <UL>
+     <LI> <A HREF="MyCode/LongestLine.c"><TT>LongestLine.c</TT></A>
+          - Program to find the longest line in the input.
+     <LI> The argument declaration <TT>char Line[]</TT> declares that 
+          <TT>Line</TT> is an array of characters. 
+          The length need not be supplied as C doesn't care.
+     <LI> C represents character strings internally by the sequence of
+          characters followed by the <TT>'\0'</TT> character. 
+          The <TT>%s</TT> format expects strings to be in this form. 
+          Character arrays that are to hold strings need to be defined 
+          one too long.
+     <LI> <TT>GetLine</TT> puts the character <TT>'\0'</TT> at the end of 
+          the array to follow the standard representation. 
+          Similarly, <TT>Copy</TT> detects the end of the string when 
+          it reaches 
+          this character.
+     <LI> The left to right evaluation of logical expressions is useful
+          in <TT>GetLine</TT>'s <TT>for</TT> loop.
+     </UL>
+<P>
+<LI> Formatted input - <TT>scanf</TT>.
+     <UL>
+     <LI> <A HREF="MyCode/ReadPeople.c"><TT>ReadPeople.c</TT></A>
+          - Program using formatted IO for reading and writing people
+     <LI> <TT>int scanf(char control[],&lt;arg1>,&lt;arg2>,....);</TT>
+     <LI> <TT>scanf</TT> reads and converts input from the standard input 
+          stream under the control of the control argument.
+     <LI> The control string controls input conversion.
+     <LI> The following arguments must all be addresses.
+          <UL>
+          <LI> Arrays = give name
+          <LI> Other variables = preceed with <TT>&</TT>.
+          </UL>
+     <LI> A conversion specification starts with a <TT>%</TT> and ends with a
+          conversion character. 
+     <LI> Some conversion characters are :
+          <LI> <TT>d</TT> = <TT>int *</TT> &lt;- decimal integer
+          <LI> <TT>c</TT> = <TT>char *</TT> &lt;- character (default one 
+               character). White space skip is suppressed. 
+               Use <TT>%1s</TT> to skip white space.
+          <LI> <TT>s</TT> = <TT>char * (char [])</TT> &lt;- character string. 
+               <TT>\0</TT> is added to the input.
+          <LI> <TT>f</TT>,<TT>e</TT>,<TT>g</TT> = <TT>float *</TT> &lt;- real
+     <LI> Example
+          <PRE>
+    int i1;
+    float f1;
+    char name[50];
+
+    scanf("%2d %f %*d %2s",&i1,&f1,name)
+          </PRE>
+          with input <TT>56789 1234 45a72</TT>
+          gives <TT>i1</TT>=56, <TT>f1</TT>=789.0 , <TT>name</TT>="45"
+     </UL>
+<P>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+
+<UL>
+<LI> Run the "hello world" program on our system.
+<LI> Modify the temperature conversion program to print a
+     Celcius-Fahrenheit conversion in reverse order, that is, from
+     148 to -17 Celcius.
+     <BR><STRONG>Answer</STRONG>:
+     <A HREF="MyCode/ReverseCToF.c"><TT>ReverseCToF.c</TT></A>
+<LI> Write a program to copy its input to its output, replacing
+     each tab by <TT>\t</TT>, each newline by <TT>\n</TT> and a newline, 
+     and each backslash by <TT>\\</TT>.
+     This makes the special characters visible in an unambiguous way.
+     <BR><STRONG>Answer</STRONG>:
+     <A HREF="MyCode/ExpandSpecials.c"><TT>ExpandSpecials.c</TT></A>
+<LI> Input two numbers and work out their sum, average and sum of the
+     squares of the numbers.
+<LI> Input and output your name, address and age to an appropriate
+     structure.
+<LI> Write a program that works out the largest and smallest values
+     from a set of 10 inputted numbers.
+<LI> Write a program to read a <TT>float</TT> representing a number of
+     degrees Celsius, and print as a <TT>float</TT> the equivalent temperature 
+     in degrees Fahrenheit. Print your results in a form such as
+     <TT>100.0 degrees Celsius converts to 212.0 degrees Fahrenheit</TT>
+<LI> Write a program to print several lines (such as your name and
+     address). You may use either several <TT>printf</TT> instructions, each 
+     with a newline character in it, or one <TT>printf</TT> with several 
+     newlines in the string. 
+<LI> Write a program to read a positive integer at least equal to 3,
+     and print out all possible permutations of three positive integers 
+     less or equal to than this value. 
+<LI> Write a program to read a number of units of length (a <TT>float</TT>)
+     and print out the area of a circle of that radius. Assume that the 
+     value of pi is 3.14159.
+     Your output should take the form:
+     <PRE>
+The area of a circle of radius ... units is .... units.  </PRE>
+<LI> Given as input a floating (real) number of centimeters, print
+     out the equivalent number of feet (integer) and inches (floating, 
+     1 decimal), with the inches given to an accuracy of one decimal place.
+     Assume 2.54 centimeters per inch, and 12 inches per foot.
+     If the input value is 333.3, the output format should be:
+     <PRE>
+333.3 centimeters is 10 feet 11.2 inches.  </PRE>
+<LI> Given as input an integer number of seconds, print as output
+     the equivalent time in hours, minutes and seconds. Recommended output 
+     format is something like
+     <PRE>
+322 seconds is equivalent to 2 hours 2 minutes 2 seconds.  </PRE>
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

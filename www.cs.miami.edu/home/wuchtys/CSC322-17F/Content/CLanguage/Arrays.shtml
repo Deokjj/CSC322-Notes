@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<TITLE>Arrays</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Arrays</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Single dimension arrays
+     <UL>
+     <LI> <A HREF="TutorialIntro.shtml#Arrays">Encountered already</A>
+     <LI> Example
+          <PRE>
+int ListOfNumbers[50]; </PRE>
+     <LI> Subscripts start at 0 and end one less than the array size. 
+          In the above example valid subscripts range from 0 to 49.
+     <LI> Access
+          <PRE>
+ThirdNumber = ListOfNumbers[2];
+ListOfNumbers[5] = 100; </PRE>
+     </UL>
+
+<LI> Typedef for arrays
+     <UL>
+     <LI> A wise C guru (almost) always <TT>typedef</TT>s arrays
+     <LI> <A HREF="MyCode/ArrayTypedef.c"><TT>ArrayTypedef.c</TT></A>
+          - Counting character types in input
+     </UL>
+
+<P>
+<LI> Array initialisation.
+     <UL>
+     <LI> Arrays may be initialised by following the definition with
+          a list of initialisers enclosed in <TT>{}</TT> separated by 
+          commas.
+          <PRE>
+int TopTen[10] = {0,1,2,3,4,5,6,7,8,9};
+          </PRE>
+     <LI> Character arrays may also be initialised with character
+          strings. This adds a null at the end if the string is
+          shorter than the array.
+          <PRE>
+char Name[32] = "Stefan Wuchty"; </PRE>
+     <LI> If there are less initialisers than elements the extra
+          elements are initialised with 0 if <TT>external</TT> or 
+          <TT>static</TT>, garbage if automatic. For example 
+          <PRE>
+int Data[10] = {}; </PRE>
+          initialises the entire array to 0/garbage.
+     <LI> There may not be more initialisers than array elements.
+     <LI> In the definition of an array the size may be implied by
+          the initialisation list. e.g. 
+          <PRE>
+int Data[] = {1,2,3,4,5,6}; </PRE>
+          defines an array of size 6 and 
+          <PRE>
+char Error[] = "Error\n"; </PRE>
+          defines an array of size 7.
+     </UL>
+
+<P>
+<LI> Strings 
+     <UL>
+     <LI> Strings are defined as arrays of characters. For example, the 
+          following defines a string of 50 characters: 
+          <PRE>
+char Name[50]; </PRE>
+     <LI> In order to allow variable length strings the <TT>\0</TT> 
+          character is used to indicate the end of a string. 
+     <LI> C has no string handling facilities built in and so the following 
+          are all illegal: 
+          <PRE>
+char FirstName[50],LastName[50],FullName[100];
+ 
+FirstName = "Arnold"; //----Illegal
+LastName = "Schwarznegger"; //----Illegal
+FullName = "Mr"+FirstName+LastName; //----Illegal </PRE>
+     <LI> There is a library of string handling routines defined in
+          <TT>string.h</TT>, e.g.,
+          <UL>
+          <LI> <TT>strcpy</TT> - copies a string into an array of <TT>char</TT>
+          <LI> <TT>strcat</TT> - appends a string into an array of 
+               <TT>char</TT> (there must be enough space allocated)
+          <LI> <TT>strlen</TT> - returns the length of the string (upto the 
+               first '\0' character)
+          <LI> <TT>strcmp</TT> - compares two strings lexicographically
+          <LI> <TT>strstr</TT> - Looks for one string in another
+          </UL>
+     <LI> To print a string we use <TT>printf</TT> with a special
+          <TT>%s</TT> control character: 
+          <PRE>
+printf("%s",name); </PRE>
+     <LI> <A HREF="MyCode/Strings.c"><TT>Strings.c</TT></A>
+          - String manipulation program
+     </UL>
+
+<P>
+<LI> Multi-dimensional arrays.
+     <UL>
+     <LI> In C multi-dimensional arrays are actually arrays of arrays (but
+          not actually arrays of references/pointers).
+     <LI> As <TT>[]</TT> are left-to-right associative 
+          <TT>int A[5][10];</TT> defines an array of size 5 of (array 
+          of size 10). 
+     <LI> The right most subscript varies fastest in memory allocation.
+     <LI> For access the indices are in separate brackets. e.g.
+          <TT>A[3][5]</TT>.
+     <LI> There is no limit on the number of dimensions.
+     <LI> Multi-dimensional array initialisation
+          <UL>
+          <LI> As multi-dimensional arrays are arrays of arrays the
+               initialisation uses the same principles as single dimension
+               arrays.
+               <PRE>
+float Data[4][3] = {{1},{2},{3},{4}}; 
+               </PRE>
+               initilises the "first column" of data to 1,2,3,4 and the 
+               rest to 0 or garbage.
+          <LI> The rules for too few initialisers apply at any level.
+          </UL>
+     <LI> <A HREF="MyCode/Array2D.c"><TT>Array2D.c</TT></A>
+          - Finding the day number in a year
+     <LI> If multi-dimensional arrays are declared (e.g. when passed
+          as function arguments, or in extern statements) all but the
+          first dimension must be specified so the correct address
+          arithmetic can be generated by the compiler. This because
+          the array is passed via the address of the first element,
+          and it is (only) necessary to know how big each first
+          dimension element is, but not how many there are, e.g.
+     <LI> <A HREF="MyCode/Array2DFunction.c"><TT>Array2DFunction.c</TT></A>
+          - Finding the day number in a year
+     <LI> A better approach is to use a <TT>typedef</TT>
+     <LI> <A HREF="MyCode/Array2DTypedef.c"><TT>Array2DTypedef.c</TT></A>
+          - Finding the day number in a year
+     </UL>
+
+<P>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write 
+     <TT>void matrix_multiply(float m1[2][3],float m2[3][4],float m3[2][4])</TT>
+     that multiplies <TT>m1</TT> with <TT>m2</TT>, putting the result in
+     <TT>m3</TT>.
+<LI> Read an integer value. Assume it is the number of a month of
+     the year; print out the name of that month.
+<LI> Write a C program to read through an array of any type. Write
+     a C program to scan through this array to find a particular value.
+<LI> Read ordinary text a character at a time from the program's
+     standard input, and print it with each line reversed from left to 
+     right. Read until you encounter end-of-data (see below).
+     You may wish to test the program by typing
+<PRE>
+prog5rev | prog5rev
+</PRE>
+     to see if an exact copy of the original input is recreated.
+<LI> Write a program to read English text to end-of-data (type control-D 
+     to indicate end of data at a terminal, see below for detecting it), 
+     and print a count of word lengths, i.e. the total number of words of 
+     length 1 which occurred, the number of length 2, and so on.
+     Define a word to be a sequence of alphabetic characters.
+     You should allow for word lengths up to 25 letters.
+     Typical output should be like this:
+     <PRE>
+length 1 : 10 occurrences
+length 2 : 19 occurrences
+length 3 : 127 occurrences
+length 4 : 0 occurrences
+length 5 : 18 occurrences
+    ....
+     </PRE>
+<LI> Write a function <TT>replace</TT> which takes a pointer to a string as a
+     parameter, replaces all spaces in that string by minus signs,
+     and delivers the number of spaces it replaced.
+     Thus
+<PRE>
+char *cat = "The cat sat";
+n = replace(cat);
+</PRE>
+     should set <TT>cat</TT> to "The-cat-sat" and <TT>n</TT> to 2.
+<LI> Write a program to find the number of times that a given word 
+     (i.e. a short string) occurs in a sentence (i.e. a long string!). 
+     Read data from standard input. The first line is a single word, which is
+     followed by general text on the second line. Read both up to a newline
+     character, and insert a terminating null before processing. 
+     Typical output should be: 
+     <PRE>
+The word is "the".
+The sentence is "the cat sat on the mat".
+The word occurs 2 times.
+     </PRE>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> Explain the difference and similarity between these two variables:
+     <PRE>
+char *String1;
+char String2[128]; </PRE>
+</UL>
+
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

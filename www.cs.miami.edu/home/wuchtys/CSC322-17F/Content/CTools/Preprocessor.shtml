@@ -1,0 +1,206 @@
+<HTML>
+<HEAD>
+<TITLE>The C Preprocessor</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>The C Preprocessor</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:42 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<!--
+<LI> Trigraph sequences
+     <UL>
+     <LI> The character set of ANSI C is within the 7 bit ASCII, but is
+          more than the ISO standard. 
+     <LI> To represent certain characters, trigraph sequences may be used. 
+     <LI> These are replaced by their characters before anything else happens
+     </UL>
+     <PRE>
+??=  #         ??/  \         ??'  ^         ??(  [
+??)  ]         ??!  |         ??&lt;  {         ??>  }
+??-  ~
+     </PRE>
+     <P>
+-->
+<LI> Line splicing
+     <UL>
+     <LI> Lines that end with <TT>\</TT> are joined with the next line.
+     </UL>
+<P>
+<LI> File inclusion - <TT>#include</TT>
+     <UL>
+     <LI> <TT>#include &lt;file></TT>
+     <LI> <TT>""</TT> searches directory of source first, then standard 
+          places.
+     <LI> <TT>&lt;></TT> search standard places only.
+     </UL>
+<P>
+<LI> Macro substitution - <TT>#define</TT>
+     <UL>
+     <LI> <TT>#define &lt;identifier> &lt;text></TT>
+     <LI> The macro identifiers are substituted by the following text
+          from the point of definition to the end of the source file.
+     <LI> Standardly written in <TT>CAPITAL_LETTERS</TT>.
+     <LI> No ; at the end of the text.
+     <LI> <A HREF="../CLanguage/MyCode/FahrCelciusDefine.c"><TT>FahrCelciusDefine.c</TT></A>
+          - Program to convert fahrenheit to celcius using <TT>#define</TT>.
+     <LI> The expansion is checked for further expansions.
+     <LI> Macros may be defined with arguments if the identifier is
+          followed immediately by a (. 
+          <UL>
+          <LI> The formal arguments in the definition are replaced by 
+               actual arguments which must match in number.
+          <LI> Example
+               <PRE>
+#define MAX(A,B) ((A) > (B) ? (A) : (B))
+               </PRE>
+               Then 
+               <PRE>
+x=MAX(p+q,r+s); 
+               </PRE>
+               expands to
+               <PRE>
+x=((p+q) > (r+s) ? (p+q) : (r+s))
+               </PRE>
+          <LI> This is useful as a max for any data type. However beware
+               problems.
+               <PRE>
+#define SQUARE(X) X*X
+SQUARE(z+1)
+               </PRE>
+               expands to 
+               <PRE>
+z+1*z+1
+               </PRE>
+          </UL>
+     <LI> <A HREF="MyCode/HashDefine.c"><TT>HashDefine.c</TT></A>
+          - Program that uses <TT>#define</TT> to keep the world clean.
+          Notice the <TT>()</TT>s used to avoid precedence errors when the
+          macro is used in an unexpected context.
+     <LI> <TT>#undef &lt;identifier></TT> causes the expansion to be forgotten.
+     <LI> Predefined identifiers
+          <UL>
+          <LI> <TT>__LINE__</TT> = current source line number
+          <LI> <TT>__FILE__</TT> = current file name
+          <LI> <TT>__DATE__</TT> = date of compilation
+          <LI> <TT>__TIME__</TT> = time of compilation
+          <LI> <TT>__STDC__</TT> = 1 (only in standard conforming 
+               implementations)
+          <LI> <A HREF="MyCode/SysDefs.c"><TT>SysDefs.c</TT></A>
+               - Program that prints out system symbol values
+          </UL>
+     </UL>
+<P>
+<LI> Conditional compilation.
+     <UL>
+     <LI> The preprocessor allows code to be compiled or ignored,
+          depending on existing defined macro identifiers. The general
+          form is :
+          <PRE>
+#if??? ?????????
+    &lt;code to be compiled if #if is non-0>
+#endif
+          </PRE>
+     <LI> <TT>#if &lt;constant expression></TT> checks if the 
+          <TT>&lt;constant expression></TT> is non-0.
+     <LI> <TT>#ifdef &lt;identifier></TT> checks if the identifier is
+          defined, by a <TT>#define</TT>.
+     <LI> <TT>#ifndef &lt;identifier></TT> checks if it is not defined.
+     <LI> In between <TT>#if???</TT> and <TT>#endif</TT> there may be 
+          <TT>#elif &lt;constant expression></TT> or <TT>#else</TT> with 
+          the intuitive meaning.
+     <LI> The constant expression may contain expressions of the form
+          <TT>defined(&lt;identifier>)</TT>, which are replaced by 
+          <TT>1L</TT> if the identifier is defined, <TT>0L</TT> if not.
+     <LI> <A HREF="MyCode/IfDef.c"><TT>IfDef.c</TT></A>
+          - Program that uses <TT>#define</TT> to keep the world clean
+     <LI> <A HREF="MyCode/MyHeader.h"><TT>MyHeader.h</TT></A>
+          - Avoiding multiple inclusions in <TT>.h</TT> files
+     <LI> Use for debugging.
+          You can set a symbol without a value on the command line, for 
+          example: 
+          <PRE>
+prompt> gcc -DDEBUG prog.c -o prog </PRE>
+          Here the value is assumed to be 1. 
+          The setting of such flags is useful, especially for debugging. 
+          You can put commands like: 
+          <PRE>
+x = y *3;
+
+#ifdef DEBUG
+     print("Debugging: Variables (x,y) = \",x,y);
+#endif </PRE>
+     </UL>
+<P>
+<LI> Line control
+     <UL>
+     <LI> <TT>#line &lt;constant></TT>
+     <LI> <TT>#line &lt;constant> "&lt;filename>"</TT>
+     <LI> Causes the compiler to believe that the current line number is
+          <TT>&lt;constant></TT>, and it is compiling the file 
+          <TT>&lt;filename></TT>
+     </UL>
+<P>
+<LI> Error generation
+     <UL>
+     <LI> <TT>#error &lt;text></TT>
+     <LI> Causes the preprocessor to output an error message that includes
+          the text.
+     </UL>
+<P>
+<LI> Pragmas
+     <UL>
+     <LI> <TT>#pragma &lt;text></TT>
+     <LI> Causes the preprocessor to perform implementation dependant
+          action, which is ignored if unrecognised.
+     </UL>
+<P>
+<LI> The -E compiler option will force the compiler to stop after the
+     preprocessing stage and output the current state of your program. 
+     Apart from being debugging aid for preprocessor commands and also 
+     as a useful initial learning tool (try this option out with some 
+     of the examples above) it is not that commonly used. 
+<P>
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write code that defines a macro <TT>CHOOSE</TT>. If the symbol 
+     <TT>LARGE</TT> is defined <TT>CHOOSE</TT> should return the larger of 
+     its two arguments, otherwise it should return the smaller.
+     <BR><STRONG>Answer</STRONG>:
+     <A HREF="ExerciseAnswers/ChooseMacro.c"><TT>ChooseMacro.c</TT></A>
+<LI> Define a preprocessor macro <TT>SWAP(t,x,y)</TT> that will swap two 
+     arguments <TT>x</TT> and <TT>y</TT> of a given type <TT>t</TT>.
+<LI> Define preprocessor macros to select: 
+     <UL>
+     <LI> the least significant bit from an unsigned char 
+     <LI> the nth (assuming least significant is 0) bit from an unsigned char. 
+     </UL>
+</UL>
+
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> Explain the difference between <TT>#include &lt;blue.h></TT> and
+     <TT>#include "blue.h"</TT>?
+<LI> Write a program that prints out the date and time is was compiled.
+<LI> What does the following macro do?
+     <PRE>
+#define cc(A,B,C) (A)?(B):(C) </PRE>
+<LI> Write a conditional compilation statement that, depending on whether
+     or not the symbol <TT>LOCAL</TT> is defined, includes the file
+     <TT>string.h</TT> from the current directory (<TT>LOCAL</TT> is defined)
+     or from the standard splace (<TT>LOCAL</TT> not defined).
+</UL>
+
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

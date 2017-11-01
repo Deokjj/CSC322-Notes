@@ -1,0 +1,23 @@
+//-----------------------------------------------------------------------------
+//----File: main.c
+//----Description:  Use the greet module to display the greeting "Hello world"
+
+//----$Log: main.c,v $
+//----Revision 1.1  2013/09/19 18:58:39  stefan
+//----Initial revision
+//----
+//-----------------------------------------------------------------------------
+static char RCSId[] = "$Id: main.c,v 1.1 2013/09/19 18:58:39 stefan Exp $";
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void Greet(char *Greeting);
+//-----------------------------------------------------------------------------
+int main(void) {
+
+    Greet("Hello world.");
+
+    return(EXIT_SUCCESS);
+}
+//-----------------------------------------------------------------------------

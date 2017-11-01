@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<TITLE>Program Structure</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Program Structure</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> In C it is important to differentiate between a definition 
+     and a declaration. 
+     A declaration gives information about something (data type, storage 
+     class, variable/function/etc), while a definition reserves
+     space/generates code.
+     A definition also serves as a declaration.
+
+<P>
+<LI> Identifiers and Keywords
+     <UL>
+     <LI> Identifiers are made up of alphanumeric and underscore.
+     <LI> Traditionally variables are lower case and constants upper
+          case. Don't begin names with underscore, as this often used
+          for libary routines and may clash.
+     <LI> Keywords cannot be used.
+          <PRE>
+auto       break      case       char       const      continue
+default    do         double     else       enum       extern     
+float      for        goto       if         int        long       
+register   return     short      signed     sizeof     static 
+struct     switch     typedef    union      unsigned   void
+volatile   while
+          </PRE>
+     </UL>
+
+<P>
+<LI> The basics.
+     <UL>
+     <LI> <A HREF="MyCode/ProgramStructure.c"><TT>ProgramStructure.c</TT></A>
+          - Fahrenheit to celcius, using functions
+     <LI> Functions should be declared before use. 
+          The declaration provides information about the arguments and return 
+          type, thus allowing better compiler checking, argument type checking,
+          etc.
+     <LI> A prototype declaration
+<PRE>
+&lt;function type> &lt;name>(&lt;argument declarations>);
+</PRE>
+          <UL>
+          <LI> The function type is void if it does not return a value.
+          <LI> The argument declarations are
+               <UL>
+               <LI> <TT>void</TT> if there are no arguments,
+               <LI> A list of comma separated 
+                    <TT>&lt;type> [&lt;formal name>]</TT> declarations.
+               </UL>
+          <LI> The argument names are optional in a declaration, and are
+               not used except for the issue of warning messages.
+          <LI> <A HREF="MyCode/Prototypes.c"><TT>Prototypes.c</TT></A>
+               - Fahrenheit to celcius, using functions
+          <LI> Each argument is declared seperately, not as for local
+               variable definitions.
+          </UL>
+     <LI> A function definition
+          <PRE>
+&lt;function type> &lt;name>(&lt;argument declarations>) {
+     &lt;local variable definitions>
+     &lt;statements>
+     [return[(&lt;return value>)]]
+}
+          </PRE>
+          <UL>
+          <LI> The definition of a function that has been declared, must
+               match exactly on type, name, number of arguments, argument
+               names if given, and argument type.
+          <LI> The argument names are not optional here.
+          </UL>
+     <LI> Returning
+          <UL>
+          <LI> Functions ay exit at any point via a return statement.
+               Multiple return statements is ok. 
+          <LI> Functions whose type is <TT>void</TT> may exit 
+               via a return statement with no &lt;return value>. 
+               Such functions may also fall of the end.
+          <LI> Functions whose type is not <TT>void</TT>, must return a 
+               value via a <TT>return(&lt;expression>)</TT> statement. 
+               The return value need not be in <TT>()</TT>s. 
+               The expression will be converted to the appropriate
+               type, as per the type conversion rules (see later). 
+          <LI> The call to a function may ignore the returned value.
+          </UL>
+     <LI> Functions may not be nested.
+     <LI> Functions may be used recursively.
+     <LI> If a function is not declared before its use, it is given a
+          default declaration of <TT>int &lt;name>(void)</TT>. 
+          It is much better to be explicit always.
+     </UL>
+
+<P>
+<LI> Arguments
+     <UL>
+     <LI> Actual arguments are converted to their formal types,
+          according to conversion rules.
+     <LI> A call to a function of 0 arguments must have <TT>()</TT>s.
+     <LI> Array names represent the address of the first element thus an
+          array is passed by reference. All other types are passed by
+          value.
+     <LI> Passing non-arrays by reference 
+          <UL>
+          <LI> <A HREF="MyCode/Swap.c"><TT>Swap.c</TT></A>
+               - Program using pointers for pass by reference
+          <LI> Their address must be passed to the function and indirection 
+               used to access the variable in the function. 
+          <LI> <TT>&</TT> indicates the address of the name.
+          <LI> <TT>*</TT> indicates the contents of the address in the name.
+          <LI> Notice the argument declaration which says <TT>This</TT> 
+               and <TT>WithThis</TT> point to <TT>int</TT>s.
+          </UL>
+     <LI> A variable number of arguments may be passed to a function.
+          <UL>
+          <LI> <A HREF="MyCode/PrintInFormat.c"><TT>PrintInFormat.c</TT></A>
+               - Program that prints a variable number of integers
+          <LI> Use the <TT>...</TT> argument as the last formal argument, e.g.
+               <TT>int printf(char *format,...)</TT>
+          <LI> There must be at least one named argument.
+          <LI> Declared in <TT>&lt;stdarg.h></TT> are the type <TT>va_list</TT>
+               and the functions <TT>va_start</TT>, <TT>va_arg</TT>, and 
+               <TT>va_end</TT>, which are used to access the variable number 
+               of arguments. 
+               A variable of type <TT>va_list</TT> is a pointer to the next 
+               argument. 
+               <TT>va_start</TT> is a procedure that initialises such a 
+               variable, <TT>va_arg</TT> returns the value of each successive 
+               argument, and updates the variable, and <TT>va_end</TT> cleans 
+               up afterwards.
+          </UL>
+     </UL>
+
+<P>
+</UL>
+
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write <TT>int strindex(char s1[],char c1)</TT> which returns the index
+     of the first occurrence of <TT>c1</TT> in <TT>s1</TT>, or -1 if 
+     <TT>c1</TT> does not occur in <TT>s1</TT>.
+</UL>
+
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> What is the difference between a declaration and a definition of a 
+     variable or function?
+<LI> Give the syntax for a function {declaration|definition}.
+<LI> How are arrays treated differently from other variables when passed as
+     arguments to functions?
+<LI> What effect does the <TT>const</TT> qualifier have when applied to
+     a function argument?
+</UL>
+
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

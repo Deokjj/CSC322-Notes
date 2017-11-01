@@ -1,0 +1,269 @@
+<HTML>
+<HEAD>
+<TITLE>UNIX Tools and Tricks</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX Tools and Tricks</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Editing
+     <UL>
+     <LI> There are many ways to edit text under UNIX. However, recommended are
+          <UL>
+          <LI> <TT>vi</TT>
+          <LI> <TT>emacs</TT
+          </UL>
+     <LI> <TT>vi</TT> (the visual editor) is the text editor written 
+          by Bill Joy for BSD UNIX (published about 1978)
+          <UL>
+          <LI> Screen-oriented WYSIWYG editor (for plain text)
+          <LI> Available on just about any UNIX system
+          <LI> About 35% of all serious UNIX hackers still prefer <TT>vi</TT>
+               (or a derivative)
+          <LI> <TT>vim</TT> is an improved version<BR>
+               <TT>vimtutor</TT> will get you going
+          <LI> <TT>gvim</TT> is a windows based interface to <TT>vim</TT>
+          </UL>
+     <LI> <TT>emacs</TT> (editing macros) started in 1976 as a set of 
+          TECO macros on ITS
+          <UL>
+          <LI> Currently popular <TT>emacs</TT> versions (GNU Emacs and 
+               XEmacs) go back to 1985 GNU Emacs by Stallman. 
+               Both basically are a LISP system with a large text editing 
+               library and an editor-like user interface
+          <LI> About 35% of all serious UNIX hackers use Emacs. 
+               Also widespread use on other operating systems
+          <LI> <TT>emacs</TT> has zillions of extensions<BR>
+	  <LI> <A HREF="emacs.shtml"><TT> emacs </TT>crash course</A>
+          </UL>
+     </UL>
+<P>
+<LI> Less typing
+     <UL>
+     <LI> History
+          <UL>
+          <LI> Set the number of commands to store in your shell
+               resource file, e.g., <TT>set history=100</TT>.
+          <LI> <TT>history</TT> lists recent commands. 
+               Gurus alias that to "h".
+          <LI> <TT>!</TT>&lt;number> redoes that command
+          <LI> <TT>!</TT>&lt;partial> redoes the most recent command that
+               started with &lt;partial>
+      </UL>
+<P>
+<LI> Globbing
+     <UL>
+     <LI> Describe to the shell (not OS) sets of file names with patterns
+     <LI> <TT>~</TT> means the home directory
+     <LI> <TT>?</TT> means any character<BR>
+          <TT>*</TT> means any string (including empty)
+     <LI> <TT>[</TT>&lt;letters><TT>]</TT> means any one of the &lt;letters>
+          (except ...), which can also be a range<BR>
+     <LI> <TT>^</TT> negates some glob expressions
+     </UL>
+ <LI> File name completion
+      <UL>
+      <LI> Many shells, including tcsh, provide file name completion
+      <LI> In tcsh, turn on with 
+           <PRE>
+set autoexpand
+set autolist </PRE>
+           in the <TT>.tcshrc</TT>
+      <LI> Use tab to expand partial file names
+      </UL>
+ </UL>
+<P>
+<LI> Foreground and background processes
+     <UL>
+     <LI> Ooooh, the <A HREF="MyCode/Ticker.c"><TT>Ticker</TT></A>
+     <LI> Foreground processes are started by typing a command.
+          While a foreground process is running the shell waits.
+     <LI> Background processes are started by appending a <TT>&</TT> to 
+          the command.
+          <UL>
+          <LI> While a background process is running the shell continues.
+          <LI> Output from the background process is mixed in ... the
+               solution is to send the <TT>stdout</TT> to a file, leaving
+               <TT>stderr</TT> to screen.
+          <LI> If a background process needs input, it gets suspended (read on).
+          </UL>
+     <LI> Each process you start from the shell is known as a "job",
+          i.e., you have maximally one foreground job and can have multiple
+          background jobs.
+     <LI> Background processes can be controlled
+          <UL>
+          <LI> <TT>jobs</TT> lists background processes, and their numbers
+          <LI> <TT>kill %N</TT> terminates a background process by job number
+          <LI> <TT>fg %N</TT> brings a background process into the foreground
+          </UL>
+     <LI> The foreground process can be suspended and moved to the background
+          <UL>
+          <LI> <TT>^Z</TT> suspends the foreground process
+          <LI> <TT>jobs</TT> also lists suspended processes
+          <LI> <TT>bg %N</TT> activates a suspended process in the background
+          <LI> <TT>fg %N</TT> also activates a suspended process in the
+               foreground
+          <LI> <TT>kill %N</TT> also terminates a suspended process
+          </UL>
+     <LI> A background process will be suspended automatically if it 
+          needs to read data from <TT>stdin</TT>.
+          Some programs, e.g., <TT>perl</TT> check <TT>stdin</TT> when
+          they start, so as background processes they hang.
+          The solution is to redirect <TT>stdin</TT> to come from
+          <TT>/dev/null</TT>.
+     <LI> <TT>nohup</TT> can be used to leave jobs running when you
+          logout ("hangup").
+     </UL>
+<P>
+<LI> Sequences and groups 
+     <UL>
+     <LI> Simple commands are commands
+     <LI> Pipelines of simple commands are commands
+     <LI> Sequences of simple commands with <TT>&</TT> are commands, and 
+          will be executed concurrently.  
+     <LI> Sequences of simple commands with <TT>;</TT> are commands, and 
+          will be executed sequentially.  
+     <LI> Commands in <TT>()</TT>s are simple commands.
+     <LI> <A HREF="MyCode/Aggregate"><TT>Aggregate</TT></A>
+          - Script that uses aggregate commands
+     </UL>
+<P>
+<LI> Manipulating files
+     <UL>
+     <LI> <TT>find</TT> searches for files
+          <UL>
+          <LI> <TT>-name</TT> to find a file by name
+          <LI> <TT>-empty</TT> to find empty files and directories
+          <LI> <TT>-type</TT> to find files of various types (bcdflps)
+          </UL>
+     <LI> <TT>more</TT> and <TT>less</TT> display a file one page
+          at a time<BR>
+          <TT>head</TT> and <TT>tail</TT> display the start and end of a
+          file<BR>
+          <TT>od</TT> can display non-text files<BR>
+     <LI> <TT>diff</TT> compares text files<BR>
+          <TT>wc</TT> counts characters, words, lines<BR>
+     </UL>
+<P>
+<LI> Regular expressions
+     <UL>
+     <LI> Describe sets of strings with patterns (not the same as globbing)
+          <UL>
+          <LI> A normal character matches itself
+          <LI> <TT>.</TT> matches any normal character
+          <LI> A range <TT>[&lt;letters>]</TT> matches any one of the 
+               &lt;letters> (except ...), which can also be a range<BR>
+               <TT>[^</TT>&lt;letters><TT>]</TT> matches any not one of the 
+               &lt;letters>
+          <LI> <TT>?</TT> after a pattern makes it optional<BR>
+               <TT>+</TT> after a pattern matches one or more repetitions<BR>
+               <TT>*</TT> after a pattern matches any number of repetitions<BR>
+               <TT>{</TT>&lt;N><TT>}</TT> after a pattern matches &lt;N>
+               repetitions in regexps<BR>
+          <LI> <TT>^</TT> means the start of the line<BR>
+               <TT>$</TT> means the end of the line
+          <LI> <TT>()</TT>s round a regexp makes it one thing to which 
+               repetition and placement options can be applied.
+          </UL>
+     <LI> <TT>grep</TT> finds lines in files that match limited regexps.
+     <LI> <TT>grep -E</TT> finds lines in files that match a regexp
+          <UL>
+          <LI> <TT>grep -E "^[a-zA-Z]+"</TT> looks for lines that start with 
+               some alphabetic characters.
+          <LI> <TT>grep -E "a*b+c{4}"</TT> looks for lines containing any 
+               number of <TT>a</TT>s followed by some <TT>b</TT>s followed by 4 
+               <TT>c</TT>s
+          <LI> <TT>grep -E '^(a*b+c{4})+$'</TT> looks for lines containing
+               exactly repetitions of the <TT>abc</TT>s 
+               (note the use of <TT>''</TT>s to avoid confusion with shell 
+               variables)
+          </UL>
+     <LI> Example: Extract the legal, Java style, <TT>int</TT> variable
+          declarations from <A HREF="MyCode/GrepExInts"><TT>GrepExInts</TT></A>.
+     <LI> Example: Extract the University of Miami lines from
+          <A HREF="MyCode/GrepExUMs"><TT>GrepExUMs</TT></A>.
+     <LI> <TT>grep</TT> has some useful options
+          <UL>
+          <LI> <TT>-c</TT> to count number of matches
+          <LI> <TT>-l</TT> to list files names that match
+          <LI> <TT>-v</TT> to list lines that don't match
+          </UL>
+     </UL>
+<P>
+</UL>
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+
+<UL>
+<LI> Set your history to store the last 100 commands, and install an alias
+     <TT>h</TT> to list your history.
+<LI> Is <TT>globbing</TT> a cool word or what?
+<LI> Turn on file name completition and listing in your shell.
+     Find out how to use name completion in your editor.
+<LI> Copy and compile the <A HREF="MyCode/Ticker.c"><TT>Ticker.c</TT></A>
+     program. Then do the following sequence
+     <OL>
+     <LI> Start a ticker with a 7 second delay, in the foreground
+     <LI> Suspend the ticker
+     <LI> List your jobs
+     <LI> Start a ticker with a 9 second delay in the background
+     <LI> List your jobs
+     <LI> Activate the 7 second ticker in the background
+     <LI> List your jobs
+     <LI> kill the 9 second ticker
+     <LI> kill the 7 second ticker
+     </OL>
+<LI> Use <TT>find</TT> to make a list of all the empty files in your
+     account.
+<LI> Provide a <TT>grep</TT> command to extract the legal (both syntactically
+     and with correct identifier style) integer variable definitions from 
+     the following lines:
+     <PRE>
+    int aDog;
+int   aDog  ;
+//  int aCommentAboutADog;
+    double aBigDog;
+    int BadDog;
+    int dogWithNoTail
+    int aDog,aCat;
+    int   aSpaceDog,   aSpaceCat;
+    int aDog, aBadCat;
+    internationalDog;
+    int a#Dog;
+int internetName; // fooo
+</PRE>
+</UL>
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+
+<UL>
+<LI> At a command prompt, what would the following commands do:
+     <PRE>
+!17
+!gli </PRE>
+<LI> In globbing, what do the <TT>*</TT> amd <TT>?</TT> characters designate?
+<LI> Explain the difference between a background process and the foreground 
+     process.
+<LI> Explain the difference between these two commands
+     <PRE>
+ls & ps & date &
+ls ; ps ; date </PRE>
+<LI> What does the following command output?
+     <PRE>
+find / -empty | wc -w </PRE>
+<LI> Which of the following lines are recognised by the regexp 
+     <TT>^a*b+c{2}</TT>?
+     <PRE>
+bbbbcc
+abbccc
+  aaabbbccc
+aaabbbcccddd
+bccbccbccbccbcc </PRE>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

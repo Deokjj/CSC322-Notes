@@ -1,0 +1,435 @@
+<HTML>
+<HEAD>
+<!------------------------------------------------------------------------>
+<TITLE>UNIX Threads</TITLE>
+<!------------------------------------------------------------------------>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX Threads</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:45 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> What are threads?
+     <UL>
+     <LI> A thread (or lightweight process) is a basic unit of CPU 
+          utilization; it consists of:
+          <UL>
+          <LI> Program counter
+          <LI> Register set
+          <LI> Stack space
+          </UL>
+     <LI> A thread shares with its peer threads its:
+          <UL>
+          <LI> Code segment
+          <LI> Data segment
+          <LI> Operating-system resources, e.g., when one thread alters a 
+               code segment memory item, all other threads see that, and
+               a file open with one thread is available to others.
+          </UL>
+     <LI> A traditional or heavyweight process is equal to a task with one 
+          thread.
+     <LI> As an OS may supports multiple processes, a process can have 
+          multiple threads.
+          <P>
+          <IMG SRC="Threads.JPG" WIDTH=80%>
+          <P>
+     <LI> Benefits of threads vs processes
+          <UL>
+          <LI> Less time to create a new thread than a process, because 
+               the newly created thread uses the current process address space.
+          <LI> Less time to terminate a thread than a process.
+          <LI> Less time to switch between two threads within the same 
+               process, partly because the newly created thread uses the 
+               current process address space.
+          <LI> Less communication overheads -- communicating between the 
+               threads of one process is simple because the threads share 
+               everything: address space, in particular. 
+               Data produced by one thread is immediately available to all 
+               the other threads.
+          </UL>
+<!--
+     <LI> Multithreading your code can have many benefits:
+          <UL>
+          <LI> Improve application responsiveness - Any program in which 
+               many activities are not dependent upon each other can be 
+               redesigned so that each activity is defined as a thread. 
+               For example, the user of a multithreaded GUI does not have 
+               to wait for one activity to complete before starting another.
+          <LI> Use multiprocessors more efficiently - 
+               Typically, applications that express concurrency requirements 
+               with threads need not take into account the number of available 
+               processors. 
+               The performance of the application improves transparently with 
+               additional processors.  
+               Numerical algorithms and applications with a high degree of 
+               parallelism, such as matrix multiplications, can run much 
+               faster when implemented with threads on a multiprocessor.
+          <LI> Improve program structure - 
+               Many programs are more efficiently structured as multiple 
+               independent or semi-independent units of execution instead 
+               of as a single, monolithic thread. 
+               Multithreaded programs can be more adaptive to variations in 
+               user demands than single threaded programs.
+          <LI> Use fewer system resources - 
+               Programs that use two or more processes that access common 
+               data through shared memory are applying more than one thread 
+               of control.  
+               However, each process has a full address space and operating 
+               systems state. 
+               The cost of creating and maintaining this large amount of 
+               state information makes each process much more expensive than 
+               a thread in both time and space.  
+               In addition, the inherent separation between processes can 
+               require a major effort by the programmer to communicate between 
+               the threads in different processes, or to synchronize their 
+               actions.
+          </UL>
+     <LI> Some example applications of threads
+          <UL>
+          <LI> A file server on a LAN
+               <UL>
+               <LI> It needs to handle several file requests over a short 
+                    period
+               <LI> Hence more efficient to create (and destroy) a single 
+                    thread for each request
+               <LI> Multiple threads can possibly be executing simultaneously 
+                    on different processors
+               </UL>
+          <LI> Matrix Multiplication
+               <UL>
+               <LI> Matrix multilication essentially involves taking the 
+                    rows of one matrix and multiplying and adding 
+                    corresponding columns in a second matrix 
+               <LI> Each element of the resultant matrix can be computed 
+                    independently, that is to say by a different thread.
+               </UL>
+          </UL>
+     </UL>
+     <P>
+
+<LI> Thread levels
+     <UL>
+     <LI> User-Level Threads (ULT)
+          <UL> 
+          <LI> In this level, the kernel is not aware of the existence 
+               of threads.
+          <LI> All thread management is done by the application by using 
+               a thread library. 
+          <LI> Thread switching does not require kernel mode privileges 
+               (no mode switch) and scheduling is application specific
+          <LI> Kernel activity for ULTs:
+               <UL>
+               <LI> The kernel is not aware of thread activity but it 
+                    is still managing process activity
+               <LI> When a thread makes a system call, the whole process 
+                    will be blocked but for the thread library that 
+                    thread is still in the running state
+               <LI> Thread states are independent of process states
+               </UL>
+          <LI> Advantages of ULTs
+               <UL>
+               <LI> Thread switching does not involve the kernel - no 
+                    mode switching
+               <LI> Scheduling can be application specific - choose the 
+                    best algorithm.
+               <LI> ULTs can run on any OS -  Only needs a thread library
+               </UL>
+          <LI> Disadvantages of ULTs
+               <UL>
+               <LI> Most system calls are blocking and the kernel blocks 
+                    processes - so all threads within the process are 
+                    blocked
+               <LI> The kernel can only assign processes to processors - 
+                    two threads within the same process cannot run 
+                    simultaneously on two processors
+               </UL>
+          </UL>
+     <LI> Kernel-Level Threads (KLT)
+          <UL>
+          <LI> In this level, all thread management is done by kernel
+          <LI> No thread library but an API (system calls) to the kernel 
+               thread facility exists.
+          <LI> The kernel maintains context information for the process 
+               and the threads, switching between threads requires the 
+               kernel
+          <LI> Scheduling is performed on a thread basis.
+          <LI> Advantages of KLTs
+               <UL>
+               <LI> The kernel can simultaneously schedule many threads 
+                    of the same process on many processors blocking is 
+                    done on a thread level
+               <LI> Kernel routines can be multithreaded
+               </UL>
+          <LI> Disadvantages of KLTs
+               <UL>
+               <LI> Thread switching within the same process involves the 
+                    kernel, this can result in a significant slow down.
+               </UL>
+          </UL>
+     <LI> Combined ULT/KLT approaches
+          <UL>
+          <LI> Thread creation done in the user space
+          <LI> Bulk of scheduling and synchronization of threads done 
+               in the user space
+          <LI> The programmer may adjust the number of KLTs
+          <LI> Process includes the user's address space, stack, and 
+               process control block
+          <LI> User-level threads (threads library) invisible to the OS
+               are the interface for application parallelism
+          <LI> Kernel threads are the unit that can be dispatched on 
+               a processor
+          <LI> Lightweight processes (LWP) support one or more ULTs and 
+               maps to exactly one KLT
+          <LI> Solaris is an example of an OS that combines both ULT 
+               and KLT 
+          <LI> <IMG SRC="UNIXThreadsLWP.GIF" WIDTH=80%>
+          </UL>
+-->
+     </UL>
+     <P>
+
+<LI> The POSIX Threads Library
+     <UL>
+     <LI> Include <TT>pthread.h</TT> and link with <TT>libpthread</TT>
+     <LI> Creating a (default) thread
+          <UL>
+          <LI> <TT>int pthread_create(pthread_t *tid, const pthread_attr_t *tattr, void*(*start_routine)(void *), void *arg);</TT>
+          <LI> Creates a thread with attributes specified by <TT>tattr</TT>, 
+               within a process.
+          <LI> When <TT>tattr</TT> is <TT>NULL</TT> the default thread is 
+               created with the following attributes:
+               <UL>
+               <LI> It is unbounded
+               <LI> It is not detached
+               <LI> It has a a default stack and stack size
+               <LI> It inherits the parent's priority
+               </UL>
+               A default attribute object can also be created with 
+               <TT>pthread_attr_init()</TT>
+          <LI> <TT>start_routine</TT> is the function at which the new 
+               thread begins execution. When <TT>start_routine</TT> returns 
+               the thread exits with the exit status set to the value returned 
+               by <TT>start_routine</TT>.
+          <LI> When <TT>pthread_create</TT> is successful the ID of the thread 
+               created is stored in the location referred to as <TT>tid</TT>.
+          <LI> <TT>pthread_create()</TT> returns a zero and exits when it 
+               completes successfully. Any other returned value indicates
+               that an error occurred.
+          <LI> The arguments passed by pointer in the last argument should
+               reside somewhere stable, e.g., <TT>malloc</TT> the memory.
+          </UL>
+     <LI> Detaching a thread
+          <UL>
+          <LI> <TT>int pthread_detach(pthread_t thread);</TT> 
+               - Indicates that storage for the <TT>thread</TT> can be 
+                 reclaimed when the thread terminates.
+          </UL>
+     <LI> Terminating a thread
+          <UL>
+          <LI> Returning from the <TT>start_routine</TT>
+          <LI> By calling <TT>pthread_exit()</TT>, supplying an exit status
+          <LI> By termination with <TT>pthread_cancel()</TT>
+          <LI> Exiting (normally or with <TT>exit</TT>) from the main
+               thread terminates all threads.
+          <LI> If the thread is detached its id, data areas, and exit
+               status are cleaned up.
+          <LI> If the thread is not detached, then the thread's ID and the 
+               exit status specified by status are retained until the thread 
+               is joined.
+          </UL>
+     <LI> <A HREF="MyCode/ThreadsDetached.c"><TT>ThreadsDetached.c</TT></A>
+          - Simple program that uses threads
+     <LI> Waiting for non-detached thread termination</A>
+          <UL>
+          <LI> <TT>int pthread_join(thread_t tid, void **status);</TT>
+               - Suspends execution of the calling thread until the target 
+               thread terminates unless the target thread has already
+               terminated.
+          <LI> If <TT>status</TT> is not <TT>NULL</TT>, it points to a 
+               location that is set to the value passed to 
+               <TT>pthread_exit()</TT> by the terminating thread.
+          <LI> If successful the function will return zero.
+          <LI> Multiple threads cannot wait for the same thread to terminate. 
+               If they try to, one thread returns successfully and the others 
+               fail.
+          <LI> <A HREF="MyCode/ThreadsJoin.c"><TT>ThreadsJoin.c</TT></A>
+               - Program that joins threads
+          </UL>
+     <LI> More basic thread functions
+          <UL>
+          <LI> <TT>pthread_t pthread_self(void);</TT>
+               - Returns the thread ID of the calling thread.
+          <LI> <TT>int pthread_equal(pthread_t t1, pthread_t t2);</TT>
+               - Returns non-zero if the thread IDs <TT>t1</TT> and <TT>t2</TT>
+               correspond to the same thread, otherwise it will return zero.
+          <LI> <TT>int pthread_cancel(pthread_t thread);</TT>
+               - Requests that the thread be canceled.
+          <LI> <TT>int sched_yield(void);</TT>
+               - Forces the running process/thread to relinquish the processor.
+          <LI> <TT>int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param);</TT>
+               - Sets the scheduling parameters of the thread.
+                 The scheduling policy for a thread can either be
+                 <TT>SCHED_FIFO</TT> (first in, first out) or 
+                 <TT>SCHED_RR</TT> (round-robin).  
+                 The thread priority (<TT>param->sched_priority</TT>) must 
+                 be at least <TT>PTHREAD_MIN_PRIORITY</TT> and no more than 
+                 <TT>PTHREAD_MAX_PRIORITY</TT>.
+          <LI> <TT>int pthread_getschedparam(pthread_t thread, int *policy,struct sched_param *param);</TT>
+               - Gets the scheduling parameters of the thread.
+          </UL>
+     <LI> <A HREF="MyCode/ThreadWars.c"><TT>ThreadWars.c</TT></A>
+          - Thread wars
+     </UL>
+<P>
+<H3>CSC322 STOPS HERE</H3>
+<LI> Mutexes
+     <UL>
+     <LI> A binary semaphore can be used to provide mutual exclusion during
+          access to shared resources.
+     <LI> <A HREF="MyCode/ThreadsCS.c"><TT>ThreadsCS.c</TT></A>
+          - Program that suffers from shared access problems
+     <LI> <TT>int pthread_mutex_init(pthread_mutex_t * mutex, pthread_mutexattr_t *attr);</TT>
+          - Initializes a mutex. Can also be done with<BR>
+          <TT>pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;</TT>
+     <LI> <TT>int pthread_mutex_lock(pthread_mutex_t *mutex);</TT>
+          - Locks <TT>mutex</TT>. If <TT>mutex</TT> is already locked, the 
+          calling thread will block until <TT>mutex</TT> becomes available.
+     <LI> <TT>int pthread_mutex_trylock(pthread_mutex_t *mutex);</TT>
+          - Locks <TT>mutex</TT>. If <TT>mutex</TT> is already locked
+          returns an error condition.
+     <LI> <TT>int pthread_mutex_unlock(pthread_mutex_t *mutex);</TT>
+          - Unlocks <TT>mutex</TT>.
+     <LI> <TT>int pthread_mutex_destroy(pthread_mutex_t *mutex);</TT>
+          - Frees the resources allocated for <TT>mutex</TT>.
+     <LI> <A HREF="MyCode/ThreadsCSMutex.c"><TT>ThreadsCSMutex.c</TT></A>
+          - Program that soves the shared access problems
+     </UL>
+     <P>
+
+<LI> Condition Variables
+     <UL>
+     <LI> Mutexes waste CPU time because a mutex lock sits testing the
+          mutex.
+     <LI> <A HREF="MyCode/ThreadsMutex.c"><TT>ThreadsMutex.c</TT></A>
+          - Program that uses mutexes
+     <LI> Condition variables can be used to put a thread to sleep until
+          another thread wakes it up.
+     <LI> <TT>int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr);</TT>
+          - Initializes a condition variable. Can also be done with<BR>
+          <TT>pthread_cond_t condition = PTHREAD_COND_INITIALIZER;</TT>
+     <LI> <TT>int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);</TT>
+          - Atomically blocks the current thread waiting on <TT>cond</TT>, and 
+          unblocks <TT>mutex</TT>. 
+          The waiting thread unblocks only after another thread calls 
+          <TT>pthread_cond_signal</TT>, or <TT>pthread_cond_broadcast</TT>
+          with the same condition variable. 
+          The thread now has to lock on <TT>mutex</TT> (possibly has to wait
+          in a tight loop).
+     <LI> <TT>int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime);</TT>
+          - Like <TT>pthread_cond_wait</TT>, but unblocks after <TT>abstime</TT>
+          if no thread signals.
+     <LI> <TT>int pthread_cond_signal(pthread_cond_t *cond);</TT>
+          - Unblocks one thread waiting for <TT>cond</TT>.
+     <LI> <TT>int pthread_cond_broadcast(pthread_cond_t *cond);</TT>
+          - Unblocks all threads waiting for <TT>cond</TT>.
+     <LI> <TT>int pthread_cond_destroy(pthread_cond_t *cond);</TT>
+          - Frees the resources allocated to <TT>cond</TT>.
+     <LI> <A HREF="MyCode/ThreadsCV.c"><TT>ThreadsCV.c</TT></A>
+          - Program that uses condition variables
+     <LI> General semaphores for threads are now easily implemented
+     <LI> <A HREF="MyCode/ThreadsSemaphores.c"><TT>ThreadsSemaphores.c</TT></A>
+          - Program that uses semaphores
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2>Exam Style Questions</H2>
+<UL>
+<LI> What is the difference between a thread and a process?
+<LI> Why do threads have performance advatnages over processes?
+<LI> What is the difference between user level threads and kernel level 
+     threads? Does the POSIX thread library implement user level or kernel
+     level threads?
+<LI> When a thread is started, by default is it detached or not? If it is
+     detached, what system call can be used to attach it? If it is not
+     detached, what system call can be used to detach it?
+<LI> What is the exact output from the following program?
+     <PRE>
+/*---------------------------------------------------------------------------*/
+#include &lt;stdio.h>
+#include &lt;pthread.h>
+
+pthread_t NewThread;
+/*---------------------------------------------------------------------------*/
+void *StartHere(void *Message) {
+
+    if (pthread_equal(NewThread,pthread_self())) {
+        printf("%s\n",(char *)Message);
+    }
+    return(NULL);
+}
+/*---------------------------------------------------------------------------*/
+int main(int argc,char *argv[]) {
+
+
+    pthread_create(&NewThread,NULL,StartHere,"Hello There");
+    StartHere("Hello");
+    StartHere("There");
+    pthread_exit(NULL);
+
+}
+/*---------------------------------------------------------------------------*/ </PRE>
+<LI> What system calls can be used to make one thread wait (in a busy loop)
+     for another?
+<LI> What is the difference between a mutex and a condition variable?
+<LI> Explain what the <TT>pthread_cond_wait</TT> function does, from the
+     call until it exits.
+<LI> What is the output from the following program?
+     <PRE>
+/*---------------------------------------------------------------------------*/
+#include &lt;stdio.h>
+#include &lt;pthread.h>
+
+pthread_cond_t GunShot;
+pthread_mutex_t Mutex;
+/*---------------------------------------------------------------------------*/
+void *LookAndLeap(void *Dummy) {
+
+    pthread_mutex_lock(&Mutex);
+    printf("Wild\n");
+    pthread_cond_wait(&GunShot,&Mutex);
+    printf("West!!\n");
+
+    return(NULL);
+}
+/*---------------------------------------------------------------------------*/
+int main(int argc,char *argv[]) {
+
+    pthread_t NewThread;
+
+    pthread_cond_init(&GunShot,NULL);
+    pthread_mutex_init(&Mutex,NULL);
+
+    pthread_create(&NewThread,NULL,LookAndLeap,NULL);
+    pthread_create(&NewThread,NULL,LookAndLeap,NULL);
+    sched_yield();
+    printf("Woolly\n");
+    pthread_cond_broadcast(&GunShot);
+    pthread_exit(NULL);
+}
+/*---------------------------------------------------------------------------*/ </PRE>
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

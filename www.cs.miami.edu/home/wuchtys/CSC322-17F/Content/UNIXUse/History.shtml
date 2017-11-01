@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<TITLE>The History of UNIX</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>The History of UNIX</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> The Myth
+     <UL>
+     <LI> UNIX is a heavy-weight operating system for big computers
+     <LI> UNIX is complicated
+     <LI> UNIX is hard to use
+     <LI> UNIX has been created by SUN, IBM, HP, and other large companies
+     <LI> UNIX is monolithic
+     </UL>
+
+<P>
+<LI> The Legend
+     <UL>
+     <LI> UNIX was developed on small machines and became popular on the
+          <A HREF="http://en.wikipedia.org/wiki/Killer_micro">"killer micros"</A>.
+          UNIX dialects now run on everything from a PDA to supercomputers.
+     <LI> UNIX is based on simple and elegant principles (but has added some 
+          cruft over the years).
+     <LI> UNIX is not particularly hard to use (compared to the power it 
+          gives to the user), but has a reasonably steep learning curve. 
+          It's not a "show-me" operating system, but a "tell me" operating 
+          system.
+     <LI> UNIX has been created in a research environment, and much of it 
+          has been developed in informal settings by hackers. 
+          Much of the impetus for UNIX comes from free versions (Linux, 
+          NetBSD, OpenBSD, FreeBSD), although many companies contribute to 
+          its development.
+     <LI> Many UNIX kernels are monolithic, but the UNIX system is extremly 
+          modular.
+     </UL>
+
+<P>
+<LI> The System
+     <UL>
+     <LI> A very portable operating system 
+          (<A HREF="http://en.wikipedia.org/wiki/List_of_Linux_supported_architectures">many architectures</A>).
+     <LI> Written in a "high-level" language (C).
+     <LI> Small (for what it does):
+          <UL>
+          <LI> Linux 2.6.32 has 12,606,910 lines of code.
+          <LI> Windows XP/7 has (estimated) 50,000,000 lines of code.
+          </UL>
+     <LI> Modular (though often on a monolithic kernel)
+          <UL>
+          <LI> Separate windowing system (X) and window managers
+          <LI> Various desktop solutions (CDE, KDE, Gnome)
+          <LI> Toolbox philosophy: Combine (lots of) simple tools
+          <LI> Underneath: Strong and simple abstraction (everything is a file)
+          </UL>
+     </UL>
+
+<P>
+<LI> The Genealogy
+     <P>
+     <IMG SRC="Pictures/UNIXHistory.gif" WIDTH=90%>
+     <IMG SRC="Pictures/UNIXGenealogy.svg" WIDTH=90%>
+     <UL>
+     <LI> See also <A HREF="http://www.levenez.com/unix/">
+          <TT>http://www.levenez.com/unix/</TT></A>
+     <LI> Read the first paragraph of
+          <A HREF="http://members.tripod.com/~mr_sedivy/rome.html">
+          The Rise and Fall of the Roman Empire</A> again, with the following
+          phrase replacements:
+          <PRE>
+    Rome          => UNIX
+    town          => operating system
+    Italy         => Bell labs
+    years         => months
+    wars          => versions
+    United States => UNIX implementations
+    government    => kernel
+    Romans        => UNIX developers
+    English       => Java
+    Spanish       => C++
+    French        => Ada </PRE>
+     </UL>
+
+<P>
+<LI> C
+     <UL>
+     <LI> Read <A HREF="http://cm.bell-labs.com/cm/cs/who/dmr/chist.html">
+          the history</A>
+     <LI> Pragmatic high level language:
+          <UL>
+          <LI> Handles characters, numbers, addresses as implemented by most 
+               computers
+          <LI> Small core language, much functionality provided by libraries 
+               (mostly in C!)
+          <LI> Compilers are easy to write
+          <LI> Compilers are easy to port
+          <LI> Even naive compilers produce reasonably decent code
+          </UL>
+     <LI> Hacker-friendly
+          <UL>
+          <LI> Straightforward compilation (nothing is hidden)
+          <LI> Compact source code (fewer keystrokes, fast to read)
+          <LI> Typed, but not a bondage-and-discipline language
+          </UL>
+     <LI> Adequate support for building abstractions
+          <UL>
+          <LI> Structures (composing objects), unions, enumerations
+          <LI> Arrays and pointer
+          <LI> Support for defining new types
+          </UL>
+     </UL>
+
+<P>
+<LI> The People<BR>
+     <CENTER>
+     <IMG SRC="Pictures/Thompson.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Ritchie.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Kernighan.JPG" HEIGHT=150 ALT="Kernighan">
+     <P>
+     <IMG SRC="Pictures/Joy.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Gosling.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Allman.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Postel.JPG" HEIGHT=150>
+     <P>
+     <IMG SRC="Pictures/Stallman.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Torvalds.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/ACox.JPG" HEIGHT=150>
+     <IMG SRC="Pictures/Tevanian.JPG" HEIGHT=150>
+     <P>
+     Back row:
+     <A HREF="http://en.wikipedia.org/wiki/Ken_Thompson">Ken Thompson</A> 
+     - B, UNIX;
+     <A HREF="http://en.wikipedia.org/wiki/Dennis_Ritchie">Denis Ritchie</A> 
+     - C, UNIX;
+     <A HREF="http://en.wikipedia.org/wiki/Brian_Kernighan">Brian Kernighan</A>
+     - awk
+     <BR>
+     Middle row:
+     <A HREF="http://en.wikipedia.org/wiki/Bill_Joy"> Bill Joy</A>
+      - vi, BSD, SUN;
+     <A HREF="http://en.wikipedia.org/wiki/James_Gosling">James Gosling</A> 
+     - emacs, Java;
+     <A HREF="http://en.wikipedia.org/wiki/Eric_Allman">Eric Allman</A> 
+     - sendmail;
+     <A HREF="http://en.wikipedia.org/wiki/Jon_Postel">Jon Postel</A> 
+     - Internet
+     <BR>
+     Front row:
+     <A HREF="http://www.stallman.org/">Richard Stallman</A> - FSF, GNU;
+     <A HREF="http://www.cs.helsinki.fi/u/torvalds/">Linus Torvalds</A> - Linux;
+     <A HREF="http://lwn.net/1999/features/ACInterview/">Alan Cox</A> 
+     - Linux, Redhat;
+     <A HREF="http://en.wikipedia.org/wiki/Avadis_Tevanian">Avie Tevanian</A>
+     - OS X
+     </CENTER>
+
+<P>
+</UL>
+
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Make sure you can answer these questions
+     <UL>
+     <LI> What computer application motivated the original development of
+          UNICS?
+     <LI> What language was UNICS written in?
+     <LI> How did the multiple lines of UNIX development come about?
+     <LI> From an HCI perspective, what is the fundamental difference
+          between Windows and UNIX?
+     <LI> Do real UNIX hackers use a "point-and-click" interface?
+     <LI> Why is it possible to write effective C compilers?
+     <LI> What bodily hair did many old UNIX hackers possess?
+     </UL>
+</UL>
+
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> What are the two main lines of UNIX development?
+<LI> What is the advantage of having most of UNIX written in C?
+<LI> To what standard should programs be written to ensure portability
+     between UNIX variants?
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

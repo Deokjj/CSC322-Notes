@@ -1,0 +1,518 @@
+<HTML>
+<HEAD>
+<!------------------------------------------------------------------------>
+<TITLE>UNIX File Systems</TITLE>
+<!------------------------------------------------------------------------>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX File Systems</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:45 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<A NAME="GetFileStatus">
+<LI> Getting file status
+     <UL>
+     <LI> <TT>int access(char *path, int mode)</TT> - Determine accessibility
+          of <TT>path</TT>.
+          <TT>mode</TT>s are defined in <TT>unistd.h</TT>
+          <UL>
+          <LI> <TT>R_OK</TT> - test for read permission
+          <LI> <TT>W_OK</TT> - test for write permission
+          <LI> <TT>X_OK</TT> - test for execute or search permission
+          <LI> <TT>F_OK</TT> - test whether the directories leading  to
+               the  file  can  be searched and the file exists.
+          </UL>
+     <LI> <CODE>int stat(char *FileName,struct stat *StatusBuffer);</CODE>
+          <UL>
+          <LI> The <CODE>stat</CODE> call retrieves information about the 
+               named file into the <CODE>StatusBuffer</CODE>
+          <LI> The <CODE>struct stat</CODE> is declared in 
+               <CODE>sys/stat.h</CODE>:
+               <PRE>
+struct stat {
+    dev_t  st_dev;   /* ID of device containing */
+                     /* a directory entry for this file*/
+    ino_t  st_ino;   /* File inode number */
+    ushort st_mode;  /* File mode */
+    short  st_nlink; /* Number of links */
+    ushort st_uid;   /* User ID of the file's owner */
+    ushort st_gid;   /* Group ID of the file's group */
+    dev_t  st_rdev;  /* ID of device - only for */
+                     /* character or block special */
+    off_t  st_size;  /* File size in bytes */
+    time_t st_atime; /* Time of last access */
+    time_t st_mtime; /* Time of last data modification */
+    time_t st_ctime; /* Time of last file status change*/
+                     /* Time measured in seconds since */
+                     /* 00:00:00 GMT, Jan. 1, 1970 */
+};</PRE>
+          </UL>
+     <LI> <CODE> int fstat(int Descriptor,struct stat *StatusBuffer);</CODE>
+          <UL>
+          <LI> <CODE>fstat</CODE>  performs the same function as 
+               <CODE>stat</CODE> on an open file whos file descriptor is known.
+          </UL>
+     <LI> <A HREF="MyCode/GetFileStatus.c"><TT>GetFileStatus.c</TT></A>
+     </UL>
+<P>
+<A NAME="SetFileStatus">
+<LI> Setting file status
+     <UL>
+     <LI> <CODE>int utimes(char *Filename,struct timeval *Times);</CODE>
+          <UL>
+          <LI> <CODE>utimes</CODE> sets the access and modification times 
+               of a file
+          <LI> <CODE>struct timeval</CODE> is defined in
+               <CODE>sys/time.h</CODE>
+               <PRE>
+struct timeval {
+    long    tv_sec;         /* seconds since Jan. 1, 1970 */
+    long    tv_usec;        /* and microseconds */
+    };</PRE>
+          <LI> If <CODE>Times</CODE> is <CODE>NULL</CODE> then the current 
+               time is used.
+          <LI> Returns -1 on error
+          </UL>
+     <LI> <CODE>int chmod(char *Path,int Mode);</CODE>
+          <UL>
+          <LI> <CODE>chmod</CODE> changes the permission, sticky and 
+               set-ID bits of <CODE>Path</CODE>
+          <LI> A <CODE>Mode</CODE> is created from or'd permission bit masks 
+               defined in <CODE>sys/stat.h</CODE>:
+               <PRE>
+#define S_IRWXU 0000700    /* RWX mask for owner */
+#define S_IRUSR 0000400    /* R for owner */
+#define S_IWUSR 0000200    /* W for owner */
+#define S_IXUSR 0000100    /* X for owner */
+
+#define S_IRWXG 0000070    /* RWX mask for group */
+#define S_IRGRP 0000040    /* R for group */
+#define S_IWGRP 0000020    /* W for group */
+#define S_IXGRP 0000010    /* X for group */
+
+#define S_IRWXO 0000007    /* RWX mask for other */
+#define S_IROTH 0000004    /* R for other */
+#define S_IWOTH 0000002    /* W for other */
+#define S_IXOTH 0000001    /* X for other */
+
+#define S_ISUID 0004000    /* set user id on execution */
+#define S_ISGID 0002000    /* set group id on execution */
+#define S_ISVTX 0001000    /* sticky bit */</PRE>
+       
+          <LI> The caller's effective UID must match the file's owner UID,
+               or the caller must be the superuser.
+          <LI> Only the superuser can turn on the sticky bit.
+          <LI> Returns -1 on error
+          </UL>
+     <LI> <CODE>int chown(char *Path,int Owner,int Group);</CODE>
+          <UL>
+          <LI> <CODE>chown</CODE> changes the owner UID and GID of a file
+          <LI> The owner of a file may change the group to a group of which 
+               he or she is a member, but the change owner capability is 
+               restricted to the super-user.
+          <LI> Returns -1 on error
+          </UL>
+     <LI> <A HREF="MyCode/SetFileStatus.c"><TT>SetFileStatus.c</TT></A>
+     </UL>
+<P>
+<LI> Linking and unlinking
+     <UL>
+     <LI> <CODE>int link(char *OldName,char *NewName);</CODE>
+          <UL>
+          <LI> <CODE>link</CODE> creates a link between the existing
+               file <CODE>OldName</CODE> and the <CODE>NewName</CODE>
+          <LI> Only the super user can link to a directory, to prevent
+               circular chains.
+          <LI> Returns -1 on error, 0 otherwise.
+          </UL>
+     <LI> <CODE>int unlink(char *Pathname);</CODE>
+          <UL>
+          <LI> <CODE>unlink</CODE> removes a directory entry.
+          <LI> The associated inode has its count field decremented, and
+               the file is deleted if the count reaches 0 (delayed when 
+               the file is open to anyone).
+          <LI> Returns -1 on error, 0 otherwise.
+          </UL>
+     <LI> <A HREF="MyCode/MoveFile.c"><TT>MoveFile.c</TT></A>
+     <LI> If a file is still open to a process when its count reaches
+          0 it is not deleted until it is closed. This can be used to
+          ensure files are deleted even if the process crashes. e.g.
+          <PRE>
+Descriptor = open("temp_file",MODE);
+unlink("temp_file");
+   . . . . .
+/*----processing that may crash */
+   . . . . .
+close(Descriptor);</PRE>
+     </UL>
+     <P>
+<A NAME="Directories">
+<LI> UNIX directories
+     <UL>
+     <LI> <TT>char *getcwd(char *buf, size_t size)</TT> - Get the full pathname
+          of the current working directory.
+          <UL>
+          <LI> Returns a pointer to the current directory  pathname.
+          <LI> If <TT>buf</TT> is not <TT>NULL</TT>, the pathname will be
+               stored in the space pointed to by <TT>buf</TT>.
+               If <TT>buf</TT> is <TT>NULL</TT>, <TT>getcwd()</TT> will
+               obtain <TT>size</TT> bytes of space using malloc.
+          </UL>
+     <LI> <TT>int chdir(char *path)</TT> - Changes directory to specified path
+          string, for the program.
+          <UL>
+          <LI> <A HREF="MyCode/MyCD.c"><TT>MyCD.c</TT></A> 
+               - Program that changes its working directory
+          </UL>
+     <LI> <CODE>int mkdir(const char *Path, mode_t Mode);</CODE>
+          <UL>
+          <LI> <CODE>mkdir</CODE> creates the directory <CODE>Path</CODE>
+               with permissions <CODE>Mode</CODE>
+          <LI> Returns 0 on success and -1 on error
+          </UL>
+     <LI> Reading directories
+          <UL>
+          <LI> <CODE>DIR * opendir(const char *Directory);</CODE>
+               <UL>
+               <LI> <CODE>opendir</CODE> opens the <CODE>Directory</CODE>
+                    and returns a pointer to a directory stream.
+               <LI> Returns <CODE>NULL</CODE> on error
+               </UL>
+          <LI> <CODE> struct dirent * readdir(DIR *DirectoryStream);</CODE>
+               <UL>
+               <LI> <CODE>readdir</CODE> returns a pointer to the next 
+                    directory entry
+               <LI> <CODE>struct dirent</CODE> is defined in 
+                    <CODE>sys/dirent.h</CODE>:
+                    <PRE>
+struct dirent {
+    int  d_fileno;    /* file number of entry */
+    int  d_reclen;    /* length of this record */
+    int  d_type;      /* file type */
+    int  d_namlen;    /* length of string in d_name */
+    char d_name[255 + 1];    /* name must be no longer than this */
+};</PRE>
+               <LI> Returns <CODE>NULL</CODE> on eof or error
+               </UL>
+          <LI> <CODE> int closedir(DIR *DirectoryStream);</CODE>
+               <UL>
+               <LI> <CODE>closedir</CODE> closes the directory stream
+               <LI> Returns 0 on success and -1 on error
+               </UL>
+          <LI> <A HREF="MyCode/Directory.c"><TT>Directory.c</TT></A>
+          </UL>
+     </UL>
+<P>
+<LI> Named pipes
+     <UL> 
+     <LI> Named pipes are permanent fixtures in the file system, and
+          provide pipe communication between processes.
+     <LI> At the command prompt 
+          <PRE>
+prompt> mknod MyPipeName p </PRE> 
+          or (FreeBSD)
+          <PRE>
+prompt> mkfifo MyPipeName </PRE>
+          or write a program using the same named system calls.
+     <LI> FIFOs can be used just like files.
+     <LI> A named pipe cannot be written to or read from until it is open
+          for both writing and reading. 
+          An open for writing (reading) blocks until there is a simultaneous
+          open for reading (writing).
+     <LI> <A HREF="MyCode/FIFOWrite.c"><TT>FIFOWrite.c</TT></A>
+          - Program that writes to a named pipe<BR>
+          <A HREF="MyCode/FIFORead.c"><TT>FIFORead.c</TT></A>
+          - Program that reads from a named pipe
+     </UL>
+<P>
+<H3>CSC322 STOPS HERE</H3>
+<A NAME="Structure">
+<LI> File System Structure
+     <UL>
+     <LI> A file system consists of randomly accessible data blocks. The
+          size of a block is given in <CODE>sys/param.h</CODE> as BSIZE, and is
+          typically 512 or 1024 bytes. 
+     <LI> The area of disc set aside for a file system is split into 4 regions:
+          <UL>
+          <LI> Block 0 is set aside for a bootstrap program if required
+          <LI> Block 1 contains the superblock which describes the file
+               system as a whole, including free blocks and inodes lists.
+          <LI> Block 2 starts the inode area (fixed size) 
+          <LI> Remaining blocks are allocated to files
+          </UL>
+     </UL>
+     <P>
+
+<A NAME="Inodes">
+<LI> Inodes
+     <UL>
+     <LI> Each file is identified by an index node (inode). 
+     <LI> Inodes are numbered from 1
+          <UL>
+          <LI> Inode 1 is reserved for the bad blocks list
+          <LI> Inode 2 for the root directory of the file system.
+          </UL>
+     <LI> Inodes contain detailed information about the file
+          <UL>
+          <LI> Type of file and access permissions.
+          <LI> Number of links to this inode (see below)
+          <LI> User and group IDs of the file owner. 
+          <LI> Size of file in bytes for files, device number for devices.
+          <LI> Addresses of the  files data blocks. 
+          <LI> Times of creation, last access, and last modification
+          </UL>
+     <LI> A UNIX directory entry contains a file name and inode number 
+          <UL>
+          <LI> It is possible for more than one entry to have the same 
+               inode number
+          <LI> A file cannot be deleted until the number of links to the
+               inode is 0
+          </UL>
+     </UL>
+     <P>
+
+<A NAME="Sync">
+<LI> Flushing buffers
+     <UL>
+     <LI> I/O is buffered, but the <CODE>sync</CODE> call can be used to 
+          schedule the output of buffers.
+     <LI> <CODE>void sync(void);</CODE>
+     <LI> <CODE>sync</CODE>  does not actually write out the buffers, merely 
+          requests the hardware to do so, and it will as soon as possible.
+     </UL>
+     <P>
+
+<A NAME="FileOps">
+<LI> Opening, reading, writing and closing files
+     <UL>
+     <LI> <CODE>int open(char *Pathname,int OpenFlag[,int AccessPerms]);</CODE>
+          <UL>
+          <LI> <CODE>open</CODE> returns a file descriptor, -1 on error
+          <LI> The  <CODE>OpenFlag</CODE> indicates whether the file is to 
+               opened for reading, writing or updating. 
+               It is created by taking the inclusive-OR of a number of 
+               possible values defined in 
+               <CODE>file /usr/include/fcntl.h</CODE>
+               <UL>
+               <LI> <CODE>O_RDONLY</CODE> - open for reading<BR>
+                    <CODE>O_WRONLY</CODE> - open for writing<BR>
+                    <CODE>O_RDWR</CODE> - open for reading and writing<BR>
+                    Exactly one of these must be used in combination with
+                    any of the others.
+               <LI> <CODE>O_NDELAY</CODE> - if the file is being opened as 
+                    a pipe then opening for reading will return immediately 
+                    and opening for writing will return an error if no process 
+                    has the file open for reading. 
+                    If the file is being opened as a communications line then  
+                    the file will  open  without waiting for a carrier.
+               <LI> <CODE>O_APPEND</CODE> - sets the file pointer to the 
+                    end of the file when opening for writing.
+               <LI> <CODE>O_SYNC</CODE> - sets synchronous write option
+               <LI> <CODE>O_CREAT</CODE>  - if the file already exists the 
+                    <CODE>O_CREAT</CODE> has no effect, but if it does not 
+                    exist it is created with the access permissions being
+                    passed in the optional 3rd parameter.
+               <LI> <CODE>O_TRUNC</CODE> - if the file already exists then 
+                    its length is set back to 0.
+               <LI> <CODE>O_EXCL</CODE> - if <CODE>O_CREAT</CODE> and 
+                    <CODE>O_EXCL</CODE> are both set then the <CODE>open</CODE>
+                    call will fail if the file already exists. This prevents 
+                    copies of a file being overwritten.
+               </UL>
+          <LI> The access permissions are included if the file is being created
+          </UL>
+     <LI> <CODE>int write(int Descriptor,char *Buffer,int NumberOfBytes);</CODE>
+          <UL>
+          <LI> <CODE>write</CODE> writes <CODE>NumberOfBytes</CODE> bytes to  
+               the <CODE>Descriptor</CODE> from the <CODE>Buffer</CODE>
+          <LI> Returns the number of bytes written, or -1 on error.
+          </UL>
+     <LI> <CODE>int read(int Descriptor,char *Buffer,int NumberOfBytes);</CODE>
+          <UL>
+          <LI> <CODE>read</CODE> reads <CODE>NumberOfBytes</CODE> bytes from 
+               the <CODE>Descriptor</CODE> into the <CODE>Buffer</CODE>
+          <LI> Returns the number of bytes read, 0 on eof, or -1 on error.
+          </UL>
+     <LI> <CODE>lseek(int Descriptor,long Offset,int Origin);</CODE>
+          <UL>
+          <LI> <CODE>lseek</CODE> moves the file pointer of the
+               <CODE>Descriptor</CODE> to <CODE>Offset</CODE> <offset> bytes 
+               from <CODE>Origin</CODE>.
+          <LI> <CODE>Origin</CODE> can be 0, 1 or 2 indicating that the 
+               offset is relative to the beginning, current position or end of
+               the file respectively.
+          <LI> Returns the resulting offset location as measured in bytes 
+               from the beginning of the file, or -1 on error.
+          <LI> The <CODE>fseek</CODE> call handling is implemented 
+          </UL>
+     <LI> <CODE>close(int Descriptor);</CODE>
+          <UL>
+          <LI> <CODE>close</CODE> breaks the link between the 
+               <CODE>Descriptor</CODE> and the file.
+          <LI> Returns -1 on error
+          </UL>
+     <LI> <A HREF="MyCode/FileOps.c"><TT>FileOps.c</TT></A> 
+          - Program to copy via a buffer
+     <LI> <A HREF="MyCode/LowLevelWrite.c"><TT>LowLevelWrite.c</TT></A> 
+          - Program to read floats at the byte level
+     <LI> <A HREF="MyCode/LowLevelRead.c"><TT>LowLevelRead.c</TT></A> 
+          - Program to read floats at the byte level
+     </UL>
+<P>
+<LI> Selecting ready files
+     <UL>
+     <LI> In cases where multiple files are being read/written, and the
+          devices are slower than the process, it is necessary to find
+          which devices are ready, and use that one.
+     <LI> <TT>int select(int nfds,fd_set *readfds,fd_set *writefds,
+          fd_set *exceptfds,struct timeval *timeout);</TT> -
+          Examines the I/O descriptor sets whose addresses are passed in
+          <TT>readfds</TT>, <TT>writefds</TT>, and <TT>exceptfds</TT> to 
+          see if some of their descriptors are ready for reading, are 
+          ready for writing, or have an exceptional condition pending, 
+          respectively.
+          <UL>
+          <LI> The first <TT>nfds</TT> descriptors are checked in each set.
+          <LI> On return, select() replaces the given descriptor sets with 
+               subsets consisting of those descriptors that are ready for the 
+               requested operation.  
+          <LI> <TT>Select()</TT> returns the total number of ready descriptors 
+               in all the sets, or -1 if an error occurs.
+          <LI> Macros are provided for manipulating such descriptor sets:
+               <UL>
+               <LI> <TT>FD_ZERO(&fdset)</TT> initializes a descriptor set 
+                    fdset to the null set.
+               <LI> <TT>FD_SET(fd,&fdset)</TT> includes a particular 
+                    descriptor <TT>fd</TT> in <TT>fdset</TT>.
+               <LI> <TT>FD_CLR(fd,&fdset)</TT> removes <TT>fd</TT> from 
+                    <TT>fdset</TT>. 
+               <LI> <TT>FD_ISSET(fd,&fdset)</TT> is non-zero if <TT>fd</TT> is 
+                    a member of <TT>fdset</TT>, zero otherwise.  
+               </UL>
+          <LI> If <TT>timeout</TT> is a non-null pointer, it specifies the 
+               maximum interval to wait for the selection to complete.  
+               If timeout is <TT>NULL</TT>, the select blocks indefinitely.
+          <LI> Any of <TT>readfds</TT>, <TT>writefds</TT>, and 
+               <TT>exceptfds</TT> may be <TT>NULL</TT> if no descriptors 
+               are of interest.
+          </UL>
+     <LI> <A HREF="MyCode/SelectReadFiles.c"><TT>SelectReadFiles.c</TT></A>
+          - Program that reads from multiple files using select
+     </UL>
+     <P>
+
+<A NAME="Pipes">
+<LI> Unnamed Pipes
+     <UL>
+     <LI> Unnamed pipes can be used to implement communication between 
+          processes.
+     <LI> The processes have to be related through a <CODE>fork</CODE>
+          due to the data structure.
+     <LI> The system call<BR>
+          <CODE>int pipe(int Descriptors[2]);</CODE><BR>
+          creates a bidirectional pipe 
+     <LI> By tradition, if a pipe is used for unidirectional communication
+          then the pipe is written to in
+          <CODE>Descriptors[1]</CODE> and read from 
+          <CODE>Descriptors[0]</CODE>
+     <LI> <A HREF="MyCode/Pipe.c"><TT>Pipe.c</TT></A>
+          - Program to transfer data through a pipe
+     <LI> <A HREF="MyCode/TwoPipes.c"><TT>TwoPipes.c</TT></A>
+          - Program that reads from two pipes using select
+     </UL>
+
+<P>
+<LI> Redirecting from within a program
+     <UL>
+     <LI> <TT>int dup(int oldd);</TT>
+          - Duplicates an existing object descriptor and returns its value.
+            The first free descriptor is used for the copy.
+     <LI> <A HREF="MyCode/Dup.c"><TT>Dup.c</TT></A>
+          - Program that <TT>dup</TT>s standard output
+     <LI> <TT>int dup2(int oldd, int newd);</TT>
+          - Like <TT>dup</TT>, but specifies the new descriptor. If it's
+            already in use then it is closed first.
+     <LI> <A HREF="MyCode/PipeStdin.c"><TT>PipeStdin.c</TT></A>
+          - Program that redirects <TT>stdin</TT>
+     <LI> Need an example to show command line piping.
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+<LI> Write  the  program  touch,  which  takes a file name  as  its
+     argument  and changes the modification and access times of the
+     file to the current time.
+<LI> Write a directory listing program that takes one or more of
+     the following flags :
+     <UL>
+     <LI> <CODE>-u uid</CODE> : Only list files owned by <CODE>uid</CODE>
+     <LI> <CODE>-g uid</CODE> : Only list files in the group <CODE>gid</CODE>
+     <LI> <CODE>-m days</CODE> : Only list files which have been modified 
+          in the last <CODE>days</CODE> days.
+     <LI> <CODE>-a days</CODE> : Only list files which have been accessed 
+          in the last <CODE>days</CODE> days.
+     <LI> <CODE>-s size</CODE> : Only list files that are larger than 
+          <CODE>size</CODE> bytes.
+     <LI> <CODE>-r</CODE> : List subdirectories recursively.
+     </UL>
+<LI> Write a program that will list all files in a current directory and
+     all files in subsequent subdirectories.
+<LI> Write a program that shows the user all his/her C source programs and then
+     prompts interactively as to whether others should be granted read
+     permission; if affirmative such permission should be granted.
+<LI> Write a program that gives the user the opportunity to remove any or
+     all of the files in a current working directory. The name of the file
+     should appear followed by a prompt as to whether it should be removed.
+</UL>
+
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2>Exam Style Questions</H2>
+<UL>
+<LI> The <TT>read</TT> system call is declared as:
+     <PRE>
+int read(int Descriptor,char *Buffer,int NumberOfBytes); </PRE>
+     and the <TT>write</TT> system call is declared as:
+     <PRE>
+int write(int Descriptor,char *Buffer,int NumberOfBytes); </PRE>
+     Complete the internals of the following function, which must copy
+     data from the <TT>ReadDescriptor</TT> to the <TT>WriteDescriptor</TT>
+     until end-of-file on the <TT>ReadDescriptor</TT>, and then close
+     both descriptors. Both descriptors are already open when passed into
+     the function.
+     <PRE>
+void CopyData(int ReadDescriptor,int WriteDescriptor) {
+
+} </PRE>
+<LI> How is it possible to increase the size of a file, without explicitly
+     appending data to the end?
+<LI> Describe two direct ways to find out how many names (links from directory
+     entries) a file has? (No search the whole file system!)
+<LI> Which system calls allow you to find out and set the last modification
+     time of a file?
+<LI> Explain the structure and contents of the <TT>st_mode</TT> field of a
+     <TT>struct stat</TT>.
+<LI> The <TT>link</TT> system call is declared as:
+     <PRE>
+int link(char *OldName,char *NewName); </PRE>
+     and the <TT>unlink</TT> system call is declared as:
+     <PRE>
+int unlink(char *Pathname);  </PRE>
+     Write a function that takes two filenames as string parameters, and 
+     renames the first named file to the second name.
+<LI> Explain how the <TT>select</TT> system call is used to allow a program
+     to read data from multiple sources.
+<LI> What are the differences between named and unnamed pipes?
+<LI> What is the effect of the <TT>dup</TT> (not <TT>dup2</TT>) system call?
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

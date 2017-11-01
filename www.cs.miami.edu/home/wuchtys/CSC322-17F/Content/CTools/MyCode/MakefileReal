@@ -1,0 +1,31 @@
+#    Makefile for the Modular program
+
+CC        = gcc
+LD        = $(CC)
+DEPEND    = mkdep
+
+CFLAGS    = -O2 -Wall
+
+CFILES  =\
+	Modular.c\
+	Person.c
+
+HFILES    =\
+	CString.h\
+	Person.h\
+	PrettyPrint.h
+
+OFILES    = $(CFILES:%.c=%.o)
+
+Modular:	$(OFILES)
+	$(LD) -o $@ $(OFILES)
+
+Modular.o:	Modular.c CString.h Person.h PrettyPrint.h
+
+Person.o:	Person.c Person.h CString.h
+
+depend:
+	$(DEPEND) $(CFLAGS) $(CFILES)
+
+clean:
+	rm -f *.o *.bak

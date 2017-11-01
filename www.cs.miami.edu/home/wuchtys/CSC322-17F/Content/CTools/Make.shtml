@@ -1,0 +1,247 @@
+<HTML>
+<HEAD>
+<TITLE>Building Modular Programs With make</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Building Modular Programs With <TT>make</TT></H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:42 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> A Monolithic Program
+     <UL>
+     <LI> Consider this monolithic program <A HREF="MyCode/Monolithic.c">
+          <TT>Monolithic.c</TT></A>
+     <LI> Placing the code into one source file has a number of shortcomings:
+          <UL>
+          <LI> It doesn't reflect the modularity of the design.<BR>
+               There is no clear separation of the ADTs from each other and
+               the main program.
+          <LI> There is no information hiding.<BR>
+               The main program contains details of the <TT>PersonType</TT> 
+               representation which it doesn't need to know.
+          <LI> It doesn't scale.
+               Storing a large program as a single file produces large files 
+               that are hard to navigate.  
+               Every time we make a change to one part, we are forced to 
+               recompile the whole program.
+          </UL>
+     <LI> The mechanisms that enable us to reflect modularity in our 
+          code are <EM>interface and implementation</EM> and 
+          <EM>separate compilation</EM>.
+     </UL>
+
+<P>
+<LI> Interface and Implementation
+     <UL>
+     <LI> A module's <EM>interface</EM> is a description of the data
+          and functions that are visible to code external to the module.  
+          These descriptions are usually just the type signatures of 
+          the externally visible data and functions.  
+     <LI> A module's <EM>implementation</EM> comprises the data structures 
+          and code that make the module work.
+     <LI> Separating the <EM>interface</EM> from the <EM>implementation</EM> is 
+          the way we reflect <EM>abstraction</EM>.
+     <LI> When we use a module, we need to know only what effects accessing 
+          the data and routines in its <EM>interface</EM> will have and we 
+          can ignore the details of how the module is <EM>implemented</EM>.
+     </UL>
+
+<P>
+<LI> A Modular Program
+     <UL>
+     <LI> We can split the code above into 4 files as follows:
+          <UL>
+          <LI> <A HREF="MyCode/CString.h"><TT>CString.h</TT></A>
+               - defines the CString type
+          <LI> <A HREF="MyCode/Person.h"><TT>Person.h</TT></A>
+               - defines the <TT>PersonType</TT> type
+          <LI> <A HREF="MyCode/PrettyPrint.h"><TT>PrettyPrint.h</TT></A>
+               - defines the <TT>PRETTY_PRINT</TT> macro
+          <LI> <A HREF="MyCode/Person.c"><TT>Person.c</TT></A>
+               - implements the <TT>person</TT> manipulation
+          <LI> <A HREF="MyCode/Modular.c"><TT>Modular.c</TT></A>
+               - main program
+          </UL>
+     <LI> This separates the interface of the ADT from the implementation.
+     <LI> The files can all be compiled together
+          <UL>
+          <LI> <TT>gcc -o Modular Modular.c Person.c</TT>
+          </UL>
+     <LI> The "declare before main, define afterwards" style of programming
+          makes the split easy to do later.
+          Compare these two ...
+          <UL>
+          <LI> <A HREF="../CLanguage/MyCode/ProgramStructure.c">
+               <TT>ProgramStructure.c</TT></A>
+          <LI> <A HREF="../CLanguage/MyCode/ProgramStructure2.c">
+               <TT>ProgramStructure2.c</TT></A>
+          </UL>
+     </UL>
+
+<P>
+<LI> Separate Compilation
+     <P>
+     <IMG SRC="Libraries.GIF" WIDTH=60%>
+     <UL>
+     <LI> Separating the interface from the implementation means
+          compiling multiple small files, and some code is compiled
+          multiple times.
+     <LI> Some files need not be recompiled when changes are made.
+     <LI> The UNIX commands to compile and link separately are
+          <UL>
+          <LI> <TT>gcc -c Source.c</TT> to compile 
+          <LI> <TT>gcc -o Executable Object1.o Object2.o ...</TT> to link
+          </UL>
+     <LI> For the example above ...
+          <A HREF="ModularDependencies.jpg">these are the file dependencies</A>
+     <LI> The <A HREF="Compiler.shtml">compiler has some options</A> that
+          support multi-file program development.
+     </UL>
+
+<P>
+<LI> <tt>make</tt>
+     <UL>
+     <LI> Large programs broken up may use many object and library files
+     <LI> Changing a source file means updating the objects, libraries
+          and executables that depend on the source file.
+     <LI> The UNIX <tt>make</tt> utility keeps track of such dependencies,
+          and recreates only the dependant files.
+     <LI> To determine which source files are part of the <EM>target</EM> 
+          to be built, and which tools to use to build the target,
+          <tt>make</tt> uses a file called <tt>Makefile</tt> in the current
+          directory.
+          <UL>
+          <LI> A simple <A HREF="MyCode/MakefileSimple"><tt>Makefile</tt></A>
+               for the modular program
+          <LI> Lines starting with a <tt>#</tt> are comments
+          <LI> A <TT>Makefile</TT> is a sequence of rules in the form
+               <PRE>
+target: dependencies
+     action </PRE>
+               Note that <tt>action</tt> must be preceded by a tab character; 
+               this is a historical artifact that no one has bothered to fix. 
+          <LI> Actions are just standard UNIX commands that are fed to a shell
+          <LI> If a dependency does not have a target entry, it is expected
+               to exist as a result of external activity, e.g., editing
+          </UL>
+     <LI> Makefiles are processed from the top down, trying to create a 
+          target. By default the first target is used, but any target can 
+          be specified on the command line.
+          <PRE>
+make(Target) {
+    foreach Dependency do {
+        if (IsATarget(Dependency)) {
+            make(Dependency)
+        }
+    }
+    if (!FileExists(Target) || AnyNewer(Dependencies,Target)) {
+        DoActions(Target)
+    }
+} </PRE>
+     <LI> Make variables can hold values like environment variables.
+          <tt>make</tt> automatically sets the value of certain
+          variables like <tt>$@</tt>. Variables of this ilk include:
+          <UL>
+          <LI> <tt>$@</tt> The file name of the target of the
+               rule.
+          <LI> <tt>$&lt;</tt> The name of the first dependency.
+          <LI> <tt>$^</tt> The names of all the dependencies with
+               spaces between them.
+          <LI> <tt>$?</tt> The list of dependencies that are out
+               of date.
+          </UL>
+     <LI> <tt>make</tt> has rules that it applies by default, specified
+          in 
+          <A HREF="MyCode/make.rules">
+          <TT>/usr/share/lib/make/make.rules</TT></A>.
+          For example, <tt>make</tt> knows that to get from a <tt>.c</tt> 
+          file to a <tt>.o</tt> file, it must run the C compiler with 
+          the <tt>-c</tt> flag.
+          <UL>
+          <LI> <A HREF="MyCode/MakefileDefaults"><TT>Makefile</TT></A>
+               using defaults
+          </UL>
+     <LI> In addition to targets that build programs, <tt>make</tt>
+          can be made to perform other housekeeping by specifying targets that
+          are not necessarily programs.  For example, a common target is
+          <PRE>
+clean:
+     rm -f *.o *.bak *~
+          </PRE>
+          which causes <tt>make</tt> to delete object files and any
+          backup files (<tt>*.bak</tt> and <tt>*~</tt>) created by other
+          programs such as editors.
+     <LI> <tt>makedepend</tt> or <TT>mkdep</TT>
+          <UL>
+          <LI> Examines each of the source files in its command line and looks
+               for <tt>#include</tt> directives.  
+          <LI> Generates a list of source files that are needed by the
+               compiler to produce the resulting target.
+          <LI> Result is placed in <A HREF="MyCode/MakefileDepends"><TT>.depend</TT></A> (FreeBSD) or appended to <TT>makefile</TT> (Linux)
+          </UL>
+     <LI> A more realistic <A HREF="MyCode/MakefileReal">
+          <TT>Makefile</TT></A> for the example
+     </UL>
+
+<P>
+<LI> Creating a library
+     <UL>
+     <LI> <TT>.o</TT> files can be combined into libraries using the
+          <TT>ar</TT> utility.
+     <LI> Library files are given a <TT>.a</TT> extension.
+     <LI> The object files can be used by the compiler by specifying
+          the location of the library file with the <TT>-L</TT> flag,
+          and giving the library file name.
+     <LI> Example
+          <PRE>
+prompt> gcc -c *.c
+prompt> ar -rv libmystuff.a *.o
+prompt> pwd
+/home/geoff/c
+prompt> gcc MyMain.c -L/home/geoff/c -lmystuff -o MyMain
+          </PRE>
+     </UL>
+
+<P>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+<LI> Below is the content of a <TT>makefile</TT>. 
+     Assume that the files <TT>part1.c</TT> and <TT>part3.c</TT> have just 
+     been modified.
+     Write down the sequence of command activations in the correct order 
+     when <TT>make</TT> is run. 
+     <PRE>
+all: part1.o part2.o
+		gcc part1.o part2.o -o whole
+
+part1.o: part1.c part3.o
+		gcc -c part1.c
+		gcc part1.o part3.o -o part3.out
+
+part2.o: part2.c
+		gcc -c part2.c
+
+part3.o: part3.c
+		gcc -c part3.c
+     </PRE>
+</UL>
+<P>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> Give the algorithm used by <TT>make</TT>.
+<LI> In terms of <TT>make</TT>, what are targets, dependencies, and actions?
+<LI> What is in a UNIX <TT>.a</TT> file?
+<LI> What UNIX program is used to create libraries?
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

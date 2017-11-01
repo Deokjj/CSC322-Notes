@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<!------------------------------------------------------------------------>
+<TITLE>UNIX System Calls</TITLE>
+<!------------------------------------------------------------------------>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>UNIX System Calls</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:45 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Access to the UNIX kernel is <A HREF="../UNIXUse/StartUse.shtml">
+     via system calls</A>.
+<LI> These are similar to function calls, but remove control from 
+     the user process. 
+<LI> The <CODE>libc.a</CODE> library provides functions that allow 
+     the entry points into the kernel to be accessed just like local 
+     functions.
+<LI> Common and well known system calls are:
+     <UL>
+     <LI> <CODE>access</CODE>:
+          checks if calling process has file access
+     <LI> <CODE>alarm</CODE>:
+          sets a process's alarm clock
+     <LI> <CODE>chdir</CODE>:
+          changes the working directory
+     <LI> <CODE>chmod</CODE>:
+          changes the mode of a file
+     <LI> <CODE>chown</CODE>:
+          changes the ownership of a file
+     <LI> <CODE>chroot</CODE>:
+          changes the root directory
+     <LI> <CODE>close</CODE>:
+          closes a file descriptor
+     <LI> <CODE>dup</CODE>, <CODE>dup2</CODE>:
+          duplicates an open file descriptor
+     <LI> <CODE>execl</CODE>, <CODE>execv</CODE>, <CODE>execle</CODE>, 
+          <CODE>execve</CODE>, <CODE>execlp</CODE>, <CODE>execvp</CODE>:
+          executes a file
+     <LI> <CODE>exit</CODE>:
+          exits a process
+     <LI> <CODE>fcntl</CODE>:
+          controls open files
+     <LI> <CODE>fork</CODE>:
+          creates a new process
+     <LI> <CODE>getpid</CODE>, <CODE>getpgrp</CODE>, <CODE>getppid</CODE>:
+          gets group and process IDs
+     <LI> <CODE>getuid</CODE>, <CODE>geteuid</CODE>, <CODE>getgid</CODE>, 
+          <CODE>getegid</CODE>:
+          gets user and group IDs
+     <LI> <CODE>ioctl</CODE>:
+          controls character devices
+     <LI> <CODE>kill</CODE>:
+          sends a signal to one or more processes
+     <LI> <CODE>link</CODE>:
+          links a new file name to an existing file
+     <LI> <CODE>lseek</CODE>:
+          moves read/write file pointer
+     <LI> <CODE>mknod</CODE>:
+          makes a directory, special or ordinary file
+     <LI> <CODE>mount</CODE>:
+          mounts a filesystem
+     <LI> <CODE>msgctl</CODE>, <CODE>msgget</CODE>, <CODE>msgsnd</CODE>, 
+          <CODE>msgrcv</CODE>:
+          message passing support
+     <LI> <CODE>nice</CODE>:
+          changes priority of a process
+     <LI> <CODE>open</CODE>:
+          opens a file for reading or writing
+     <LI> <CODE>pause</CODE>:
+          suspends a process until a signal occurs
+     <LI> <CODE>pipe</CODE>:
+          creates an interprocess pipe
+     <LI> <CODE>plock</CODE>:
+          locks a process in memory
+     <LI> <CODE>profil</CODE>:
+          requests an execution profile
+     <LI> <CODE>ptrace</CODE>:
+          allows a process to trace the execution of another
+     <LI> <CODE>read</CODE>:
+          reads from a file
+     <LI> <CODE>semctl</CODE>, <CODE>semget</CODE>, <CODE>semop</CODE>:
+          semaphore support
+     <LI> <CODE>setpgrp</CODE>:
+          sets process group ID
+     <LI> <CODE>setuid</CODE>, <CODE>setgid</CODE>:
+          sets user and group IDs
+     <LI> <CODE>shmctl</CODE>, <CODE>shmget</CODE>, <CODE>shmop</CODE>:
+          shared memory support
+     <LI> <CODE>signal</CODE>:
+          control of signal processing
+     <LI> <CODE>sleep</CODE>:
+          suspends execution for an interval
+     <LI> <CODE>stat</CODE>, <CODE>fstat</CODE>:
+          gets file status
+     <LI> <CODE>stime</CODE>:
+          sets the time
+     <LI> <CODE>sync</CODE>:
+          updates the super block
+     <LI> <CODE>time</CODE>:
+          number of seconds since 1/1/1970
+     <LI> <CODE>times</CODE>:
+          gets process and child process times
+     <LI> <CODE>ulimit</CODE>:
+          gets and sets user limits
+     <LI> <CODE>umask</CODE>:
+          gets and sets file creation mask
+     <LI> <CODE>umount</CODE>:
+          unmounts a file system
+     <LI> <CODE>uname</CODE>:
+          gets system information
+     <LI> <CODE>unlink</CODE>:
+          removes directory entry
+     <LI> <CODE>ustat</CODE>:
+          gets file system statistics
+     <LI> <CODE>utime</CODE>:
+          sets file access and modification times
+     <LI> <CODE>wait</CODE>:
+          waits for a child process to stop or terminate
+     <LI> <CODE>write</CODE>:
+          writes to a file
+     </UL>
+<LI> Example: <A HREF="MyCode/Sleep.c">Sleep.c</A>
+     - Program that sleeps a bit
+<LI> Errors during system calls.
+     <UL>
+     <LI> If an error occurs during a system call the function may return
+          an error value.
+     <LI> The function may also set an external integer variable
+          <CODE>errno</CODE>.
+     <LI> Error messages can be output using:<BR>
+          <CODE>void perror(char *user_message)</CODE><BR>
+          which outputs <EM>user_message</EM>: <EM>system message</EM>
+     <LI> <A HREF="MyCode/Suicide.c">Suicide.c</A>
+          - A suicidal program.
+     </UL>
+</UL>
+<P>
+
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+<LI> System call error: 
+     Attempt to increase the priority of your program with a 
+     <CODE>nice()</CODE> system call.
+     Print out the resultant error number and associated error message.
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2>Exam Style Questions</H2>
+<UL>
+<LI>
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

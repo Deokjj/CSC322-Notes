@@ -1,0 +1,8 @@
+13a
+    printf("Have a most excellent day\n");
+.
+12c
+    printf("Hello world\n");
+.
+10d
+1,$p

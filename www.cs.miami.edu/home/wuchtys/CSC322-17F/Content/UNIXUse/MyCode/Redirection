@@ -1,0 +1,27 @@
+#!/bin/tcsh
+
+ls > Listing$$
+echo Output is in Listing$$
+echo Listing holds --------------------------
+cat Listing$$
+echo ----------------------------------------
+
+rm -f Listing$$
+
+touch WCFile$$
+foreach File (*)
+    wc $File >> WCFile$$
+end
+echo WCFile holds ---------------------------
+cat WCFile$$
+echo ----------------------------------------
+set dummy=$<
+rm WCFile$$
+
+echo -n "Number of lines with the word echo is "
+grep echo Redirection | wc -l
+echo ----------------------------------------
+set dummy=$<
+
+ls
+echo "This is the end, my friends"

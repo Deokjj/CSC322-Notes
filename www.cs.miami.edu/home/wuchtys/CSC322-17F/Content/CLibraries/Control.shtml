@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<TITLE>Control</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Control</H1>
+</CENTER>
+Last modified Monday, 22-Jan-2001 01:45:54 EST.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Error handling
+     <UL>
+     <LI> <TT>errno</TT> - an external <TT>int</TT> which holds error 
+          numbers for the most recent error. 
+          Declared as <TT>extern int errno;</TT> in <TT>errno.h</TT>, and
+          accessed by most error functions.
+     <LI> <TT>perror</TT> - prints an error message
+          <UL>
+          <LI> <TT>void perror(char s1[])</TT>
+          <LI> Prints <TT>s1</TT> and an implementation defined error message 
+               out to <TT>stderr</TT>. 
+          <LI> The error message is that indicated by the current value of 
+               <TT>errno</TT>, and may be accessed directly by
+               <TT>char *strerror(int error_number)</TT>
+          </UL>
+     <LI> <A HREF="MyCode/OpenFileError.c"><TT>OpenFileError.c</TT></A>
+          - Program that tests for the readability of a file
+     </UL>
+     <P>
+
+<LI> Diagnostics
+     <UL>
+     <LI> The <TT>assert.h</TT> file provides a function
+          <TT>void assert(int expression)</TT>. 
+     <LI> If <TT>expression</TT> is 0, an error message of the form
+          <PRE>
+Assertion failed: expression, file &lt;filename>, line &lt;line>
+          </PRE>
+          is output to <TT>stderr</TT>, and execution is aborted.
+     <LI> If <TT>NDEBUG</TT> is defined at the time <TT>&lt;assert.h></TT>
+          is included, the <TT>assert</TT> macros are ignored.
+     <LI> <A HREF="MyCode/AssertNonZero.c"><TT>AssertNonZero.c</TT></A>
+          - Program that asserts a divisor is non-zero
+     </UL>
+     <P>
+
+<LI> Non-local jumps
+     <UL>
+     <LI> This provides a facility to exit from deeply nested function calls. 
+     <LI> The declarations are in <TT>setjmp.h</TT>.
+     <LI> <TT>int setjmp(jmp_buf environment)</TT> stores the current state
+          information in environment, and returns 0.
+     <LI> <TT>void longjmp(jmp_buf environment,int value)</TT> returns again
+          from the <TT>setjmp</TT> that created the environment, returning 
+          the value specified. 
+     <LI> The function containing the <TT>setjmp</TT> must not have
+          terminated. 
+     <LI> Accesible objects retain their values from the time of the 
+          <TT>longjmp</TT>.
+     <LI> <A HREF="MyCode/LongJump.c"><TT>LongJump.c</TT></A>
+          - Program that escapes from recursion using <TT>longjmp</TT>
+     </UL>
+     <P>
+
+<LI> Date and time functions
+     <UL>
+     <LI> The <TT>time.h</TT> header declares several functions for 
+          manipulating the time and date. 
+     <LI> <TT>time_t time(time_t *tloc)</TT> - Returns the time since 
+          <TT>00:00:00 GMT, Jan.  1,  1970</TT>, measured in seconds. 
+          If <TT>tloc</TT> is not NULL, the return value is also stored 
+          in the location to which <TT>tloc</TT> points. 
+     <LI> <TT>struct tm *localtime_r(const time_t *clock, struct tm *res);</TT>
+          - Converts an elapsed time since epoch to a <TT>struct tm</TT>:
+<PRE>
+struct  tm {
+     int   tm_sec;    /* seconds after the minute - [0, 61] */
+                      /* for leap seconds */
+     int   tm_min;    /* minutes after the hour - [0, 59] */
+     int   tm_hour;   /* hour since midnight - [0, 23] */
+     int   tm_mday;   /* day of the month - [1, 31] */
+     int   tm_mon;    /* months since January - [0, 11] */
+     int   tm_year;   /* years since 1900 */
+     int   tm_wday;   /* days since Sunday - [0, 6] */
+     int   tm_yday;   /* days since January 1 - [0, 365] */
+     int   tm_isdst;  /* flag for alternate daylight savings time */
+};
+</PRE>
+     <LI> <TT>char *asctime_r(const struct tm *tm, char *buf, int buflen);</TT>
+          - Converts a <TT>struct tm</TT> to a readable string.
+     <LI> <TT>char *ctime(time_t *clock)</TT> - Converts the time pointed 
+          to by clock, representing the time in seconds since the Epoch 
+          (00:00:00 UTC, January 1, 1970), to local time in the form of a 
+          26 character string.
+     <LI> <A HREF="MyCode/MyDate.c"><TT>MyDate.c</TT></A>
+          - Program that prints the date
+     <LI> <TT>clock_t clock(void);</TT> - Returns the amount of CPU time (in
+          clock ticks, often microseconds) used since the start of the calling 
+          process.
+          Use <TT>CLOCKS_PER_SEC</TT> to convert to seconds.
+     <LI> <A HREF="MyCode/TimeFib.c"><TT>TimeFib.c</TT></A>
+          - Program that times recursive Fibonacci
+     </UL>
+     <P>
+
+<LI> Delays and exits
+     <UL>
+     <LI> <TT>unsigned int sleep(unsigned int seconds);</TT> - Suspends
+          the calling process for <TT>seconds</TT>.
+     <LI> <TT>void exit(int status);</TT> - Closes files, etc, and returns
+          <TT>status</TT> to the OS.
+     <LI> <TT>int atexit(void (*func)(void));</TT> - Registers <TT>func</TT>
+          as a function to be called at the start of exit processing.
+     <LI> <A HREF="MyCode/Exit.c"><TT>Exit.c</TT></A>
+          - Program that sleeps, and exits with an exit function
+     </UL>
+     <P>
+
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+<LI> Write a recursive function and a linear function for generating the 
+     Nth Fibonacci number. Compare their time performance for generating the 
+     Nth Fibonacci number, for progressively larger N.
+<LI> Exercise 12709<BR>
+     Write a C program to produce a series of floating point random 
+     numbers in the ranges 
+     <OL>
+     <LI> 0.0 - 1.0
+     <LI> 0.0 - n where n is any floating point value.
+     </OL>
+     The seed should be set so that a unique sequence is guaranteed.
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+<LI> Any of the short <A HREF="#Exercises">exercises</A>.
+<LI> The following problem could suffer from a divide by zero error. Rewrite
+     it adding an <TT>assert</TT> statement to prevent the potential error.
+     <PRE>
+int i1,i2;
+
+scanf("%d %d",&i1,&i2);
+printf("%d\n:,i1/i2); </PRE>
+<LI> Explain how <TT>setjmp</TT> and <TT>longjmp</TT> can be used to retreat
+     from complicated situations in one step.
+<LI> What is the output from the following program?
+     <PRE>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;time.h>
+
+void Byeee(void) {
+
+    time_t elapsedSinceEpoch;
+
+    time(&elapsedSinceEpoch);
+    printf("My time is %s\n",ctime(&elapsedSinceEpoch));
+}
+
+int main(void) {
+
+    FILE *File;
+
+    atexit(Byeee);
+
+    if ((File = fopen("/bin/ls","w")) == NULL) {
+        perror("Opening system file");
+        exit(-1);
+    }
+
+    fclose(File);
+    return(0);
+} </PRE>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

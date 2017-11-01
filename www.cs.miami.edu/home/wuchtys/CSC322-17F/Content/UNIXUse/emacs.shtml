@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+<TITLE>Emacs</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Using Emacs</H1>
+</CENTER>
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Getting started
+  <UL>
+     <LI> Get help           <TT>C-h</TT>  (Hold down <TT>CTRL</TT> and press <TT>h</TT>)
+     <LI> Emacs manual       <TT>C-h r</TT>        
+     <LI> Emacs tutorial     <TT>C-h t</TT>
+  </UL>
+<LI> Dealing with files
+  <UL>
+    <LI> open a file         <TT>C-x C-f</TT>
+    <LI> save a file under a given name <TT>C-x C-w</TT>
+    <LI> save a give file    <TT>C-x C-s</TT>
+  </UL>
+<LI> Editing
+  <UL>
+  <LI> undo function <TT> C-_</TT>
+  <LI> search forward <TT>C-s</TT>
+   <LI> search backward <TT>C-r</TT>
+   <LI> mark region <TT>C-space</TT>
+   <LI> kill a region <TT>C-k</TT>
+   <LI> kill a region <TT>C-w</TT>
+   <LI> replace text <TT>M-%</TT> (`<TT>M-</TT>' means use the <TT>Meta</TT> (or <TT>Alt</TT>) key. Alternatively press <TT>esc</TT>)
+   </UL>
+<LI> Using windows
+  <UL>
+    <LI> close window <TT>C-x 0</TT>
+    <LI> close all windows except active one <TT>C-x 1</TT>
+    <LI> split the active window vertically <TT>C-x 2</TT>
+    <LI> split the active window horizontally <TT>C-x 3</TT>
+    <LI> change active window to next window <TT>C-x o</TT>
+  </UL>
+<LI> Leaving <TT>emacs</TT>
+  <UL>
+    terminating emacs <TT>C-x C-c</TT>
+  </UL>
+<LI> For lazy ones
+<UL>
+     <LI> Activate menubar   <TT>M-`</TT>
+</UL>
+     
+  </UL>
+  
+<P>
+<HR><!------------------------------------------------------------------------>
+Last modified Thursday, 15-Sep-2016 11:47:06 EDT.
+<HR><!------------------------------------------------------------------------>
+
+</BODY>
+</HTML>

@@ -1,0 +1,297 @@
+<HTML>
+<HEAD>
+<TITLE>File System</TITLE>
+</HEAD>
+<BODY ALIGN=JUSTIFY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>File System</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:44 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> Hierarchy<BR>
+     <UL>
+     <LI> UNIX philosophy: Everything is a file
+          <UL>
+          <LI> Plain file
+          <LI> Directory
+          <LI> Block device (disk, CD, DVD, tape)
+          <LI> Character device (keyboard, mouse, modem)
+          <LI> Socket link (internet)
+          <LI> FIFO (pipes between processes)
+          <LI> Symbolic link (aliases, shortcuts)
+          </UL>
+     <LI> File systems
+          <UL>
+          <LI> Root file system
+          <LI> Mounted file systems
+               <UL>
+               <LI> <TT>/mnt</TT> and <TT>/media</TT>
+               <LI> Local and NFS
+               <LI> <TT>mount</TT> command
+	       <LI> automatic mounting <TT> /etc/fstab</TT>
+               <LI> <TT>df</TT> command
+               <LI> <TT>du</TT> command
+               </UL>
+          <LI> The result is a single tree<BR>
+               <IMG SRC="Pictures/Hierarchy.GIF" WIDTH=80%>
+          </UL>
+     <LI> Each node has a number of attributes:
+          <UL>
+          <LI> Name
+          <LI> Type
+          <LI> Size
+          <LI> Owner
+          <LI> Group (each file belongs to one group, even if the owner 
+               belongs to multiple groups)
+          <LI> Permissions
+          <LI> Number of links
+          <LI> Access dates
+          <LI> <TT>ls -l</TT> gives a full listing
+               <PRE>
+> ls -l
+total 72
+-rw------- 1 geoff user   490 Feb 10  2004 CSCCodes
+drwx------ 5 geoff user  4096 Mar 25  2008 CVSLab
+drwx------ 2 geoff user  4096 Apr 22  2004 LabTasks
+drwx------ 2 geoff user  4096 Apr  7  2008 MyCode.C
+drwxr-xr-x 2 geoff user  4096 Jan 21 10:03 MyCode.UNIX
+drwx------ 2 geoff user  4096 Apr 27  2004 RPC
+drwx------ 2 geoff user  4096 Feb  6  2007 SampleCode
+-rw------- 1 geoff user 12552 Jan 18  2005 Schulz.tgz
+drwx------ 2 geoff user  4096 Apr 22  2008 SocketExample
+drwxr-xr-x 2 geoff user  4096 Feb 26  2004 StreamEditor
+drwxr-xr-x 2 geoff user  4096 Apr 10  2008 ThreadFib
+drwx------ 2 geoff user  4096 Apr 30  2007 ThreadFibWithSignals
+-rwx------ 1 geoff user  5119 Jan 25  2007 Ticker
+-rw-r--r-- 1 geoff user   418 Feb  3  2006 Ticker.c </PRE>
+          <LI> <TT>stat</TT> gets information about a file
+          </UL>
+     <LI> Pathnames consist of file/directory names, separated by slashes 
+          (as opposed to sloshes)
+          <UL>
+          <LI> Any character except <TT>/</TT> is allowed.
+               Use <TT>''</TT>s around weird file names.
+          <LI> Extensions are not meaningful to UNIX, only to applications
+          <LI> Special file names
+               <UL>
+               <LI> <TT>.file_name</TT>
+               <LI> <TT>.</TT> 
+               <LI> <TT>..</TT>
+               </UL>
+          <LI> Absolute and relative file names
+               <UL>
+               <LI> Absolute to the root (start with slash)
+               <LI> Relative to the current working directory of the process
+                    (including <TT>.</TT> and <TT>..</TT>)
+               </UL>
+          </UL>
+     <LI> <TT>cat</TT> displays a file<BR>
+          <TT>cp</TT> copies files<BR>
+          <TT>mv</TT> renames files (does not "move" them)<BR>
+          <TT>rm</TT> deletes files<BR>
+          <TT>chown</TT> changes the owner of a file (root only)<BR>
+          <TT>chgrp</TT> changes the group of a file (constraints)
+     </UL>
+<P>
+<LI> Directories
+     <UL>
+     <LI> <TT>ls</TT> &lt;directory> lists the files in the &lt;directory>
+          (default is the current working directory)<BR>
+          <UL>
+          <LI> <TT>ls -F</TT> appends characters to show file type<BR>
+          <LI> <TT>ls -a</TT> includes files starting with <TT>.</TT> (hidden 
+               files)
+          <LI> <TT>ls</TT> has lots of useful options - read the man page
+          </UL>
+     <LI> <TT>cd</TT> changes the shell's current working directory<BR>
+          <TT>pushd</TT> pushes the shell's current working directory<BR>
+          <TT>popd</TT> pops the shell's current working directory<BR>
+          <TT>mkdir</TT> makes a directory<BR>
+          <TT>rmdir</TT> removes an empty directory<BR>
+          <TT>rm -r</TT> recursively removes files and directories<BR>
+     <LI> Important system directories (common places - these vary between
+          UNICES)
+          <UL>
+          <LI> <TT>/bin</TT> - binaries of commands
+          <LI> <TT>/sbin</TT> - binaries of system admin commands
+          <LI> <TT>/usr</TT> - read-only data shared between machines
+          <LI> <TT>/usr/bin</TT> - shared binaries
+          <LI> <TT>/usr/sbin</TT> - shared system admin commands
+          <LI> <TT>/usr/local/bin</TT> - shared binaries installed locally
+          <LI> <TT>/usr/local/sbin</TT> - shared system admin binaries installed
+               locally
+          <LI> <TT>/dev</TT> - files corresponding to devices
+          <LI> <TT>/etc</TT> - host specific configuration files
+          <LI> <TT>/home</TT> - user accounts
+          <LI> <TT>/lib</TT> - libraries of objects
+          <LI> <TT>/tmp</TT> - temporary stuff, deleted periodically
+          <LI> <TT>/var</TT> - changing data
+          <LI> <TT>/proc</TT> - information about processes
+          </UL>
+     </UL>
+<P>
+<LI> Links
+     <UL>
+     <LI> UNIX file systems are organized as DAGs.
+          Think of the names being on the edges, not the nodes.
+     <LI> A node can have multiple names, "linked" from different
+          parts of the hierarchy.
+          <UL>
+          <LI> Hard links cannot be to directories, or across file systems
+          </UL>
+     <LI> Symbolic links are different, and provide a reference to another
+          node in the hierarchy, for the system to follow.
+     <LI> <TT>ln</TT> makes hard links<BR>
+          <TT>ln -s</TT> makes symbolic links<BR>
+          <TT>stat</TT> and <TT>readlink</TT> dereference symbolic links<BR>
+     </UL>
+<P>
+<LI> Permissions
+     <UL>
+     <LI> There are three groups with access rights:
+          <UL>
+          <LI> The user who owns the file
+          <LI> Members of the group associated with the file
+          <LI> Other users
+          </UL>
+     <LI> If the process has the EUID of the file owner, the first group of
+          permissions is used. 
+          If the process has the EGID of the file group, the second group of
+          permissions is used.
+          If neither of the former apply, the third group of
+          permissions is used.
+     <LI> There are three types of access:
+          <UL>
+          <LI> Read access
+          <LI> Write access
+          <LI> Execute (file) or current directory (directories) access
+          </UL>
+     <LI> Symbolic encoding
+          <UL>
+          <LI> The mode has the form <TT>uuugggooo</TT> to encode user, 
+               group, and other access rights
+          <LI> Each letter may be one of <TT>-</TT>, <TT>r</TT>,
+               <TT>w</TT>, <TT>x</TT>.
+          </UL>
+     <LI> <TT>chmod</TT> changes permissions
+     <LI> Numerical Encoding
+          <UL>
+          <LI> The 9 permission bits are represented by 3 octal digits 
+               (each digit represents 3 bits):
+               <UL>
+               <LI> 001 represents execute access for others
+               <LI> 002 represents write access for others
+               <LI> 004 represents read access for others
+               <LI> 010 represents execute access for group
+               <LI> 020 represents write access for group
+               <LI> 040 represents read access for group
+               <LI> 100 represents execute access for user
+               <LI> 200 represents write access for user
+               <LI> 400 represents read access for user
+               </UL>
+          <LI> To generate a composite mode, add up the individual modes
+          <LI> Example:
+               <TT>rw-r--r--</TT> is a common mode for a regular file:
+               the user is allowed to read and write the file, and
+               everyone else is allowed to read the file (no secrets ;-).
+               <UL>
+               <LI> Corresponding numerical value:
+                    <PRE>
+0400 User read
+0200 User write
+0040 Group read
+0004 Other read
+---------------
+0644
+                    </PRE>
+               </UL>
+               Numeric mode 666 (the number of the beast) gives full 
+               read and write access for everyone (<TT>rw-rw-rw-</TT>)
+               Some people claim that this is not coincidence.
+          <LI> <TT>chmod</TT> changes permissions
+          </UL>
+     <LI> Default permissions
+          <UL>
+          <LI> The default permissions for new plain files are 
+               <TT>rw-rw-rw-</TT>, and the default permissions for new
+               directories are <TT>rwxrwxrwx</TT>.
+          <LI> Each process maintains a file mode <TT>umask</TT> that 
+               determines what access rights are <EM>not</EM> granted for 
+               newly created files and directories.
+          <LI> The umask is inherited by new processes (i.e., your files 
+               will be created with rights based on the umask of your 
+               shell)
+          <LI> The umask contains 9 bits, corresponding to the 
+               <TT>rwxrwxrwx</TT> access rights, and bits set in the 
+               mask are always cleared
+          <LI> <TT>umask</TT> sets the umask of your shell
+          </UL>
+     </UL> 
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+
+<UL>
+<LI> How much data is it possible to store in the file <TT>/dev/null</TT>?
+     How can you later read that data?
+<LI> When logged in as the root user, how often would you do the command
+     <TT>rm -rf /</TT>?
+<LI> Name the 7 types of files in UNIX.
+<LI> Describes the type(s) of files that are stored in
+     <UL>
+     <LI> <TT>/bin</TT>
+     <LI> <TT>/sbin</TT>
+     <LI> <TT>/usr</TT>
+     <LI> <TT>/usr/bin</TT>
+     <LI> <TT>/usr/sbin</TT>
+     <LI> <TT>/usr/local/bin</TT>
+     <LI> <TT>/usr/local/sbin</TT>
+     <LI> <TT>/dev</TT>
+     <LI> <TT>/etc</TT>
+     <LI> <TT>/home</TT>
+     <LI> <TT>/lib</TT>
+     <LI> <TT>/tmp</TT>
+     <LI> <TT>/var</TT>
+     </UL>
+<LI> What access permissions does <TT>641</TT> give for a plain file?
+<LI> What access permissions does <TT>754</TT> give for a directory?
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+
+<UL>
+<LI> How is it posssible for a program to read a network connection as a
+     file?
+<LI> Explain the mechanism by which multiple physical disk partitions are
+     viewed as a single file system in UNIX.
+<LI> What is the significance of a leading <TT>.</TT> on a file name?
+<LI> Which if the following are legal file names in UNIX?
+     <OL>
+     <LI> <TT>big_222_numbers</TT>
+     <LI> <TT>.HiddenCode.c</TT>
+     <LI> <TT>spaced out man</TT>
+     <LI> <TT>/slash/</TT>
+     <LI> <TT>$dollar$</TT>
+     <LI> <TT>I'm a little Noddy Man, I always nod my head</TT>
+     </OL>
+<LI> Describe how hard links give a file multiple names in UNIX.
+<LI> Describe how soft (symbolic) links give a file multiple names in UNIX.
+<LI> Describe what users can do what to the file <TT>MyProgram</TT> after
+     doing the command
+     <PRE>
+chmod 510 MyProgram </PRE>
+<LI> Describe what users can do what to the directory <TT>PartialSecrets</TT>
+     after doing the command
+     <PRE>
+chmod 754 PartialSecrets </PRE>
+<LI> Give a command that adds read and write permission to the file
+     <TT>NoSecrets</TT> for the groups and others.
+</UL>
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

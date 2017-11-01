@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<TITLE>Other Tools</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Other Tools</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:42 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> <TT>gprof</TT>
+     <UL>
+     <LI> <TT>gprof</TT> produces an execution profile of programs compiled
+          with the <TT>-pg</TT> option
+     <LI> After compiling the program with <TT>-pg</TT>, run it, and a file
+          called <TT>&lt;program>.gmon</TT> is produced.
+     <LI> Run <TT>gprof</TT> on the <TT>&lt;program></TT> to get information
+          the number of calls to, and the time spent, each of your functions
+          and system functions called.
+     <LI> Useful <TT>gprof</TT> flags are:
+          <UL>
+          <LI> <TT>-b</TT> - suppresses the printing of the field descriptions
+          <LI> <TT>-l</TT> - suppresses the printing of the call graph profile
+          </UL>
+     <LI> Example: <A HREF="MyCode/ProfileThis.c"><TT>ProfileThis.c</TT></A>
+          <PRE>
+prompt> gcc -Wall -pg ProfileThis.c -o ProfileThis
+prompt> ProfileThis 35
+LinearFibonacci(35)      = 9227465
+QuadraticFibonacci(35)   = 9227465
+ExponentialFibonacci(35) = 9227465
+prompt> gprof -b -l ProfileThis
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 84.0       2.03     2.03                             .mcount (29)
+ 16.0       2.42     0.39        1   385.74   385.74  ExponentialFibonacci [1]
+  0.0       2.42     0.00       37     0.00     0.00  imalloc [3]
+  0.0       2.42     0.00       36     0.00     0.00  malloc [4]
+  0.0       2.42     0.00       36     0.00     0.00  malloc_bytes [5]
+  0.0       2.42     0.00       15     0.00     0.00  memchr [6]
+  0.0       2.42     0.00       15     0.00     0.00  memcpy [7]
+  0.0       2.42     0.00        9     0.00     0.00  __sfvwrite [133]
+  0.0       2.42     0.00        9     0.00     0.00  __sprint [134]
+  0.0       2.42     0.00        6     0.00     0.00  __ultoa [135]
+  0.0       2.42     0.00        4     0.00     0.00  sbrk [8]
+  0.0       2.42     0.00        3     0.00     0.00  __error [136]
+  0.0       2.42     0.00        3     0.00     0.00  __sflush [137]
+  0.0       2.42     0.00        3     0.00     0.00  __swrite [138]
+  0.0       2.42     0.00        3     0.00     0.00  _write [139]
+  0.0       2.42     0.00        3     0.00     0.00  brk [9]
+  0.0       2.42     0.00        3     0.00     0.00  fflush [10]
+  0.0       2.42     0.00        3     0.00     0.00  malloc_pages [11]
+  0.0       2.42     0.00        3     0.00     0.00  map_pages [12]
+  0.0       2.42     0.00        3     0.00     0.00  printf [13]
+  0.0       2.42     0.00        3     0.00     0.00  vfprintf [14]
+  0.0       2.42     0.00        1     0.00     0.00  LinearFibonacci [15]
+  0.0       2.42     0.00        1     0.00     0.00  QuadraticFibonacci [16]
+  ... </PRE>
+     </UL>
+
+<P>
+<LI> <TT>gdb</TT>
+     <UL>
+     <LI> GDB allows you to see what is going on inside a program while it
+          executes
+     <LI> GDB can do four main kinds of things to help you catch bugs in 
+          the act:
+          <UL>
+          <LI>  Start your program, specifying anything that might
+                affect its behavior.
+          <LI>  Make your program stop on specified conditions.
+          <LI>  Examine what has happened, when your program has stopped.
+          <LI>  Change things in your program, so you can experiment with 
+                correcting the effects of one bug and go on to learn about 
+                another.
+          </UL>
+     <LI> To use <TT>gdb</TT> compile the target program with the <TT>-g</TT>
+          option.
+     <LI> To run a program under <TT>gdb</TT> specify the program name as
+          the argument to <TT>gdb</TT>
+     <LI> Here are some of the most frequently needed GDB commands:
+          <UL>
+          <LI> <TT>break [file:]function</TT><BR>
+               Set a breakpoint at function (in file).
+          <LI> <TT>run [arglist]</TT><BR>
+               Start your program (with arglist, if specified).
+          <LI> <TT>bt</TT><BR>
+               Backtrace: display the program stack.
+          <LI> <TT>print expr</TT><BR>
+               Display the value of an expression.
+          <LI> <TT>c</TT><BR>
+               Continue running your program (after stopping, e.g. at a 
+               breakpoint).
+          <LI> <TT>next</TT><BR>
+               Execute next program line (after stopping); step over any 
+               function calls in the line.
+          <LI> <TT>step</TT><BR>
+               Execute next program line (after stopping); step
+               into any function calls in the line.
+          <LI> <TT>help [name]</TT><BR>
+               Show information about GDB command name, or general
+               information about using GDB.
+          <LI> <TT>quit</TT><BR>
+               Exit from GDB.
+          </UL>
+     <LI> Example: <A HREF="MyCode/ProfileThis.c">
+          <TT>ProfileThis.c</TT></A>
+     </UL>
+
+</UL>
+
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2>Exercises</H2>
+<UL>
+</UL>
+
+<P>
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL> 
+</UL>
+
+<P>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

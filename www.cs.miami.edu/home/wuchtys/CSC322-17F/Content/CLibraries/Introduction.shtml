@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<TITLE>Introduction</TITLE>
+</HEAD>
+<BODY>
+<HR><!------------------------------------------------------------------------>
+<CENTER>
+<H1>Mathematics</H1>
+</CENTER>
+Last modified Monday, 22-Aug-2016 11:19:41 EDT.
+<HR><!------------------------------------------------------------------------>
+<UL>
+<LI> C - Libraries not Language
+     <UL>
+     <LI> C is an extremely small language. Many of the functions of other 
+          languages are not included in C, e.g., no built in I/O, string 
+          handling or maths functions.
+     <LI> C provides functionality through a rich set function libraries.
+     <LI> Decent C implementations include standard libraries of functions 
+          for many facilities. For many practical purposes these may be 
+          regarded as being part of C. But they may vary from machine to
+          machine. (<EM>cf</EM> Borland C for a PC to UNIX C).
+     <LI> A programmer can also develop his or her own function libraries 
+          and also include special purpose third party libraries, e.g. NAG, 
+          PHIGS.
+     <LI> All libraries (except standard I/O) need to be explicitly linked 
+          in with the <TT>-l</TT> and, possibly, <TT>-L</TT> compiler options.
+     <LI> Do Not Reinvent Wheels
+          <UL>
+          <LI> The UNIX system provides a large number of C functions in 
+               libraries. 
+          <LI> It is wise for  programmers to check whether a library function
+               is available to perform a task before writing their own 
+               version. This will reduce program development time. 
+          <LI> The library functions have been tested, so they are more 
+               likely to be correct than any function which the programmer 
+               might write. This will save time when debugging the program.
+          </UL>
+     </UL>
+<P>
+<LI> Finding information about library functions
+     <UL>
+     <LI> The UNIX manual has an entry for all available functions. 
+     <LI> Function documentation is stored in section 3 of the manual, 
+          and there are many other useful system calls in section 2. 
+          If you already know the name of the function you want, you 
+          can read the page by typing (to find about <TT>sqrt</TT>):
+          <PRE>
+prompt> man 3 sqrt
+          </PRE>
+     <LI> If you don't know the name of the function, try <TT>man -k</TT>
+          <PRE>
+prompt> man -k root
+          </PRE>
+     <LI> On any manual page, the <TT>SYNOPSIS</TT> section will include 
+          information on the use of the function.  For example:
+          <PRE>
+#include &lt;time.h&gt;
+
+char *ctime(time_t *clock)
+          </PRE>
+          This means that you must have <TT>#include &lt;time.h&gt;</TT>
+          in your file before you call <TT>ctime</TT>. And that function 
+          <TT>ctime</TT> takes a pointer to type <TT>time_t</TT> as an 
+          argument, and returns a <TT>string (char *)</TT>. 
+          <TT>time_t</TT> will probably be defined in the same manual 
+          page.
+     <LI> The <TT>DESCRIPTION</TT> section gives a short description of 
+          what the function does. For example:
+          <PRE>
+ctime() converts a long integer, pointed to by clock,  to  a
+26-character  string  of the form produced by asctime().
+          </PRE>
+     </UL>
+</UL>
+<A NAME="Exercises">
+<HR><!------------------------------------------------------------------------>
+<H2> Exercises </H2>
+<UL>
+</UL>
+<A NAME="ESQ">
+<HR><!------------------------------------------------------------------------>
+<H2> Exam Style Questions </H2>
+<UL>
+</UL>
+<HR><!------------------------------------------------------------------------>
+</BODY>
+</HTML>

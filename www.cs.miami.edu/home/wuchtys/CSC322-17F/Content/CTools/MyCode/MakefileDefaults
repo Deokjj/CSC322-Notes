@@ -1,0 +1,10 @@
+#    Makefile for the Modular program
+
+CC     = gcc
+LD     = $(CC)
+
+Modular:	Modular.o Person.o
+
+Modular.o:	Modular.c Person.h CString.h PrettyPrint.h
+
+Person.o:	Person.c Person.h CString.h

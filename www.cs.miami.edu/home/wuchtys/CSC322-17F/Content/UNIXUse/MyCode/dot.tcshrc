@@ -1,0 +1,33 @@
+#----Set the path
+set path=( \
+        . \
+        /bin \
+        /usr/local/bin \
+        /usr/bin/X11 \
+        /usr/local/bin/X11 \
+        /usr/bin \
+        /usr/ucb \
+        /etc \
+)
+
+#----Set shell characteristics
+set autoexpand
+set autolist
+set prompt="`whoami`@`hostname | cut -f1 -d. `\:%c> "
+set history=100
+
+#----Set terminal characteristics
+set term=vt100
+
+#----Aliases
+alias ls "ls -F"
+alias   h       history
+
+#----Programming, etc
+setenv CLASSPATH .:$HOME
+
+#----Extra stuff
+limit coredumpsize 0
+# unalias rm
+# unalias mv
+
