@@ -1,6 +1,7 @@
 <HTML>
 <HEAD>
 <TITLE>Control</TITLE>
+<link rel="stylesheet" href="../styles.css">
 </HEAD>
 <BODY ALIGN=JUSTIFY>
 <HR><!------------------------------------------------------------------------>
@@ -14,16 +15,16 @@ Last modified Sunday, 23-Oct-2016 18:53:32 EDT.
      <UL>
      <LI> Arithmetic operators
           <UL>
-          <LI> Binary <TT>+</TT>, <TT>-</TT>, <TT>*</TT>, <TT>/</TT>, 
-               <TT>%</TT>, and unary <TT>+</TT> and <TT>-</TT>. 
+          <LI> Binary <TT>+</TT>, <TT>-</TT>, <TT>*</TT>, <TT>/</TT>,
+               <TT>%</TT>, and unary <TT>+</TT> and <TT>-</TT>.
                Precedence and associativity to be discussed later.
-          <LI> The <TT>libm.a</TT> library has maths functions, prototyped in 
+          <LI> The <TT>libm.a</TT> library has maths functions, prototyped in
                <TT>math.h</TT>.
           </UL>
      <LI> Relational and logical operators.
           <UL>
-          <LI> Relational <TT>&gt;</TT>, <TT>&gt;=</TT>, <TT>&lt;</TT>, 
-               <TT>&lt;=</TT>, <TT>==</TT>, <TT>!=</TT>. 
+          <LI> Relational <TT>&gt;</TT>, <TT>&gt;=</TT>, <TT>&lt;</TT>,
+               <TT>&lt;=</TT>, <TT>==</TT>, <TT>!=</TT>.
                These have lower precedence than arithmetic operators.
           <LI> Logical connectives <TT>&&</TT>, <TT>||</TT>.
                Expressions connected by these are evaluated left to right.
@@ -35,32 +36,32 @@ for (Index = 0; Index &lt; STRING_LENGTH-1 && (C1=getchar()) != '\n' && C1 != EO
                the order is useful in that it's necessary to check there
                is space to store the character before reading it. If not
                the evaluation will stop before the <TT>getchar()</TT>.
-          <LI> Unary negation <TT>!</TT> which convertes non-0 (true) operands 
+          <LI> Unary negation <TT>!</TT> which convertes non-0 (true) operands
                into 0 and a 0 (false) operand into 1.
           </UL>
      <LI> Increment and decrement.
           <UL>
-          <LI> <TT>++</TT> and <TT>--</TT> can be prefix or postfix. 
-               If used prefix the increment/decrement takes place before the 
-               variable is used, and if postfix the increment/decrement takes 
+          <LI> <TT>++</TT> and <TT>--</TT> can be prefix or postfix.
+               If used prefix the increment/decrement takes place before the
+               variable is used, and if postfix the increment/decrement takes
                place after the variable is used.
           <LI> <A HREF="MyCode/SqueezeThis.c"><TT>SqueezeThis.c</TT></A>
                - Program that squeezes a string
           </UL>
      <LI> Bitwise logical operators
           <UL>
-          <LI> These may be applied to <TT>char</TT>, <TT>short</TT>, 
-               <TT>int</TT>, <TT>long</TT> (<TT>signed</TT> or 
+          <LI> These may be applied to <TT>char</TT>, <TT>short</TT>,
+               <TT>int</TT>, <TT>long</TT> (<TT>signed</TT> or
                <TT>unsigned</TT>).
           <LI> <TT>&</TT> = bitwise AND. Useful for masking off bits.
           <LI> <TT>|</TT> = bitwise inclusive OR. Useful for turning on bits.
           <LI> <TT>^</TT> = bitwise exclusive OR.
-          <LI> <TT>&lt;&lt;</TT> = left shift. 
-               This shifts the bits of the left operand left by the number of 
-               bit positions specified by the right operand, filling the lsbs 
+          <LI> <TT>&lt;&lt;</TT> = left shift.
+               This shifts the bits of the left operand left by the number of
+               bit positions specified by the right operand, filling the lsbs
                with zero. Useful for creating masks.
-          <LI> <TT>>></TT> = right shift. See <TT>&lt;&lt;</TT>, but fill 
-               depends on whether or not sign extension is used for "-ve" 
+          <LI> <TT>>></TT> = right shift. See <TT>&lt;&lt;</TT>, but fill
+               depends on whether or not sign extension is used for "-ve"
                bit patterns.
           <LI> <TT>~</TT> = one's complement, i.e. inverts all bits.
           <LI> <A HREF="MyCode/PlayBits.c"><TT>PlayBits.c</TT></A>
@@ -94,10 +95,10 @@ else &lt;variable> = &lt;expression3>; </PRE>
                can be rewritten in the form
                <PRE>
 &lt;variable> = &lt;expression1> ? &lt;expression2> : &lt;expression3> </PRE>
-          <LI> The <TT>?:</TT> operator contructs genuine expressions, 
-               which may be used like any other expression. 
-          <LI> If <TT>&lt;expression2></TT> and <TT>&lt;expression3></TT> 
-               are of different types the result is determined by the mixed 
+          <LI> The <TT>?:</TT> operator contructs genuine expressions,
+               which may be used like any other expression.
+          <LI> If <TT>&lt;expression2></TT> and <TT>&lt;expression3></TT>
+               are of different types the result is determined by the mixed
                expression conversion rules.
           </UL>
      <LI> <A HREF="MyCode/FunkyExpressions.c"><TT>FunkyExpressions.c</TT></A>
@@ -108,7 +109,7 @@ else &lt;variable> = &lt;expression3>; </PRE>
                They are evaluated left-to-right and have the value of the
                right expression.
           <LI> These appear most frequently in for loops. See later.
-          <LI> Beware confusion with other <TT>,</TT>s, such as in actual 
+          <LI> Beware confusion with other <TT>,</TT>s, such as in actual
                arguments.  <TT>()</TT> should be used to avoid abiguity.
           </UL>
      </UL>
@@ -116,9 +117,9 @@ else &lt;variable> = &lt;expression3>; </PRE>
 <P>
 <LI> Sizeof
      <UL>
-     <LI> The <TT>sizeof</TT> function returns an integral value giving 
-          the number of bytes required to store an object. 
-     <LI> The result type is defined as <TT>size_t</TT> in 
+     <LI> The <TT>sizeof</TT> function returns an integral value giving
+          the number of bytes required to store an object.
+     <LI> The result type is defined as <TT>size_t</TT> in
           <TT>&lt;stddef.h></TT>.
      <LI> <A HREF="MyCode/SizeOf.c"><TT>SizeOf.c</TT></A>
           - Program that tells the size of various types
@@ -130,12 +131,12 @@ else &lt;variable> = &lt;expression3>; </PRE>
      <TR> <TH ALIGN=LEFT> Operator
           <TH ALIGN=LEFT> Associativity
      <TR> <TD COLSPAN=2> <HR>
-     <TR> <TD> <TT>()</TT>  <TT>func()</TT>  <TT>[]</TT>  <TT>-></TT>  
+     <TR> <TD> <TT>()</TT>  <TT>func()</TT>  <TT>[]</TT>  <TT>-></TT>
                <TT>.</TT>
-          <TD> left to right   
+          <TD> left to right
      <TR> <TD> <TT>!</TT>   <TT>~</TT>   <TT>++</TT>  <TT>--</TT>  <TT>+</TT>
-               <TT>-</TT>  <TT>(&lt;type>)</TT>  <TT>*</TT>  <TT>&</TT>  
-               <TT>sizeof</TT> 
+               <TT>-</TT>  <TT>(&lt;type>)</TT>  <TT>*</TT>  <TT>&</TT>
+               <TT>sizeof</TT>
           <TD> right to left
      <TR> <TD> <TT>*</TT>   <TT>/</TT>   <TT>%</TT>
           <TD> left to right
@@ -165,10 +166,10 @@ else &lt;variable> = &lt;expression3>; </PRE>
           <TD> left to right
      </TABLE>
      <UL>
-     <LI> The level 2 <TT>+</TT> and <TT>-</TT> operators are unary plus 
+     <LI> The level 2 <TT>+</TT> and <TT>-</TT> operators are unary plus
           and minus while the level 4 <TT>+</TT> and <TT>-</TT> are binary.
-     <LI> The level 2 <TT>*</TT> and <TT>&</TT> operators are for address 
-          arithmetic while the level 3 <TT>*</TT> is multiplication and the 
+     <LI> The level 2 <TT>*</TT> and <TT>&</TT> operators are for address
+          arithmetic while the level 3 <TT>*</TT> is multiplication and the
           level 8 <TT>&</TT> is bitwise AND.
      <LI> The associativity specifies the natural bracketing of
           expressions using the same operator repeatedly. e.g.,
@@ -183,9 +184,9 @@ else &lt;variable> = &lt;expression3>; </PRE>
           is seen as
           <PRE>
 &lt;variable1> += (&lt;variable2> += &lt;expression1>) </PRE>
-     <LI> The order of evaluation of operands of an operator (except 
-          <TT>&&</TT>, <TT>||</TT>, <TT>?:</TT>, and <TT>,</TT>) is 
-          unspecified. 
+     <LI> The order of evaluation of operands of an operator (except
+          <TT>&&</TT>, <TT>||</TT>, <TT>?:</TT>, and <TT>,</TT>) is
+          unspecified.
           To force a particular order temporary variables should be used.
      <LI> The order of evaluation of of operands in an expression and
           arguments to functions is not specified. To force an order
@@ -217,7 +218,7 @@ if (&lt;expression>) {
     &lt;false stuff>
 } </PRE>
           <UL>
-          <LI> The test is on the numeric value of the expression. 
+          <LI> The test is on the numeric value of the expression.
                0 = FALSE; non-0 = TRUE.
           <LI> The hanging-else problem may occur.
           </UL>
@@ -225,14 +226,14 @@ if (&lt;expression>) {
           <UL>
           <LI> <A HREF="MyCode/SwitchChar.c"><TT>SwitchChar.c</TT></A>
                - Using <TT>switch</TT> to act according to character.
-          <LI> The <TT>switch</TT> searches for a label corresponding to 
+          <LI> The <TT>switch</TT> searches for a label corresponding to
                the switch value and starts execution there.
-          <LI> The <TT>break</TT> is used to exit from the switch, otherwise 
+          <LI> The <TT>break</TT> is used to exit from the switch, otherwise
                all statements below the start of execution would be executed
-               (called fall-through). 
-               Put <TT>break</TT> after the last case, even though it is not 
+               (called fall-through).
+               Put <TT>break</TT> after the last case, even though it is not
                necessary - it makes it easier to add another case later.
-          <LI> The <TT>default</TT> case is optional, and will execute if no 
+          <LI> The <TT>default</TT> case is optional, and will execute if no
                other case is selected.
           <LI> The case labels must be constant and unique, and can only be
                of integral type.
@@ -254,8 +255,8 @@ for (&lt;exp1>;&lt;exp2>;&lt;exp3>) {
                for loop but it is bad style.
           <LI> The controlling variable retains its value after the loop is
                exited.
-          <LI> The comma operator appears in <TT>&lt;exp1></TT> and 
-               <TT>&lt;exp3></TT> when more than one variable needs to be 
+          <LI> The comma operator appears in <TT>&lt;exp1></TT> and
+               <TT>&lt;exp3></TT> when more than one variable needs to be
                initialised or updated.
           <LI> Compound statements are used for clarity and survival
           <LI> <A HREF="MyCode/ReverseString.c"><TT>ReverseString.c</TT></A>
@@ -288,7 +289,7 @@ for (&lt;exp1>;&lt;exp2>;&lt;exp3>) {
      <UL>
      <LI> Continue
           <UL>
-          <LI> Causes the rest of the body of a <TT>for</TT>, <TT>while</TT> 
+          <LI> Causes the rest of the body of a <TT>for</TT>, <TT>while</TT>
                or <TT>do</TT> loop not to be executed.
           <LI> <A HREF="MyCode/Continue.c"><TT>Continue.c</TT></A>
                - Program that sums the positive numbers input
@@ -298,8 +299,8 @@ for (&lt;exp1>;&lt;exp2>;&lt;exp3>) {
           <UL>
           <LI> <A HREF="MyCode/BreakLoop.c"><TT>BreakLoop.c</TT></A>
                - Using break to exit a loop
-          <LI> Used to exit from <TT>for</TT>, <TT>while</TT>, <TT>do</TT> and 
-               <TT>switch</TT>. 
+          <LI> Used to exit from <TT>for</TT>, <TT>while</TT>, <TT>do</TT> and
+               <TT>switch</TT>.
                The only structured use is in the switch statement.
           </UL>
      </UL>
@@ -344,17 +345,17 @@ error:    /*----Sort out the mess */ </PRE>
 <HR><!------------------------------------------------------------------------>
 <H2> Exercises </H2>
 <UL>
-<LI> Write <TT>char lower(char c1)</TT> which returns the lower case of 
-     <TT>c1</TT>, using a conditional expression to test for that case 
+<LI> Write <TT>char lower(char c1)</TT> which returns the lower case of
+     <TT>c1</TT>, using a conditional expression to test for that case
      of <TT>c1</TT>.
 <LI> Write <TT>void expand(char s1[],char s2[])</TT> which converts
      non-printing characters (such as new line, tab, etc) in <TT>s1</TT> to
      visible sequences (such as <TT>\n</TT>, <TT>\t</TT>, etc) in s2.
-     Use a switch to select the visible sequence for each non-printing 
+     Use a switch to select the visible sequence for each non-printing
      character.
 <LI> Write <TT>int invert(unsigned input,int position,int number)</TT> that
      returns the input value with the number bits that begin at
-     position (counting from the right), inverted. 
+     position (counting from the right), inverted.
      Other bits should be left unchanged.
      <BR><STRONG>Answer</STRONG>:
      <A HREF="MyCode/InvertBits.c"><TT>InvertBits.c</TT></A>
@@ -362,7 +363,7 @@ error:    /*----Sort out the mess */ </PRE>
      the number to a character string in the base. For example
      <TT>itob(i1,s1,16)</TT> puts <TT>i1</TT> in hex format into <TT>s1</TT>.
 <LI> Exercise 12306<BR>
-     Given as input three integers representing a date as day, month, year, 
+     Given as input three integers representing a date as day, month, year,
      print out the number day, month and year for the following day's date.
      Typical run:
      <PRE>
@@ -370,15 +371,15 @@ error:    /*----Sort out the mess */ </PRE>
 Date following 28:02:1992 is 29:02:1992
      </PRE>
 <LI> Write a program which reads two integer values. If the first is less than
-     the second, print the message "up". If the second is less than the first, 
-     print the message "down". If the numbers are equal, print the message 
-     "equal". If there is an error reading the data, print a message 
+     the second, print the message "up". If the second is less than the first,
+     print the message "down". If the numbers are equal, print the message
+     "equal". If there is an error reading the data, print a message
      containing the word <TT>Error</TT> and perform <TT>exit(0)</TT>;
 <LI> Exercise 12327<BR>
      Write a program to read in 10 numbers and compute the average, maximum and
      minimum values.
 <LI> Exercise 12328<BR>
-     Write a program to read in numbers until the number -999 is encountered. 
+     Write a program to read in numbers until the number -999 is encountered.
      The sum of all number read until this point should be printed out.
 <LI> Exercise 12329<BR>
      Write a program which will read an integer value for a base,
@@ -475,11 +476,11 @@ a  13%; e   8%; i   0%; o   4%; u   0%; rest  73%
      <PRE>
 char ch;
 while ((ch = getchar()) >= 0) {
-/* ch is the next character */    
+/* ch is the next character */
     ....
 }
      </PRE>
-     to read characters one at a time using <TT>getchar()</TT> until 
+     to read characters one at a time using <TT>getchar()</TT> until
      a negative value is returned.
 <LI> Read a file of English text, and print it out one word per line, all
      punctuation and non-alpha characters being omitted.
@@ -522,12 +523,12 @@ if (i1++ >=  --i2) {
     printf("%d %d\n",--i1,++i2);
 }
 printf("%d %d\n",i1,i2); </PRE>
-<LI> Assuming that the bits in an integer are numbered from 0, from right 
+<LI> Assuming that the bits in an integer are numbered from 0, from right
      (least significant) to left (most significant), write an expression
      using bitwise logical operators to extract the 4 bits numbered 6 to 3
      from an integer <TT>i1</TT>, and shift them all down so that bit
      numbered 3 ends up in position number 1.
-<LI> Explain how a conditional expression may be rewritten using an 
+<LI> Explain how a conditional expression may be rewritten using an
      <TT>if-then-else</TT> statement.
 <LI> Rewrite the following <TT>for</TT> loop as a <TT>while</TT> loop.i
      <PRE>

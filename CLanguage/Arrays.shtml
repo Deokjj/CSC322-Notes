@@ -1,6 +1,7 @@
 <HTML>
 <HEAD>
 <TITLE>Arrays</TITLE>
+<link rel="stylesheet" href="../styles.css">
 </HEAD>
 <BODY ALIGN=JUSTIFY>
 <HR><!------------------------------------------------------------------------>
@@ -16,7 +17,7 @@ Last modified Monday, 22-Aug-2016 11:19:41 EDT.
      <LI> Example
           <PRE>
 int ListOfNumbers[50]; </PRE>
-     <LI> Subscripts start at 0 and end one less than the array size. 
+     <LI> Subscripts start at 0 and end one less than the array size.
           In the above example valid subscripts range from 0 to 49.
      <LI> Access
           <PRE>
@@ -35,7 +36,7 @@ ListOfNumbers[5] = 100; </PRE>
 <LI> Array initialisation.
      <UL>
      <LI> Arrays may be initialised by following the definition with
-          a list of initialisers enclosed in <TT>{}</TT> separated by 
+          a list of initialisers enclosed in <TT>{}</TT> separated by
           commas.
           <PRE>
 int TopTen[10] = {0,1,2,3,4,5,6,7,8,9};
@@ -46,36 +47,36 @@ int TopTen[10] = {0,1,2,3,4,5,6,7,8,9};
           <PRE>
 char Name[32] = "Stefan Wuchty"; </PRE>
      <LI> If there are less initialisers than elements the extra
-          elements are initialised with 0 if <TT>external</TT> or 
-          <TT>static</TT>, garbage if automatic. For example 
+          elements are initialised with 0 if <TT>external</TT> or
+          <TT>static</TT>, garbage if automatic. For example
           <PRE>
 int Data[10] = {}; </PRE>
           initialises the entire array to 0/garbage.
      <LI> There may not be more initialisers than array elements.
      <LI> In the definition of an array the size may be implied by
-          the initialisation list. e.g. 
+          the initialisation list. e.g.
           <PRE>
 int Data[] = {1,2,3,4,5,6}; </PRE>
-          defines an array of size 6 and 
+          defines an array of size 6 and
           <PRE>
 char Error[] = "Error\n"; </PRE>
           defines an array of size 7.
      </UL>
 
 <P>
-<LI> Strings 
+<LI> Strings
      <UL>
-     <LI> Strings are defined as arrays of characters. For example, the 
-          following defines a string of 50 characters: 
+     <LI> Strings are defined as arrays of characters. For example, the
+          following defines a string of 50 characters:
           <PRE>
 char Name[50]; </PRE>
-     <LI> In order to allow variable length strings the <TT>\0</TT> 
-          character is used to indicate the end of a string. 
-     <LI> C has no string handling facilities built in and so the following 
-          are all illegal: 
+     <LI> In order to allow variable length strings the <TT>\0</TT>
+          character is used to indicate the end of a string.
+     <LI> C has no string handling facilities built in and so the following
+          are all illegal:
           <PRE>
 char FirstName[50],LastName[50],FullName[100];
- 
+
 FirstName = "Arnold"; //----Illegal
 LastName = "Schwarznegger"; //----Illegal
 FullName = "Mr"+FirstName+LastName; //----Illegal </PRE>
@@ -83,15 +84,15 @@ FullName = "Mr"+FirstName+LastName; //----Illegal </PRE>
           <TT>string.h</TT>, e.g.,
           <UL>
           <LI> <TT>strcpy</TT> - copies a string into an array of <TT>char</TT>
-          <LI> <TT>strcat</TT> - appends a string into an array of 
+          <LI> <TT>strcat</TT> - appends a string into an array of
                <TT>char</TT> (there must be enough space allocated)
-          <LI> <TT>strlen</TT> - returns the length of the string (upto the 
+          <LI> <TT>strlen</TT> - returns the length of the string (upto the
                first '\0' character)
           <LI> <TT>strcmp</TT> - compares two strings lexicographically
           <LI> <TT>strstr</TT> - Looks for one string in another
           </UL>
      <LI> To print a string we use <TT>printf</TT> with a special
-          <TT>%s</TT> control character: 
+          <TT>%s</TT> control character:
           <PRE>
 printf("%s",name); </PRE>
      <LI> <A HREF="MyCode/Strings.c"><TT>Strings.c</TT></A>
@@ -103,9 +104,9 @@ printf("%s",name); </PRE>
      <UL>
      <LI> In C multi-dimensional arrays are actually arrays of arrays (but
           not actually arrays of references/pointers).
-     <LI> As <TT>[]</TT> are left-to-right associative 
-          <TT>int A[5][10];</TT> defines an array of size 5 of (array 
-          of size 10). 
+     <LI> As <TT>[]</TT> are left-to-right associative
+          <TT>int A[5][10];</TT> defines an array of size 5 of (array
+          of size 10).
      <LI> The right most subscript varies fastest in memory allocation.
      <LI> For access the indices are in separate brackets. e.g.
           <TT>A[3][5]</TT>.
@@ -116,9 +117,9 @@ printf("%s",name); </PRE>
                initialisation uses the same principles as single dimension
                arrays.
                <PRE>
-float Data[4][3] = {{1},{2},{3},{4}}; 
+float Data[4][3] = {{1},{2},{3},{4}};
                </PRE>
-               initilises the "first column" of data to 1,2,3,4 and the 
+               initilises the "first column" of data to 1,2,3,4 and the
                rest to 0 or garbage.
           <LI> The rules for too few initialisers apply at any level.
           </UL>
@@ -144,7 +145,7 @@ float Data[4][3] = {{1},{2},{3},{4}};
 <HR><!------------------------------------------------------------------------>
 <H2> Exercises </H2>
 <UL>
-<LI> Write 
+<LI> Write
      <TT>void matrix_multiply(float m1[2][3],float m2[3][4],float m3[2][4])</TT>
      that multiplies <TT>m1</TT> with <TT>m2</TT>, putting the result in
      <TT>m3</TT>.
@@ -153,16 +154,16 @@ float Data[4][3] = {{1},{2},{3},{4}};
 <LI> Write a C program to read through an array of any type. Write
      a C program to scan through this array to find a particular value.
 <LI> Read ordinary text a character at a time from the program's
-     standard input, and print it with each line reversed from left to 
+     standard input, and print it with each line reversed from left to
      right. Read until you encounter end-of-data (see below).
      You may wish to test the program by typing
 <PRE>
 prog5rev | prog5rev
 </PRE>
      to see if an exact copy of the original input is recreated.
-<LI> Write a program to read English text to end-of-data (type control-D 
-     to indicate end of data at a terminal, see below for detecting it), 
-     and print a count of word lengths, i.e. the total number of words of 
+<LI> Write a program to read English text to end-of-data (type control-D
+     to indicate end of data at a terminal, see below for detecting it),
+     and print a count of word lengths, i.e. the total number of words of
      length 1 which occurred, the number of length 2, and so on.
      Define a word to be a sequence of alphabetic characters.
      You should allow for word lengths up to 25 letters.
@@ -184,12 +185,12 @@ char *cat = "The cat sat";
 n = replace(cat);
 </PRE>
      should set <TT>cat</TT> to "The-cat-sat" and <TT>n</TT> to 2.
-<LI> Write a program to find the number of times that a given word 
-     (i.e. a short string) occurs in a sentence (i.e. a long string!). 
+<LI> Write a program to find the number of times that a given word
+     (i.e. a short string) occurs in a sentence (i.e. a long string!).
      Read data from standard input. The first line is a single word, which is
      followed by general text on the second line. Read both up to a newline
-     character, and insert a terminating null before processing. 
-     Typical output should be: 
+     character, and insert a terminating null before processing.
+     Typical output should be:
      <PRE>
 The word is "the".
 The sentence is "the cat sat on the mat".

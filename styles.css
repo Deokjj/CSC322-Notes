@@ -1,0 +1,16 @@
+body{
+  font-size: 1.3em;
+}
+
+.hl{
+  background-color: yellow;
+}
+
+.comment{
+  color: blue;
+  padding-left: 20px;
+}
+
+div.comment{
+  padding-bottom: 5px;
+}

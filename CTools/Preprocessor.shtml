@@ -1,6 +1,7 @@
 <HTML>
 <HEAD>
 <TITLE>The C Preprocessor</TITLE>
+<link rel="stylesheet" href="../styles.css">
 </HEAD>
 <BODY ALIGN=JUSTIFY>
 <HR><!------------------------------------------------------------------------>
@@ -14,8 +15,8 @@ Last modified Monday, 22-Aug-2016 11:19:42 EDT.
 <LI> Trigraph sequences
      <UL>
      <LI> The character set of ANSI C is within the 7 bit ASCII, but is
-          more than the ISO standard. 
-     <LI> To represent certain characters, trigraph sequences may be used. 
+          more than the ISO standard.
+     <LI> To represent certain characters, trigraph sequences may be used.
      <LI> These are replaced by their characters before anything else happens
      </UL>
      <PRE>
@@ -33,7 +34,7 @@ Last modified Monday, 22-Aug-2016 11:19:42 EDT.
 <LI> File inclusion - <TT>#include</TT>
      <UL>
      <LI> <TT>#include &lt;file></TT>
-     <LI> <TT>""</TT> searches directory of source first, then standard 
+     <LI> <TT>""</TT> searches directory of source first, then standard
           places.
      <LI> <TT>&lt;></TT> search standard places only.
      </UL>
@@ -49,29 +50,29 @@ Last modified Monday, 22-Aug-2016 11:19:42 EDT.
           - Program to convert fahrenheit to celcius using <TT>#define</TT>.
      <LI> The expansion is checked for further expansions.
      <LI> Macros may be defined with arguments if the identifier is
-          followed immediately by a (. 
+          followed immediately by a (.
           <UL>
-          <LI> The formal arguments in the definition are replaced by 
+          <LI> The formal arguments in the definition are replaced by
                actual arguments which must match in number.
           <LI> Example
                <PRE>
 #define MAX(A,B) ((A) > (B) ? (A) : (B))
                </PRE>
-               Then 
+               Then
                <PRE>
-x=MAX(p+q,r+s); 
+x=MAX(p+q,r+s);
                </PRE>
                expands to
                <PRE>
 x=((p+q) > (r+s) ? (p+q) : (r+s))
                </PRE>
-          <LI> This is useful as a max for any data type. However beware
+          <LI class="hl"> This is useful as a max for any data type. However beware
                problems.
                <PRE>
 #define SQUARE(X) X*X
 SQUARE(z+1)
                </PRE>
-               expands to 
+               expands to
                <PRE>
 z+1*z+1
                </PRE>
@@ -87,7 +88,7 @@ z+1*z+1
           <LI> <TT>__FILE__</TT> = current file name
           <LI> <TT>__DATE__</TT> = date of compilation
           <LI> <TT>__TIME__</TT> = time of compilation
-          <LI> <TT>__STDC__</TT> = 1 (only in standard conforming 
+          <LI> <TT>__STDC__</TT> = 1 (only in standard conforming
                implementations)
           <LI> <A HREF="MyCode/SysDefs.c"><TT>SysDefs.c</TT></A>
                - Program that prints out system symbol values
@@ -104,29 +105,29 @@ z+1*z+1
     &lt;code to be compiled if #if is non-0>
 #endif
           </PRE>
-     <LI> <TT>#if &lt;constant expression></TT> checks if the 
+     <LI> <TT>#if &lt;constant expression></TT> checks if the
           <TT>&lt;constant expression></TT> is non-0.
      <LI> <TT>#ifdef &lt;identifier></TT> checks if the identifier is
           defined, by a <TT>#define</TT>.
      <LI> <TT>#ifndef &lt;identifier></TT> checks if it is not defined.
-     <LI> In between <TT>#if???</TT> and <TT>#endif</TT> there may be 
-          <TT>#elif &lt;constant expression></TT> or <TT>#else</TT> with 
+     <LI> In between <TT>#if???</TT> and <TT>#endif</TT> there may be
+          <TT>#elif &lt;constant expression></TT> or <TT>#else</TT> with
           the intuitive meaning.
      <LI> The constant expression may contain expressions of the form
-          <TT>defined(&lt;identifier>)</TT>, which are replaced by 
+          <TT>defined(&lt;identifier>)</TT>, which are replaced by
           <TT>1L</TT> if the identifier is defined, <TT>0L</TT> if not.
      <LI> <A HREF="MyCode/IfDef.c"><TT>IfDef.c</TT></A>
           - Program that uses <TT>#define</TT> to keep the world clean
      <LI> <A HREF="MyCode/MyHeader.h"><TT>MyHeader.h</TT></A>
           - Avoiding multiple inclusions in <TT>.h</TT> files
      <LI> Use for debugging.
-          You can set a symbol without a value on the command line, for 
-          example: 
+          You can set a symbol without a value on the command line, for
+          example:
           <PRE>
 prompt> gcc -DDEBUG prog.c -o prog </PRE>
-          Here the value is assumed to be 1. 
-          The setting of such flags is useful, especially for debugging. 
-          You can put commands like: 
+          Here the value is assumed to be 1.
+          The setting of such flags is useful, especially for debugging.
+          You can put commands like:
           <PRE>
 x = y *3;
 
@@ -140,8 +141,9 @@ x = y *3;
      <LI> <TT>#line &lt;constant></TT>
      <LI> <TT>#line &lt;constant> "&lt;filename>"</TT>
      <LI> Causes the compiler to believe that the current line number is
-          <TT>&lt;constant></TT>, and it is compiling the file 
+          <TT>&lt;constant></TT>, and it is compiling the file
           <TT>&lt;filename></TT>
+          <span class="comment">This affects the __FILE__ and __LINE__ symbols</span>
      </UL>
 <P>
 <LI> Error generation
@@ -149,6 +151,13 @@ x = y *3;
      <LI> <TT>#error &lt;text></TT>
      <LI> Causes the preprocessor to output an error message that includes
           the text.
+     <div class="comment">
+       <pre>
+         #if defined USING_SQLITE && defined USING_MYSQL
+         #error You cannot use both sqlite and mysql at the same time
+         #endif
+       </pre>
+     </div>
      </UL>
 <P>
 <LI> Pragmas
@@ -159,27 +168,27 @@ x = y *3;
      </UL>
 <P>
 <LI> The -E compiler option will force the compiler to stop after the
-     preprocessing stage and output the current state of your program. 
-     Apart from being debugging aid for preprocessor commands and also 
-     as a useful initial learning tool (try this option out with some 
-     of the examples above) it is not that commonly used. 
+     preprocessing stage and output the current state of your program.
+     Apart from being debugging aid for preprocessor commands and also
+     as a useful initial learning tool (try this option out with some
+     of the examples above) it is not that commonly used.
 <P>
 </UL>
 <P>
 <HR><!------------------------------------------------------------------------>
 <H2> Exercises </H2>
 <UL>
-<LI> Write code that defines a macro <TT>CHOOSE</TT>. If the symbol 
-     <TT>LARGE</TT> is defined <TT>CHOOSE</TT> should return the larger of 
+<LI> Write code that defines a macro <TT>CHOOSE</TT>. If the symbol
+     <TT>LARGE</TT> is defined <TT>CHOOSE</TT> should return the larger of
      its two arguments, otherwise it should return the smaller.
      <BR><STRONG>Answer</STRONG>:
      <A HREF="ExerciseAnswers/ChooseMacro.c"><TT>ChooseMacro.c</TT></A>
-<LI> Define a preprocessor macro <TT>SWAP(t,x,y)</TT> that will swap two 
+<LI> Define a preprocessor macro <TT>SWAP(t,x,y)</TT> that will swap two
      arguments <TT>x</TT> and <TT>y</TT> of a given type <TT>t</TT>.
-<LI> Define preprocessor macros to select: 
+<LI> Define preprocessor macros to select:
      <UL>
-     <LI> the least significant bit from an unsigned char 
-     <LI> the nth (assuming least significant is 0) bit from an unsigned char. 
+     <LI> the least significant bit from an unsigned char
+     <LI> the nth (assuming least significant is 0) bit from an unsigned char.
      </UL>
 </UL>
 

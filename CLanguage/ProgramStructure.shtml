@@ -1,6 +1,7 @@
 <HTML>
 <HEAD>
 <TITLE>Program Structure</TITLE>
+<link rel="stylesheet" href="../styles.css">
 </HEAD>
 <BODY ALIGN=JUSTIFY>
 <HR><!------------------------------------------------------------------------>
@@ -10,12 +11,30 @@
 Last modified Monday, 22-Aug-2016 11:19:41 EDT.
 <HR><!------------------------------------------------------------------------>
 <UL>
-<LI> In C it is important to differentiate between a definition 
-     and a declaration. 
-     A declaration gives information about something (data type, storage 
+<LI> In C it is important to differentiate between a definition
+     and a declaration.
+     <span class="hl">A declaration gives information about something (data type, storage
      class, variable/function/etc), while a definition reserves
      space/generates code.
-     A definition also serves as a declaration.
+     A definition also serves as a declaration.</span>
+     <div class="comment">
+       A declaration introduces an identifier and describes its type, be it a type, object, or function.
+       A declaration is what the compiler needs to accept references to that identifier. These are declarations:
+       <pre>
+          extern int bar;
+          extern int g(int, int);
+          double f(int, double); // extern can be omitted for function declarations
+          class foo; // no extern allowed for type declarations
+       </pre>
+       A definition actually instantiates/implements this identifier. It's what the linker needs in order to link references to those entities.
+       These are definitions corresponding to the above declarations:
+       <pre>
+          int bar;
+          int g(int lhs, int rhs) {return lhs*rhs;}
+          double f(int i, double d) {return i+d;}
+          class foo {};
+       </pre>
+     </div>
 
 <P>
 <LI> Identifiers and Keywords
@@ -27,9 +46,9 @@ Last modified Monday, 22-Aug-2016 11:19:41 EDT.
      <LI> Keywords cannot be used.
           <PRE>
 auto       break      case       char       const      continue
-default    do         double     else       enum       extern     
-float      for        goto       if         int        long       
-register   return     short      signed     sizeof     static 
+default    do         double     else       enum       extern
+float      for        goto       if         int        long
+register   return     short      signed     sizeof     static
 struct     switch     typedef    union      unsigned   void
 volatile   while
           </PRE>
@@ -40,8 +59,8 @@ volatile   while
      <UL>
      <LI> <A HREF="MyCode/ProgramStructure.c"><TT>ProgramStructure.c</TT></A>
           - Fahrenheit to celcius, using functions
-     <LI> Functions should be declared before use. 
-          The declaration provides information about the arguments and return 
+     <LI> <span class="hl">Functions should be declared before use.</span>
+          The declaration provides information about the arguments and return
           type, thus allowing better compiler checking, argument type checking,
           etc.
      <LI> A prototype declaration
@@ -53,7 +72,7 @@ volatile   while
           <LI> The argument declarations are
                <UL>
                <LI> <TT>void</TT> if there are no arguments,
-               <LI> A list of comma separated 
+               <LI> A list of comma separated
                     <TT>&lt;type> [&lt;formal name>]</TT> declarations.
                </UL>
           <LI> The argument names are optional in a declaration, and are
@@ -80,21 +99,21 @@ volatile   while
      <LI> Returning
           <UL>
           <LI> Functions ay exit at any point via a return statement.
-               Multiple return statements is ok. 
-          <LI> Functions whose type is <TT>void</TT> may exit 
-               via a return statement with no &lt;return value>. 
+               Multiple return statements is ok.
+          <LI> Functions whose type is <TT>void</TT> may exit
+               via a return statement with no &lt;return value>.
                Such functions may also fall of the end.
-          <LI> Functions whose type is not <TT>void</TT>, must return a 
-               value via a <TT>return(&lt;expression>)</TT> statement. 
-               The return value need not be in <TT>()</TT>s. 
+          <LI> Functions whose type is not <TT>void</TT>, must return a
+               value via a <TT>return(&lt;expression>)</TT> statement.
+               The return value need not be in <TT>()</TT>s.
                The expression will be converted to the appropriate
-               type, as per the type conversion rules (see later). 
+               type, as per the type conversion rules (see later).
           <LI> The call to a function may ignore the returned value.
           </UL>
      <LI> Functions may not be nested.
      <LI> Functions may be used recursively.
      <LI> If a function is not declared before its use, it is given a
-          default declaration of <TT>int &lt;name>(void)</TT>. 
+          default declaration of <TT>int &lt;name>(void)</TT>.
           It is much better to be explicit always.
      </UL>
 
@@ -107,33 +126,88 @@ volatile   while
      <LI> Array names represent the address of the first element thus an
           array is passed by reference. All other types are passed by
           value.
-     <LI> Passing non-arrays by reference 
+     <LI> Passing non-arrays by reference
           <UL>
           <LI> <A HREF="MyCode/Swap.c"><TT>Swap.c</TT></A>
                - Program using pointers for pass by reference
-          <LI> Their address must be passed to the function and indirection 
-               used to access the variable in the function. 
+          <LI> Their address must be passed to the function and indirection
+               used to access the variable in the function.
           <LI> <TT>&</TT> indicates the address of the name.
           <LI> <TT>*</TT> indicates the contents of the address in the name.
-          <LI> Notice the argument declaration which says <TT>This</TT> 
+          <LI> Notice the argument declaration which says <TT>This</TT>
                and <TT>WithThis</TT> point to <TT>int</TT>s.
           </UL>
      <LI> A variable number of arguments may be passed to a function.
           <UL>
           <LI> <A HREF="MyCode/PrintInFormat.c"><TT>PrintInFormat.c</TT></A>
                - Program that prints a variable number of integers
-          <LI> Use the <TT>...</TT> argument as the last formal argument, e.g.
+
+          <div class="comment">
+            <pre>
+              //-----------------------------------------------------------------------------
+              #include <stdio.h>
+              #include <stdlib.h>
+              #include <stdarg.h>
+              //-----------------------------------------------------------------------------
+              int IntPrint(int NumberOfArguments,char Format,...) {
+
+                  int NumberPrinted,Value,ArgumentNumber;
+                  va_list Arguments;
+
+                  NumberPrinted = 0;
+                  va_start(Arguments,Format);
+                  for (ArgumentNumber = 1; ArgumentNumber <= NumberOfArguments;
+              ArgumentNumber++) {
+                      Value = va_arg(Arguments,int);
+                      switch (Format) {
+                          case 'd':
+                          case 'D':
+                              printf("%d\n",Value);
+                              break;
+                          case 'x':
+                          case 'X':
+                              printf("%x\n",Value);
+                              break;
+                          case 'o':
+                          case 'O':
+                              printf("%o\n",Value);
+                              break;
+                          default :
+                              printf("Error in format");
+                              return(-1);
+                              break;
+                      }
+                      NumberPrinted++;
+                  }
+                  va_end(Arguments);
+
+                  return(NumberPrinted);
+              }
+              //-----------------------------------------------------------------------------
+              int main(void) {
+
+                  int NumberPrinted;
+
+                  NumberPrinted = IntPrint(4,'x',123,456,789,-123);
+                  printf("\n%d items were printed\n",NumberPrinted);
+
+                  return(EXIT_SUCCESS);
+              }
+              //-----------------------------------------------------------------------------
+            </pre>
+          </div>
+          <LI> Use the <span class="hl"><TT>...</TT> argument as the last formal argument, e.g.</span>
                <TT>int printf(char *format,...)</TT>
-          <LI> There must be at least one named argument.
-          <LI> Declared in <TT>&lt;stdarg.h></TT> are the type <TT>va_list</TT>
-               and the functions <TT>va_start</TT>, <TT>va_arg</TT>, and 
-               <TT>va_end</TT>, which are used to access the variable number 
-               of arguments. 
-               A variable of type <TT>va_list</TT> is a pointer to the next 
-               argument. 
-               <TT>va_start</TT> is a procedure that initialises such a 
-               variable, <TT>va_arg</TT> returns the value of each successive 
-               argument, and updates the variable, and <TT>va_end</TT> cleans 
+          <LI> <span class="hl">There must be at least one named argument.</span>
+          <LI class="hl"> Declared in <TT>&lt;stdarg.h></TT> are the type <TT>va_list</TT>
+               and the functions <TT>va_start</TT>, <TT>va_arg</TT>, and
+               <TT>va_end</TT>, which are used to access the variable number
+               of arguments.
+               A variable of type <TT>va_list</TT> is a pointer to the next
+               argument.
+               <TT>va_start</TT> is a procedure that initialises such a
+               variable, <TT>va_arg</TT> returns the value of each successive
+               argument, and updates the variable, and <TT>va_end</TT> cleans
                up afterwards.
           </UL>
      </UL>
@@ -145,14 +219,14 @@ volatile   while
 <H2> Exercises </H2>
 <UL>
 <LI> Write <TT>int strindex(char s1[],char c1)</TT> which returns the index
-     of the first occurrence of <TT>c1</TT> in <TT>s1</TT>, or -1 if 
+     of the first occurrence of <TT>c1</TT> in <TT>s1</TT>, or -1 if
      <TT>c1</TT> does not occur in <TT>s1</TT>.
 </UL>
 
 <HR><!------------------------------------------------------------------------>
 <H2> Exam Style Questions </H2>
 <UL>
-<LI> What is the difference between a declaration and a definition of a 
+<LI> What is the difference between a declaration and a definition of a
      variable or function?
 <LI> Give the syntax for a function {declaration|definition}.
 <LI> How are arrays treated differently from other variables when passed as

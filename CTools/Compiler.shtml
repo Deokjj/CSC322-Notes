@@ -1,6 +1,7 @@
 <HTML>
 <HEAD>
 <TITLE>The C Compiler</TITLE>
+<link rel="stylesheet" href="../styles.css">
 </HEAD>
 <BODY>
 <HR><!------------------------------------------------------------------------>
@@ -16,37 +17,37 @@ Last modified Monday, 22-Aug-2016 11:19:42 EDT.
      <UL>
      <LI> The Preprocessor
           <UL>
-          <LI> We will study this part of the compilation process in greater 
+          <LI> We will study this part of the compilation process in greater
                detail later
-          <LI> Removes comments
-          <LI> Interprets special <EM>preprocessor directives</EM> 
+          <LI> <span class="hl">Removes comments</span>
+          <LI> Interprets special <EM>preprocessor directives</EM>
                denoted by <TT>#</TT>.
                <UL>
-               <LI> <TT>#include</TT> - includes contents of a named file. 
+               <LI> <TT>#include</TT> - includes contents of a named file.
                     Files usually called <EM>header</EM> files. E.g.,
                     <PRE>
 #include &lt;math.h&gt;
 #include &lt;stdio.h&gt;
                     </PRE>
-               <LI> <TT>#define</TT> - defines a symbolic name or constant. 
-                    Macro substitution. E.g.,
+                    <LI> <TT>#define</TT> - defines <span class="hl">a symbolic name or constant.
+                    Macro substitution. E.g.,</span>
                     <PRE>
 #define MAX_ARRAY_SIZE 100
                     </PRE>
                </UL>
-          <LI> Run the compiler with the <TT>-E</TT> option to see the 
+          <LI> Run the compiler with the <TT>-E</TT> option to see the
                preprocessor output.
           </UL>
      <LI> C Compiler
           <UL>
-          <LI> The C compiler translates source to assembly code. 
+          <LI class="hl"> The C compiler translates source to assembly code.
           <LI> The source code is received from the preprocessor.
           <LI> Run the compiler with the <TT>-S</TT> option to leave
                the assembler output in a <TT>.s</TT> file.
           </UL>
      <LI> Assembler
           <UL>
-          <LI> The assembler creates object code. 
+          <LI> The assembler creates object code.
           <LI> Run the compiler with the <TT>-c</TT> option to leave
                the object code in a <TT>.o</TT> file.
           </UL>
@@ -54,10 +55,10 @@ Last modified Monday, 22-Aug-2016 11:19:42 EDT.
           <UL>
           <LI> Takes one or more object files (<TT>.o</TT>)
                and library files (<TT>.a</TT>) and creates an executable.
-          <LI> If a source file references library functions or functions 
-               defined in other object files the link editor combines 
-               these functions (with <TT>main()</TT>) 
-          <LI> External variable references resolved here also. 
+          <LI> If a source file references library functions or functions
+               defined in other object files the link editor combines
+               these functions (with <TT>main()</TT>)
+          <LI> External variable references resolved here also.
           </UL>
      <LI> Compiler options to control the phases
           <DL>
@@ -67,7 +68,7 @@ Last modified Monday, 22-Aug-2016 11:19:42 EDT.
           <DD> Stop after producing assembler code in a <TT>.s</TT> file.
           <DT> <STRONG><TT>-c</TT></STRONG>
           <DD> Suppress the linking process and produce a <TT>.o</TT>  file
-               for each source file listed.  Several can be subsequently 
+               for each source file listed.  Several can be subsequently
                linked by the <TT>gcc</TT> command, for example:
                <PRE>
 prompt> gcc  file1.o file2.o ...... -o executable
@@ -88,43 +89,43 @@ prompt> gcc  file1.o file2.o ...... -o executable
      <DD> Optimize the compiled code to <TT>level</TT>, which is in the
           range 0 to ... (depends on compiler).
      <DT> <STRONG><TT>-I directory</TT></STRONG>
-     <DD> Add pathname to the list of directories in which to search 
+     <DD> Add pathname to the list of directories in which to search
           for  <TT>#include</TT> files with relative filenames.
           The preprocessor first searches for <TT>#include</TT> files in
           directories  named  with  -I options (if any), and then
-          in <TT>/usr/include</TT>. So to include header files stored in 
+          in <TT>/usr/include</TT>. So to include header files stored in
           <TT>/home/myname/myheaders</TT> you would do:
           <PRE>
 prompt> gcc  prog.c -I /home/myname/myheaders </PRE>
      <DT> <STRONG><TT>-l library</TT></STRONG>
-     <DD> Link with object libraries. This option must follow the source 
-          file arguments. The object libraries are archived and can be 
+     <DD> Link with object libraries. This option must follow the source
+          file arguments. The object libraries are archived and can be
           standard, third party or user created libraries.
           Probably the most commonly used library is the math library.
-          You must link in this library explicitly if you wish to use 
-          the maths functions (don't forget to 
+          You must link in this library explicitly if you wish to use
+          the maths functions (don't forget to
           <TT>#include &lt;math.h&gt;</TT>). For example:
           <PRE>
 prompt> gcc  calc.c -o calc -lm </PRE>
      <DT> <STRONG><TT>-L directory</TT></STRONG>
      <DD> Add directory to the list of directories  containing  libraries.
-          The linker always looks for standard and other system libraries 
-          in <TT>/lib</TT> and <TT>/usr/lib</TT>. If you want to link in 
-          libraries that you have created or installed yourself (unless 
-          you have certain privileges and get the libraries installed 
-          in <TT>/usr/lib</TT>) you have to specify where you files are 
+          The linker always looks for standard and other system libraries
+          in <TT>/lib</TT> and <TT>/usr/lib</TT>. If you want to link in
+          libraries that you have created or installed yourself (unless
+          you have certain privileges and get the libraries installed
+          in <TT>/usr/lib</TT>) you have to specify where you files are
           stored, For example:
           <PRE>
 prompt> gcc  prog.c -L /home/myname/mylibs  -lmystuff </PRE>
      <DT> <STRONG><TT>-g</TT></STRONG>
-     <DD> Invoke debugging option. This instructs the compiler to produce 
-          additional symbol table information that is used by a variety 
+     <DD> Invoke debugging option. This instructs the compiler to produce
+          additional symbol table information that is used by a variety
           of debugging utilities.
      <DT> <STRONG><TT>-D</TT></STRONG>
-     <DD> Define symbols either as identifiers (<TT>-D</TT> 
+     <DD> Define symbols either as identifiers (<TT>-D</TT>
           <EM>identifer</EM>) or as values (<TT>-D</TT>
-          <EM>symbol=value</EM>) in a similar fashion as the 
-          <TT>#define</TT> preprocessor command. 
+          <EM>symbol=value</EM>) in a similar fashion as the
+          <TT>#define</TT> preprocessor command.
      </DL>
 </UL>
 <P>
@@ -137,7 +138,7 @@ prompt> gcc  prog.c -L /home/myname/mylibs  -lmystuff </PRE>
 <UL>
 <LI> Enter, compile and run the following program:
      <PRE>
-int main(void) { 
+int main(void) {
 
     int i;
 
@@ -148,7 +149,7 @@ int main(void) {
 
 }
      </PRE>
-<LI> The following program uses the math library. Enter compile and run 
+<LI> The following program uses the math library. Enter compile and run
      it correctly.
      <PRE>
 #include &lt;math.h&gt;
@@ -164,34 +165,34 @@ int main(void) {
 
 }
      </PRE>
-<LI> Look in <TT>/lib</TT> and <TT>/usr/lib</TT> and see what libraries are 
+<LI> Look in <TT>/lib</TT> and <TT>/usr/lib</TT> and see what libraries are
      available.
      <UL>
      <LI> Use the <TT>man</TT> command to get details of library functions
-     <LI> Explore the libraries to see what each contains by running the 
+     <LI> Explore the libraries to see what each contains by running the
           command <TT>ar t libfile</TT>.
      </UL>
 <LI> Look in <TT>/usr/include</TT> and see what header files are available.
      <UL>
-     <LI> Use the <TT>less</TT> or <TT>cat</TT> commands to view these text 
+     <LI> Use the <TT>less</TT> or <TT>cat</TT> commands to view these text
           files.
-     <LI> Explore the header files to see what each contains, note the 
-          include, define, type definitions and function prototypes declared 
+     <LI> Explore the header files to see what each contains, note the
+          include, define, type definitions and function prototypes declared
           in them.
      </UL>
-<LI> Suppose you have a C program whose main function is in <TT>main.c</TT> 
-     and has other functions in the files <TT>input.c</TT> and 
+<LI> Suppose you have a C program whose main function is in <TT>main.c</TT>
+     and has other functions in the files <TT>input.c</TT> and
      <TT>output.c</TT>:
      <UL>
-     <LI> What command(s) would you use on your system to compile and link 
+     <LI> What command(s) would you use on your system to compile and link
           this program?
-     <LI> How would you modify the above commands to link a library called 
+     <LI> How would you modify the above commands to link a library called
           <TT>process1</TT> stored in the standard system library directory?
-     <LI> How would you modify the above commands to link a library called 
+     <LI> How would you modify the above commands to link a library called
           <TT>process2</TT> stored in your home directory?
-     <LI> Some header files need to be read and have been found to be located 
-          in a <TT>header</TT> subdirectory of your home directory and also 
-          in the current working directory. How would you modify the compiler 
+     <LI> Some header files need to be read and have been found to be located
+          in a <TT>header</TT> subdirectory of your home directory and also
+          in the current working directory. How would you modify the compiler
           commands to account for this?
      </UL>
 </UL>
@@ -202,11 +203,11 @@ int main(void) {
 <UL>
 <LI> What are the four processes in converting a C program to an executable
      program? What are the formats of each stage's input and output files?
-<LI> What <TT>gcc</TT> flag is used to link a particular library into a 
+<LI> What <TT>gcc</TT> flag is used to link a particular library into a
      C program? Give an example.
-<LI> What <TT>gcc</TT> flag is used to specify directories where include 
+<LI> What <TT>gcc</TT> flag is used to specify directories where include
      files might be found?
-<LI> What does the <TT>-D</TT> flag do when using <TT>gcc</TT>? What is an 
+<LI> What does the <TT>-D</TT> flag do when using <TT>gcc</TT>? What is an
      alternative to using the <TT>-D</TT> flag?
 </UL>
 
