@@ -1,0 +1,19 @@
+[01;31mAssignment = Lab6
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 8.0
+Duckjea Jun
+
+file: sort.c
+gcc -Wall  sort.c -o sort
+running program: sort
+passed test case 1!
+passed test case 2!
+
+file: matrix.c
+gcc -Wall  matrix.c -o matrix
+running program: matrix
+passed test case 1!
+passed test case 2!
+passed test case 3!
+passed test case 4!

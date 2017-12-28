@@ -1,0 +1,13 @@
+[01;31mAssignment = Lab10
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 4.9
+Duckjea Jun
+
+file: qualities.c
+gcc -Wall  qualities.c -o qualities
+running program: qualities
+passed test case 1!
+passed test case 2!
+
+-0.1 didn't check return value of remove to ensure file is deleted

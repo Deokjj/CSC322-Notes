@@ -1,0 +1,9 @@
+./Ticker 5 &
+./Ticker 7
+ctr + z                 #press key control with z
+jobs
+bg %2
+fg %1
+ctr + z
+kill %1 
+kill %2

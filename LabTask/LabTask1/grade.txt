@@ -1,0 +1,11 @@
+[01;31mAssignment = Lab1
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 2.7
+Duckjea Jun
+
+-0.1 should be ls -A to not count the current and parent directories
+-0.1 no command for the tcsh path 
+-0.1 incorrect tcsh path
+-1.5 No submission for disk.sh
+-0.5 no submission for environment.txt

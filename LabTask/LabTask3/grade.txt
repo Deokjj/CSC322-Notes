@@ -1,0 +1,21 @@
+[01;31mAssignment = Lab3
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 6.9
+Duckjea Jun
+
+
+file: kangaroo.c
+gcc -Wall  kangaroo.c -o kangaroo
+running program: kangaroo
+passed test case 1!
+passed test case 2!
+
+file: scubaO2.c
+gcc -Wall  scubaO2.c -o scubaO2
+running program: scubaO2
+passed test case 1!
+passed test case 2!
+
+-0.1 use more constants
+Instead of storing the alphabet in a string, you can simply add 'A' to the value

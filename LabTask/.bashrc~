@@ -1,0 +1,10 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific aliases and functions
+alias phaser='phaser -is:javahome /usr/lib/jvm/java-1.6.0-openjdk-1.6.0.36.x86_64'
+alias eclipse='/usr/local/bin/eclipse'

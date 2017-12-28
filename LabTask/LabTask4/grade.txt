@@ -1,0 +1,25 @@
+[01;31mAssignment = Lab4
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 6.8
+Duckjea Jun
+
+file: tax.c
+gcc -Wall  tax.c -o tax
+running program: tax
+passed test case 1!
+passed test case 2!
+passed test case 3!
+
+file: reverse.c
+gcc -Wall  reverse.c -o reverse
+running program: reverse
+passed test case 1!
+passed test case 2!
+failed test case 3
+
+-0.2 your program does not reverse strings with spaces
+
+You can use string.h for builtin string functions. Instead of manually computing length, you can use strlen(). Good in place algorithm, though recursive algorithms take up stack memory.
+In your input function, you can just return a char * instead of passing your char[] as a parameter.
+Either put all functions before main or after.

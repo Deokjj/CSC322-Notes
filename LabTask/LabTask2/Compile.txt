@@ -1,0 +1,3 @@
+cat ~csc322/Ticker.c > Ticker.c  #copy the file to current directory
+gcc -o Ticker Ticker.c           #excutable generated as 'Ticker' in current dir
+./Ticker 1                       #run arg being '1'

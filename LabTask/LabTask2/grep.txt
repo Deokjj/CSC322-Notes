@@ -1,0 +1,1 @@
+wget http://www.cs.miami.edu/home/wuchtys/CSC322-17F/Assessment/regEx -qO- | grep -v "^ "

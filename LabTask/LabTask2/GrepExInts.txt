@@ -1,0 +1,2 @@
+wget http://www.cs.miami.edu/home/wuchtys/CSC322-17F/Content/UNIXUse/MyCode/GrepExInts -qO- | grep -E "^ *int  *[a-z_]" | grep -E ";$" | grep -v "[!@#\$%\^\&*\)\(+=.-]"
+

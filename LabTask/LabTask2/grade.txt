@@ -1,0 +1,22 @@
+[01;31mAssignment = Lab2
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 8.3
+Duckjea Jun
+
+-0.2 no mail directory provided
+-0.2 incorrect pam directory
+-0.2 incorrect umask code
+
+you can use cp instead of catting the file
+
+-0.1 extract is meant to select that line, not to throw that line away
+
+-0.1 for rename.sh, file extensions must be at the end of a filename
+     but your script replaces the pattern even in the middle of a filename
+
+in CSCCodes you can specify matching whole words in grep by using the -w option
+-0.1 you should not be using the -v option. 'extract' does not mean delete the matching pattern, but delete everything but the matching pattern.
+
+
+-0.3 in GrepExInts, your variable name pattern only accepts a small subset of possible variable names.

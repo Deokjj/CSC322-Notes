@@ -1,0 +1,8 @@
+mkdir LabTask2
+cd LabTask2
+mkdir Originals
+mkdir Links
+touch Originals/HardStuff Originals/SoftStuff
+cd Links
+ln ../Originals/HardStuff ./LinkToHardStuff  ##inside Links directory
+ln ../Originals/SoftStuff ./RelativeToSoftStuff

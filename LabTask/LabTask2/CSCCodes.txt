@@ -1,0 +1,1 @@
+wget http://www.cs.miami.edu/home/wuchtys/CSC322-17F/Assessment/MyCode/CSCCodes -qO- | head -n12 | tail -n8 | grep -v "C[Ss][Cc][0-9][0-9][0-9][^a-zA-Z]"

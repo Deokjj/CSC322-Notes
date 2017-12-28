@@ -1,0 +1,2 @@
+export DJ='deokjae' #sets the variable in environment
+unset DJ #unsets the variable

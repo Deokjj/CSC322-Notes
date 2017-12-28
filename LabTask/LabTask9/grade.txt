@@ -1,0 +1,16 @@
+[01;31mAssignment = Lab9
+Student Login Id = duju322
+--------------------------------------------------------------------------------[0m
+duju322 3.9
+Duckjea Jun
+
+file: nations.c
+gcc -Wall  nations.c -o nations
+running program: nations
+failed test case 1
+failed test case 2
+
+-0.3 no sentinel is used for this assignment
+-0.3 some buddies are showing garbage output
+-0.3 you cannot print and free nodes within the same loop. the reason for this is that if someones buddy appeared earlier in the list, then their node has already been freed, meaning we cant print that buddies information.
+-0.2 you need to check that malloc does not return a null pointer!

@@ -27,43 +27,225 @@ Last modified Monday, 22-Aug-2016 11:19:41 EDT.
           <LI> <A HREF="MyCode/PrimitivePointers.c">
                <TT>PrimitivePointers.c</TT></A>
                - program demonstrating pointers to primitive types
+               <pre>
+                //-----------------------------------------------------------------------------
+                #include <stdio.h>
+                #include <stdlib.h>
+                //-----------------------------------------------------------------------------
+                int main(void) {
+
+                    int AnInt;
+
+                    int *PointAtInt;     <span class='comment'>// PointAtInt is the address and (which it points to) *PointAtInt is an int</span>
+                    int *CopyPointer;
+
+                    AnInt = 27;
+                    PointAtInt = &AnInt; <span class='comment'>// saving the address of AnInt to PointAtInt </span>
+                    printf("AnInt = %d and %d\n",AnInt,*PointAtInt); <span class='comment'>// 27 27 </span>
+
+                    *PointAtInt = 33;
+                    printf("AnInt = %d and %d\n",AnInt,*PointAtInt); <span class='comment'>// 33 33 </span>
+
+                    CopyPointer = PointAtInt;
+                    *CopyPointer = 16;
+                    printf("AnInt = %d and %d\n",AnInt,*PointAtInt); <span class='comment'>// 16 16 </span>
+
+                    return(EXIT_SUCCESS);
+                }
+                //-----------------------------------------------------------------------------
+               </pre>
           </UL>
      <LI> The <TT>NULL</TT> pointer
           <UL>
-          <LI> <TT>NULL</TT> is defined in <TT>stdio.h</TT> as 0.
+          <LI> <span class='hl'><TT>NULL</TT> is defined in <TT>stdio.h</TT> as 0.</span>
           <LI> Pointers and <TT>int</TT>s are not interchangable (despite a
                cavalier attitute of classic C programmers).
-          <LI> The only integer that may be assigned to or compared with a
-               pointer is 0. Using <TT>NULL</TT> makes this explicit.
+          <LI> <span class='hl'>The only integer that may be assigned to or compared with a
+               pointer is 0. Using <TT>NULL</TT> makes this explicit.</span>
           <LI> C guarantees no pointer to data will contain 0, so returning
                <TT>NULL</TT> for an error is safe.
           <LI> <A HREF="MyCode/NullPointer.c"><TT>NullPointer.c</TT></A>
                - program demonstrating a null pointer
+               <pre>
+                 //-----------------------------------------------------------------------------
+                 #include <stdio.h>
+                 #include <stdlib.h>
+                 //-----------------------------------------------------------------------------
+                 int main(void) {
+
+                     int AnInt;
+                     int *PointAtAnInt;
+                     int *PointNoWhere;
+                     int *NullPointer = NULL;
+
+                     AnInt = 16;
+                     PointAtAnInt = &AnInt;
+                     printf("The integer is %d\n",*PointAtAnInt);
+                     printf("The null integer address is %d\n",NullPointer); <span class='comment'> // 0(defined in studio.h) </span>
+                     // printf("The null integer is %d\n",*NullPointer); <span class='comment'>// Error</span>
+
+                     printf("The non-existent integer is %d\n",*PointNoWhere); <span class='comment'>// -1991643855</span>
+
+                     if (NullPointer != NULL) {
+                         printf("The non-null integer is %d\n",*NullPointer);
+                     } else {
+                         printf("That pointer is null\n"); <span class='hl'>// this -> NullPointer is NULL </span>
+                     }
+
+                     return(EXIT_SUCCESS);
+                 }
+                 //-----------------------------------------------------------------------------
+               </pre>
           </UL>
      <LI> Array of pointers
           <UL>
           <LI> <A HREF="MyCode/ElementPoints.c"><TT>ElementPoints.c</TT></A>
                - Program demonstrating use of an array of pointers
           </UL>
+          <pre>
+            //-----------------------------------------------------------------------------
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <string.h>
+
+            typedef char String[128];
+
+            typedef char* CharPointer;
+            //-----------------------------------------------------------------------------
+            int main(void) {
+
+                String AWord = "recieve";
+                CharPointer ArrayOfPointers[strlen(AWord)];
+                int Index;
+
+                printf("The original word is  %s\n",AWord);
+
+                printf("The iterative word is ");
+                for (Index = 0; Index < strlen(AWord); Index++) {
+                    printf("%c",AWord[Index]);
+                    ArrayOfPointers[Index] = &AWord[Index];
+                }
+                printf("\n");
+
+                printf("The pointed word is   ");
+                for (Index = 0; Index < strlen(AWord); Index++) {
+                    printf("%c",*(ArrayOfPointers[Index]));
+                }
+                printf("\n");
+
+
+                ArrayOfPointers[3] = &AWord[4];
+                ArrayOfPointers[4] = &AWord[3];
+                printf("The fixed word is     ");
+                for (Index=0;Index < strlen(AWord);Index++) {
+                    printf("%c",*(ArrayOfPointers[Index]));
+                }
+                printf("\n");
+
+                return(EXIT_SUCCESS);
+            }
+            //-----------------------------------------------------------------------------
+          </pre>
      </UL>
 <P>
 <LI> Pointers as parameters
      <UL>
      <LI> Pass by value (= pass the referred object by reference)
      <LI> <A HREF="MyCode/PassByValue.c"><TT>PassByValue.c</TT></A>
+       <pre>
+         //-----------------------------------------------------------------------------
+         #include <stdio.h>
+         #include <stdlib.h>
+
+         void ReadIntByPointer(int *IntPointer);
+         //-----------------------------------------------------------------------------
+         int main(void) {
+
+             int AnInt;
+             int *PointAtInt;
+
+             AnInt = 27;
+             printf("AnInt = %d\n\n",AnInt);
+
+             PointAtInt = &AnInt;
+             ReadIntByPointer(PointAtInt);
+             printf("AnInt = %d\n\n",AnInt);
+
+             ReadIntByPointer(&AnInt);
+             printf("AnInt = %d\n\n",AnInt);
+
+             return(EXIT_SUCCESS);
+         }
+         //-----------------------------------------------------------------------------
+         void ReadIntByPointer(int *IntPointer) {
+
+             printf("Enter integer to assign by pointer   : ");
+             scanf("%d",IntPointer);
+
+         }
+         //-----------------------------------------------------------------------------
+       </pre>
           - Program demonstrating passing pointers by value
      <LI> Pointers to pointers pass pointers by reference
      <LI> <A HREF="MyCode/PassByReference.c">
           <TT>PassByReference.c</TT></A>
           - Program that passes a pointer to a pointer.
+          <pre>
+            //-----------------------------------------------------------------------------
+            //----Contrived program to show ways of playing with pointers
+            #include <stdio.h>
+            #include <stdlib.h>
+
+            typedef int * IntPtr;
+            typedef IntPtr * IntPtrPtr;
+            //-----------------------------------------------------------------------------
+            void SwapPointers(IntPtrPtr IntPP1,IntPtrPtr IntPP2) {
+            //----or void SwapPointers(int **  IntPP1,int **  IntPP2)
+                <span class="comment">// ** is pointer variable of a pointer</span>
+                <span class="comment">//SwapPointers(&DataPtr1,&DataPtr2) => int ** IntPP1 = &(int *)..</span>
+
+                IntPtr Temporary;
+            //----or int * Temporary
+
+                Temporary = *IntPP1; <span class="comment">// * (&DataPtr1) is the address of what DataPtr1 is pointing.</span>
+                *IntPP1 = *IntPP2;
+                *IntPP2 = Temporary;
+            }
+            //-----------------------------------------------------------------------------
+            void SwapInts(IntPtrPtr IntPP1,IntPtrPtr IntPP2) {
+            //---or void SwapInts(int ** IntPP1,int ** IntPP2)
+
+                int Temporary;
+
+                Temporary = **IntPP1; <span class="comment">// ** (&DataPtr1) is the value being pointed by DataPtr1.</span>
+                **IntPP1 = **IntPP2;
+                **IntPP2 = Temporary;
+            }
+            //-----------------------------------------------------------------------------
+            int main(void) {
+
+                int Data1,Data2;
+                IntPtr DataPtr1,DataPtr2;
+            //----or int * DataPtr1,DataPtr2;
+
+                Data1 = 27;
+                Data2 = 16;
+                DataPtr1 = &Data1;
+                DataPtr2 = &Data2;
+                printf("Data      : Data1     = %d, Data2     = %d\n",Data1,Data2);
+                printf("DataPtr   : *DataPtr1 = %d, *DataPtr2 = %d\n",*DataPtr1,*DataPtr2);
+
+                SwapPointers(&DataPtr1,&DataPtr2);
+                printf("Data      : Data1     = %d, Data2     = %d\n",Data1,Data2);
+          </pre>
      </UL>
 <P>
 <LI> BEWARE following pointers ... you'd better know where they go
      <UL>
      <LI> If you follow a pointer to a place you don't own, you'll
-          get a seg fault.
+          get <span class="hl">a seg fault.</span>
      <LI> If you follow a pointer to a place that doesn't exist, you'll
-          get a bus error.
+          get <span class="hl">a bus error.</span>
      <LI> <A HREF="SegFault1.jpg">Virgin</A>
           <A HREF="SegFault2.jpg">Airlines</A>
      </UL>
@@ -74,8 +256,8 @@ Last modified Monday, 22-Aug-2016 11:19:41 EDT.
           Anything that can be done with array subscripting can be done
           with pointers.
      <LI> An array name provides the address of the first element of the
-          array. e.g. <TT>int A[10];</TT> Then <TT>A == &A[0]</TT> and
-          <TT>*A == A[0]</TT>.
+          array. <span class='hl'>e.g. <TT>int A[10];</TT> Then <TT>A == &A[0]</TT> and
+          <TT>*A == A[0]</TT>.</span>
      <LI> Given a pointer <TT>PA</TT> into an array <TT>A</TT> (the array
           name counts as a pointer to the first element), then the pointer
           can be indexed like an array.
@@ -91,6 +273,95 @@ Last modified Monday, 22-Aug-2016 11:19:41 EDT.
           array) moves the pointer along the array
      <LI> <A HREF="MyCode/ArrayPointer.c"><TT>ArrayPointer.c</TT></A>
           - Using pointers into an array
+          <pre>
+            //-----------------------------------------------------------------------------
+            #include <stdio.h>
+            #include <stdlib.h>
+
+            #define ARRAY_SIZE 8
+
+            typedef int DataArray[ARRAY_SIZE];
+            //-----------------------------------------------------------------------------
+            int main(void) {
+
+                DataArray MyFibonaccis;
+                int Index;
+                int *ArrayBase;
+
+                MyFibonaccis[0] = 0;
+                MyFibonaccis[1] = 1;
+                for (Index = 2; Index < ARRAY_SIZE; Index++) {
+                    MyFibonaccis[Index] = MyFibonaccis[Index-1] + MyFibonaccis[Index-2];
+                }
+
+                for (Index = 0; Index < ARRAY_SIZE; Index++) {
+                    printf("Direct Fibonacci number %d is %d\n",Index,MyFibonaccis[Index]);
+                }
+                <span class="comment">
+                // Direct Fibonacci number 0 is 0
+                // Direct Fibonacci number 1 is 1
+                // Direct Fibonacci number 2 is 1
+                // Direct Fibonacci number 3 is 2
+                // Direct Fibonacci number 4 is 3
+                // Direct Fibonacci number 5 is 5
+                // Direct Fibonacci number 6 is 8
+                </span>
+
+                ArrayBase = &MyFibonaccis[0];
+                for (Index = 0; Index < ARRAY_SIZE; Index++) {
+                    printf("Offset pointer number %d is %d %d\n",Index,ArrayBase[Index],
+            *(ArrayBase+Index));
+                }
+                <span class="comment">
+                // Offset pointer number 0 is 0 0
+                // Offset pointer number 1 is 1 1
+                // Offset pointer number 2 is 1 1
+                // Offset pointer number 3 is 2 2
+                // Offset pointer number 4 is 3 3
+                // Offset pointer number 5 is 5 5
+                // Offset pointer number 6 is 8 8
+                // Offset pointer number 7 is 13 13
+                </span>
+
+                ArrayBase = &MyFibonaccis[2];
+                for (Index = -2; Index < ARRAY_SIZE-2; Index++) {
+                    printf("Indexed pointer number %d is %d %d\n",Index,ArrayBase[Index],
+            *(ArrayBase+Index));
+                }
+                <span class="comment">
+                // Indexed pointer number -2 is 0 0
+                // Indexed pointer number -1 is 1 1
+                // Indexed pointer number 0 is 1 1
+                // Indexed pointer number 1 is 2 2
+                // Indexed pointer number 2 is 3 3
+                // Indexed pointer number 3 is 5 5
+                // Indexed pointer number 4 is 8 8
+                // Indexed pointer number 5 is 13 13
+                </span>
+
+                ArrayBase = &MyFibonaccis[ARRAY_SIZE-1];
+                while (ArrayBase != MyFibonaccis) {
+                    printf("Directly pointed number is %d\n",*ArrayBase);
+                    ArrayBase--;
+                }
+                <span class="comment">
+                // Directly pointed number is 13
+                // Directly pointed number is 8
+                // Directly pointed number is 5
+                // Directly pointed number is 3
+                // Directly pointed number is 2
+                // Directly pointed number is 1
+                // Directly pointed number is 1
+                </span>
+
+                ArrayBase = &MyFibonaccis[3];
+                printf("From %d to %d there are %d elements\n",*ArrayBase,
+            MyFibonaccis[ARRAY_SIZE-1],&MyFibonaccis[ARRAY_SIZE-1] - ArrayBase);
+                <span class="comment">// From 2 to 13 there are 4 elements</span>
+                return(EXIT_SUCCESS);
+            }
+            //-----------------------------------------------------------------------------
+          </pre>
      <LI> Function arguments
           <UL>
           <LI> It is possible to pass part of an array to a function by
@@ -100,12 +371,43 @@ Last modified Monday, 22-Aug-2016 11:19:41 EDT.
                array (subscripted from 0 again) or as a pointer to an element.
           <LI> <A HREF="MyCode/ArrayRestart.c"><TT>ArrayRestart.c</TT></A>
                - Offsets an array in a function
+               <pre>
+                  //-----------------------------------------------------------------------------
+                  #include <stdio.h>
+                  #include <stdlib.h>
+
+                  #define STRING_LENGTH 128
+
+                  typedef char String[STRING_LENGTH];
+                  //-----------------------------------------------------------------------------
+                  void PrintSubString(char * TheString,int Length) {
+
+                      int Index;
+
+                      for (Index = 0; Index < Length; Index++) {
+                          putchar(TheString[Index]);
+                      }
+                  }
+                  //-----------------------------------------------------------------------------
+                  int main(void) {
+
+                      String MyString = "Welcome to lovely Capetown";
+
+                      PrintSubString(MyString,2); <span class="comment"> // 'We'</span>
+                      PrintSubString(&MyString[10],5); <span class="comment"> // ' love' 10th index to 14th</span>
+                      PrintSubString(&MyString[17],2); <span class="comment"> // ' C'</span>
+                      printf("\n");
+
+                      return(EXIT_SUCCESS);
+                  }
+                  //-----------------------------------------------------------------------------
+               </pre>
           </UL>
      <LI> Multi-dimensional array accesses are also converted to pointer
           access.
           <UL>
           <LI> Given the definition <TT>int a[5][8]</TT>,
-               <TT>a[3][5]</TT> is converted to <TT>*(*(a+3)+5)</TT> in the
+               <span class='hl'><TT>a[3][5]</TT> is converted to <TT>*(*(a+3)+5)</TT></span> in the
                steps <TT>a[3]</TT> => <TT>*(a+3)</TT>, <TT>a[3][5]</TT> =>
                <TT>*(a+3)[5]</TT> => <TT>*(*(a+3)+5)</TT>.
           <LI> <TT>a</TT> - a pointer to the 1st of 5 arrays of 8 elements.
@@ -145,6 +447,48 @@ message="Hello world";
           Take care that you own the memory that you use
      <LI> <A HREF="MyCode/StringPointers.c"><TT>StringPointers.c</TT></A>
           - Dangerous games with strings
+          <pre>
+            //-----------------------------------------------------------------------------
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <string.h>
+
+            #define STRING_LENGTH 128
+
+            typedef char String[STRING_LENGTH];
+            //-----------------------------------------------------------------------------
+            int main(void) {
+
+                String MyArray;
+                char MyMessage[] = "hello world";
+                char *OSMessage = "don't touch me";
+                char *NoMemory;
+
+                printf("MyArray = %s\n",MyArray); <span class="comment">//MyArray =</span>
+                strcpy(MyArray,MyMessage);
+                printf("MyArray = %s\n",MyArray); <span class="comment">//MyArray = hello world</span>
+                strcpy(MyArray,OSMessage);
+                printf("MyArray = %s\n",MyArray); <span class="comment">//MyArray = don't touch me</span>
+
+                printf("Now let's live dangerously\n");
+                printf("MyMessage = %s\n",MyMessage); <span class="comment">//MyMessage = hello world</span>
+                strcpy(MyMessage,"shorty lives");
+                printf("MyMessage = %s\n",MyMessage); <span class="comment">//MyMessage = shorty lives</span>
+                strcpy(MyMessage,"a long life is great");
+                printf("MyMessage = %s\n",MyMessage); <span class="comment">//MyMessage = a long life is great</span>
+
+                printf("OSMessage = %s\n",OSMessage); <span class="comment">//OSMessage = don't touch me</span>
+                strcpy(OSMessage,"attack the OS"); <span class="comment">//exited with non-zero status</span>
+                printf("OSMessage = %s\n",OSMessage);
+
+                printf("NoMemory = %s\n",NoMemory);
+                strcpy(NoMemory,OSMessage);
+                printf("NoMemory = %s\n",NoMemory);
+
+                return(EXIT_SUCCESS);
+            }
+            //-----------------------------------------------------------------------------
+          </pre>
      <LI> C does not provide string manipulation directly, but there are
           plenty of library routines, declared in <TT>string.h</TT> and
           <TT>stdlib.h</TT>.
@@ -160,6 +504,65 @@ message="Hello world";
      <LI> Useful for ragged right edge arrays.
      <LI> <A HREF="MyCode/StringsSort.c"><TT>StringsSort.c</TT></A>
           - Sorting strings by pointers
+          <pre>
+            //-----------------------------------------------------------------------------
+            #include <stdio.h>
+            #include <stdlib.h>
+            #include <string.h>
+            //-----------------------------------------------------------------------------
+            void PrintNames(char* Names[],int HowMany) {
+
+                int Index;
+
+                for (Index = 0; Index < HowMany; Index++) {
+                    printf("%s\n",Names[Index]);
+                }
+            }
+            //-----------------------------------------------------------------------------
+            void SortNames(char* Names[],int HowMany) {
+
+                int Swapped = 1;
+                int Index;
+                char* Temporary;
+
+                while (Swapped) {
+                    Swapped = 0;
+                    for (Index = 0; Index < HowMany-1; Index++) {
+                        if (strcmp(Names[Index],Names[Index+1]) > 0) {
+                            Temporary = Names[Index];
+                            Names[Index] = Names[Index+1];
+                            Names[Index+1] = Temporary;
+                            Swapped = 1;
+                        }
+                    }
+                }
+            }
+            //-----------------------------------------------------------------------------
+            int main(void) {
+
+                char* MonthNames[]= {
+                    "January",
+                    "Feburary",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December"};
+
+                PrintNames(MonthNames,12);
+                SortNames(MonthNames,6);
+                printf("\n");
+                PrintNames(MonthNames,12);
+
+                return(EXIT_SUCCESS);
+            }
+            //-----------------------------------------------------------------------------
+          </pre>
           <UL>
           <LI> <TT>Name</TT> is an array of pointers to character.
           <LI> Each of these characters is the first in an initialised array.
